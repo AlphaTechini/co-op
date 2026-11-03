@@ -1,15 +1,15 @@
 {
   "network": "sandbox",
-  "rpc": "http://127.0.0.1:35439",
+  "rpc": "http://127.0.0.1:44785",
   "coop": "coop.sandbox",
   "token": "credits.sandbox",
   "wasm": {
-    "coop_sha256": "c5c2df759a708257ff2bf5d7bb81e9393bae6898679a5dac1399a595be650e08",
+    "coop_sha256": "1153080653c5267514cab929051d22a7832259da8c907aa78c11f0bca721602a",
     "credits_token_sha256": "9552645d00607863d952741f41e91a3eba2f73530021fb78b7fc3fb4c54f20f7"
   },
   "offer_id": 1,
-  "started_at": "2026-11-03T22:21:16.883Z",
-  "finished_at": "2026-11-03T22:22:06.061Z",
+  "started_at": "2026-11-03T22:49:03.805Z",
+  "finished_at": "2026-11-03T22:49:52.379Z",
   "ok": true,
   "roster": [
     {
@@ -35,17 +35,6 @@
       "budget": "4030000000000000000000000"
     },
     {
-      "label": "buyer-e3",
-      "kind": "eager",
-      "units": 3,
-      "policy": {
-        "archetype": "eager",
-        "units": 3,
-        "max_unit_price": "1000000000000000000000000"
-      },
-      "budget": "3030000000000000000000000"
-    },
-    {
       "label": "buyer-b501",
       "kind": "bargain-50",
       "units": 4,
@@ -58,6 +47,17 @@
       "budget": "2030000000000000000000000"
     },
     {
+      "label": "buyer-e3",
+      "kind": "eager",
+      "units": 3,
+      "policy": {
+        "archetype": "eager",
+        "units": 3,
+        "max_unit_price": "1000000000000000000000000"
+      },
+      "budget": "3030000000000000000000000"
+    },
+    {
       "label": "buyer-e4",
       "kind": "eager",
       "units": 4,
@@ -65,17 +65,6 @@
         "archetype": "eager",
         "units": 4,
         "max_unit_price": "1100000000000000000000000"
-      },
-      "budget": "4030000000000000000000000"
-    },
-    {
-      "label": "buyer-e5",
-      "kind": "eager",
-      "units": 4,
-      "policy": {
-        "archetype": "eager",
-        "units": 4,
-        "max_unit_price": "1000000000000000000000000"
       },
       "budget": "4030000000000000000000000"
     },
@@ -128,18 +117,6 @@
       "budget": "1430000000000000000000000"
     },
     {
-      "label": "buyer-b205",
-      "kind": "bargain-20",
-      "units": 2,
-      "policy": {
-        "archetype": "bargain",
-        "units": 2,
-        "max_unit_price": "900000000000000000000000",
-        "target_price": "700000000000000000000000"
-      },
-      "budget": "1430000000000000000000000"
-    },
-    {
       "label": "buyer-b502",
       "kind": "bargain-50",
       "units": 4,
@@ -156,17 +133,17 @@
     {
       "name": "pool is finished",
       "pass": true,
-      "detail": "status Settled, 12 members"
+      "detail": "status Settled, 10 members"
     },
     {
       "name": "every member paid <= units x its own limit",
       "pass": true,
-      "detail": "12 members checked"
+      "detail": "10 members checked"
     },
     {
       "name": "paid + refunded + storage == locked, per member",
       "pass": true,
-      "detail": "12 members balance to the yocto"
+      "detail": "10 members balance to the yocto"
     },
     {
       "name": "filled members paid units x tier price, the rest paid nothing",
@@ -176,17 +153,17 @@
     {
       "name": "sum of member payments == seller payout",
       "pass": true,
-      "detail": "21.000000 vs 21.000000 NEAR"
+      "detail": "16.800000 vs 16.800000 NEAR"
     },
     {
       "name": "seller_paid event matches payout",
       "pass": true,
-      "detail": "21.000000 NEAR in events"
+      "detail": "16.800000 NEAR in events"
     },
     {
       "name": "group size matches the resolved result",
       "pass": true,
-      "detail": "30 units from 10 members"
+      "detail": "24 units from 8 members"
     },
     {
       "name": "seller paid only if a tier was reached",
@@ -196,12 +173,12 @@
     {
       "name": "token balances match units delivered",
       "pass": true,
-      "detail": "30 units delivered"
+      "detail": "24 units delivered"
     },
     {
       "name": "inventory fully accounted for (seller kept the unsold units)",
       "pass": true,
-      "detail": "seller 1000000 -> 999970, escrow 0 -> 0"
+      "detail": "seller 1000000 -> 999976, escrow 0 -> 0"
     },
     {
       "name": "no budget left locked",
@@ -211,12 +188,12 @@
     {
       "name": "membership storage cost is small and non-negative",
       "pass": true,
-      "detail": "12 members, 0.00257 to 0.00278 NEAR each"
+      "detail": "10 members, 0.00257 to 0.00278 NEAR each"
     },
     {
       "name": "owner withdrew every leftover budget (full-access key, 1 yocto)",
       "pass": true,
-      "detail": "9.9894 NEAR withdrawn from 12 agents"
+      "detail": "8.7415 NEAR withdrawn from 10 agents"
     }
   ],
   "pool": {
@@ -244,31 +221,31 @@
       "max_units": 60,
       "unit_amount": "1",
       "inventory_held": "0",
-      "deadline_ns": "1793744523271270200",
+      "deadline_ns": "1793746190193618010",
       "lock_window_ns": "10000000000",
-      "lock_at_ns": "1793744513271270200",
+      "lock_at_ns": "1793746180193618010",
       "status": "Closed",
-      "created_at_ns": "1793744478652331562"
+      "created_at_ns": "1793746145571008619"
     },
     "status": "Settled",
-    "member_count": 12,
-    "units_unconditional": 19,
-    "units_conditional": 19,
+    "member_count": 10,
+    "units_unconditional": 15,
+    "units_conditional": 17,
     "projected": {
-      "units": 30,
-      "members_in": 10,
+      "units": 24,
+      "members_in": 8,
       "tier_index": 1,
       "unit_price": "700000000000000000000000"
     },
     "result": {
-      "units": 30,
-      "members_in": 10,
+      "units": 24,
+      "members_in": 8,
       "tier_index": 1,
       "unit_price": "700000000000000000000000",
-      "seller_payout": "21000000000000000000000000",
-      "resolved_at_ns": "1793744524047959025"
+      "seller_payout": "16800000000000000000000000",
+      "resolved_at_ns": "1793746190853726614"
     },
-    "settle_cursor": 12
+    "settle_cursor": 10
   },
   "members": [
     {
@@ -278,7 +255,7 @@
       "threshold_units": null,
       "locked": "4001250000000000000000000",
       "memo": "Entry price 1.00 is within my 1.00 limit. Joining now.",
-      "joined_at_ns": "1793744480816708998",
+      "joined_at_ns": "1793746147736308258",
       "projected_in": true,
       "outcome": "Filled",
       "paid": "2800000000000000000000000",
@@ -295,7 +272,7 @@
       "threshold_units": null,
       "locked": "4001250000000000000000000",
       "memo": "Entry price 1.00 is within my 1.10 limit. Joining now.",
-      "joined_at_ns": "1793744482214744978",
+      "joined_at_ns": "1793746149139569826",
       "projected_in": true,
       "outcome": "Filled",
       "paid": "2800000000000000000000000",
@@ -306,30 +283,13 @@
       "storage_fee": "2570000000000000000000"
     },
     {
-      "agent_id": "buyer-e3.sandbox",
-      "owner": "sandbox",
-      "units": 3,
-      "threshold_units": null,
-      "locked": "3001250000000000000000000",
-      "memo": "Entry price 1.00 is within my 1.00 limit. Joining now.",
-      "joined_at_ns": "1793744483734684705",
-      "projected_in": true,
-      "outcome": "Filled",
-      "paid": "2100000000000000000000000",
-      "refunded": "900000000000000000000000",
-      "delivery": "Delivered",
-      "limit": "1000000000000000000000000",
-      "token_balance": "3",
-      "storage_fee": "2570000000000000000000"
-    },
-    {
       "agent_id": "buyer-b501.sandbox",
       "owner": "sandbox",
       "units": 4,
       "threshold_units": 50,
       "locked": "2001250000000000000000000",
       "memo": "In if the group reaches 50. I only buy at 0.50 or less.",
-      "joined_at_ns": "1793744485251088814",
+      "joined_at_ns": "1793746150673972347",
       "projected_in": false,
       "outcome": "Excluded",
       "paid": "0",
@@ -340,13 +300,30 @@
       "storage_fee": "2780000000000000000000"
     },
     {
+      "agent_id": "buyer-e3.sandbox",
+      "owner": "sandbox",
+      "units": 3,
+      "threshold_units": null,
+      "locked": "3001250000000000000000000",
+      "memo": "Entry price 1.00 is within my 1.00 limit. Joining now.",
+      "joined_at_ns": "1793746152193036901",
+      "projected_in": true,
+      "outcome": "Filled",
+      "paid": "2100000000000000000000000",
+      "refunded": "900000000000000000000000",
+      "delivery": "Delivered",
+      "limit": "1000000000000000000000000",
+      "token_balance": "3",
+      "storage_fee": "2570000000000000000000"
+    },
+    {
       "agent_id": "buyer-e4.sandbox",
       "owner": "sandbox",
       "units": 4,
       "threshold_units": null,
       "locked": "4001250000000000000000000",
       "memo": "Entry price 1.00 is within my 1.10 limit. Joining now.",
-      "joined_at_ns": "1793744486763781252",
+      "joined_at_ns": "1793746153729489050",
       "projected_in": true,
       "outcome": "Filled",
       "paid": "2800000000000000000000000",
@@ -357,30 +334,13 @@
       "storage_fee": "2570000000000000000000"
     },
     {
-      "agent_id": "buyer-e5.sandbox",
-      "owner": "sandbox",
-      "units": 4,
-      "threshold_units": null,
-      "locked": "4001250000000000000000000",
-      "memo": "Entry price 1.00 is within my 1.00 limit. Joining now.",
-      "joined_at_ns": "1793744488285699334",
-      "projected_in": true,
-      "outcome": "Filled",
-      "paid": "2800000000000000000000000",
-      "refunded": "1200000000000000000000000",
-      "delivery": "Delivered",
-      "limit": "1000000000000000000000000",
-      "token_balance": "4",
-      "storage_fee": "2570000000000000000000"
-    },
-    {
       "agent_id": "buyer-b201.sandbox",
       "owner": "sandbox",
       "units": 2,
       "threshold_units": 20,
       "locked": "1401250000000000000000000",
       "memo": "In if the group reaches 20. I only buy at 0.70 or less.",
-      "joined_at_ns": "1793744489797553476",
+      "joined_at_ns": "1793746155135505757",
       "projected_in": true,
       "outcome": "Filled",
       "paid": "1400000000000000000000000",
@@ -397,7 +357,7 @@
       "threshold_units": 20,
       "locked": "1401250000000000000000000",
       "memo": "In if the group reaches 20. I only buy at 0.70 or less.",
-      "joined_at_ns": "1793744491194166134",
+      "joined_at_ns": "1793746156663706421",
       "projected_in": true,
       "outcome": "Filled",
       "paid": "1400000000000000000000000",
@@ -414,7 +374,7 @@
       "threshold_units": 20,
       "locked": "2101250000000000000000000",
       "memo": "In if the group reaches 20. I only buy at 0.70 or less.",
-      "joined_at_ns": "1793744492712834129",
+      "joined_at_ns": "1793746158190951419",
       "projected_in": true,
       "outcome": "Filled",
       "paid": "2100000000000000000000000",
@@ -431,24 +391,7 @@
       "threshold_units": 20,
       "locked": "1401250000000000000000000",
       "memo": "In if the group reaches 20. I only buy at 0.70 or less.",
-      "joined_at_ns": "1793744494229735024",
-      "projected_in": true,
-      "outcome": "Filled",
-      "paid": "1400000000000000000000000",
-      "refunded": "0",
-      "delivery": "Delivered",
-      "limit": "900000000000000000000000",
-      "token_balance": "2",
-      "storage_fee": "2660000000000000000000"
-    },
-    {
-      "agent_id": "buyer-b205.sandbox",
-      "owner": "sandbox",
-      "units": 2,
-      "threshold_units": 20,
-      "locked": "1401250000000000000000000",
-      "memo": "In if the group reaches 20. I only buy at 0.70 or less.",
-      "joined_at_ns": "1793744495754368464",
+      "joined_at_ns": "1793746159720335970",
       "projected_in": true,
       "outcome": "Filled",
       "paid": "1400000000000000000000000",
@@ -465,7 +408,7 @@
       "threshold_units": 50,
       "locked": "2001250000000000000000000",
       "memo": "In if the group reaches 50. I only buy at 0.50 or less.",
-      "joined_at_ns": "1793744497276317313",
+      "joined_at_ns": "1793746161121955661",
       "projected_in": false,
       "outcome": "Excluded",
       "paid": "0",
@@ -481,8 +424,8 @@
       "kind": "offer_created",
       "message": "Offer 1: Demo API credits (volume pricing) (1+ at 1.00, 20+ at 0.70, 50+ at 0.50; up to 60 units)",
       "pool_id": 1,
-      "id": "mw195eep-1",
-      "ts": 1793744479543
+      "id": "mw1a54m3-1",
+      "ts": 1793746146463
     },
     {
       "kind": "decision",
@@ -490,8 +433,8 @@
       "pool_id": 1,
       "agent_id": "buyer-e1.sandbox",
       "reason": "Entry price 1.00 is within my 1.00 limit. Joining now.",
-      "id": "mw195eep-2",
-      "ts": 1793744480549
+      "id": "mw1a54m3-2",
+      "ts": 1793746147472
     },
     {
       "kind": "pool_joined",
@@ -500,14 +443,14 @@
       "agent_id": "buyer-e1.sandbox",
       "reason": "Entry price 1.00 is within my 1.00 limit. Joining now.",
       "tx": {
-        "hash": "3DcL96bZEn2pnCVRgNzMe6n7cSc1YMhk9Fq6EdYk2oSt",
+        "hash": "AwKQjLSwo5LktiWPctDsf1ucjnxYpGp1MfMXv9KGqrqp",
         "signer": "buyer-e1.sandbox",
         "receiver": "coop.sandbox",
         "method": "join_pool",
-        "gas_burnt": "2900244324422"
+        "gas_burnt": "2900345628857"
       },
-      "id": "mw195eep-3",
-      "ts": 1793744480938
+      "id": "mw1a54m3-3",
+      "ts": 1793746147859
     },
     {
       "kind": "decision",
@@ -515,8 +458,8 @@
       "pool_id": 1,
       "agent_id": "buyer-e2.sandbox",
       "reason": "Entry price 1.00 is within my 1.10 limit. Joining now.",
-      "id": "mw195eep-4",
-      "ts": 1793744482046
+      "id": "mw1a54m3-4",
+      "ts": 1793746148969
     },
     {
       "kind": "pool_joined",
@@ -525,39 +468,14 @@
       "agent_id": "buyer-e2.sandbox",
       "reason": "Entry price 1.00 is within my 1.10 limit. Joining now.",
       "tx": {
-        "hash": "266Zmg9cqqBXXJzxt9gYVdtMCZomZgTaV7ao2Gkoyfu5",
+        "hash": "6h1G26Nyp3v19Ej6wxGgEpP1X5MoqLvoXt4EQf32LvKj",
         "signer": "buyer-e2.sandbox",
         "receiver": "coop.sandbox",
         "method": "join_pool",
-        "gas_burnt": "2904804324422"
+        "gas_burnt": "2904905628857"
       },
-      "id": "mw195eep-5",
-      "ts": 1793744482336
-    },
-    {
-      "kind": "decision",
-      "message": "buyer-e3.sandbox decides to join pool 1 with 3 units unconditionally",
-      "pool_id": 1,
-      "agent_id": "buyer-e3.sandbox",
-      "reason": "Entry price 1.00 is within my 1.00 limit. Joining now.",
-      "id": "mw195eep-6",
-      "ts": 1793744483548
-    },
-    {
-      "kind": "pool_joined",
-      "message": "buyer-e3.sandbox joined pool 1: 3 units, unconditional",
-      "pool_id": 1,
-      "agent_id": "buyer-e3.sandbox",
-      "reason": "Entry price 1.00 is within my 1.00 limit. Joining now.",
-      "tx": {
-        "hash": "CbL13P8ZmocuZr8waKod9njDqjL1SgNbLwMdJmrCWqnv",
-        "signer": "buyer-e3.sandbox",
-        "receiver": "coop.sandbox",
-        "method": "join_pool",
-        "gas_burnt": "2909364324422"
-      },
-      "id": "mw195eep-7",
-      "ts": 1793744483861
+      "id": "mw1a54m3-5",
+      "ts": 1793746149265
     },
     {
       "kind": "decision",
@@ -565,8 +483,8 @@
       "pool_id": 1,
       "agent_id": "buyer-b501.sandbox",
       "reason": "In if the group reaches 50. I only buy at 0.50 or less.",
-      "id": "mw195eep-8",
-      "ts": 1793744485044
+      "id": "mw1a54m3-6",
+      "ts": 1793746150468
     },
     {
       "kind": "pool_joined",
@@ -575,14 +493,39 @@
       "agent_id": "buyer-b501.sandbox",
       "reason": "In if the group reaches 50. I only buy at 0.50 or less.",
       "tx": {
-        "hash": "2XHWWJv9UGsDmYSJbarRYFD6SzV8gt9UHU7gxr7LFJfq",
+        "hash": "5NXAodVJne3BfZNuqaWLoXjRdFJCFe3xGksMMXwU31eZ",
         "signer": "buyer-b501.sandbox",
         "receiver": "coop.sandbox",
         "method": "join_pool",
-        "gas_burnt": "2916226333841"
+        "gas_burnt": "2916327638276"
       },
-      "id": "mw195eep-9",
-      "ts": 1793744485372
+      "id": "mw1a54m3-7",
+      "ts": 1793746150795
+    },
+    {
+      "kind": "decision",
+      "message": "buyer-e3.sandbox decides to join pool 1 with 3 units unconditionally",
+      "pool_id": 1,
+      "agent_id": "buyer-e3.sandbox",
+      "reason": "Entry price 1.00 is within my 1.00 limit. Joining now.",
+      "id": "mw1a54m3-8",
+      "ts": 1793746151967
+    },
+    {
+      "kind": "pool_joined",
+      "message": "buyer-e3.sandbox joined pool 1: 3 units, unconditional",
+      "pool_id": 1,
+      "agent_id": "buyer-e3.sandbox",
+      "reason": "Entry price 1.00 is within my 1.00 limit. Joining now.",
+      "tx": {
+        "hash": "AXJs3YkNmS67XUmHobAt5GYB8Lb2SztLAn51E5AvGaKu",
+        "signer": "buyer-e3.sandbox",
+        "receiver": "coop.sandbox",
+        "method": "join_pool",
+        "gas_burnt": "2921181067493"
+      },
+      "id": "mw1a54m3-9",
+      "ts": 1793746152316
     },
     {
       "kind": "decision",
@@ -590,8 +533,8 @@
       "pool_id": 1,
       "agent_id": "buyer-e4.sandbox",
       "reason": "Entry price 1.00 is within my 1.10 limit. Joining now.",
-      "id": "mw195eep-10",
-      "ts": 1793744486546
+      "id": "mw1a54m3-10",
+      "ts": 1793746153467
     },
     {
       "kind": "pool_joined",
@@ -600,39 +543,14 @@
       "agent_id": "buyer-e4.sandbox",
       "reason": "Entry price 1.00 is within my 1.10 limit. Joining now.",
       "tx": {
-        "hash": "A7h2ZzQpmSQ3QdUVb5wBpuhCmhKUn92JzYj9kp6JqvtH",
+        "hash": "9tYQgSeJMpvQoUW3kBnosgiuGo2E9SR8GhoKjJ4XScQX",
         "signer": "buyer-e4.sandbox",
         "receiver": "coop.sandbox",
         "method": "join_pool",
-        "gas_burnt": "2923359763058"
+        "gas_burnt": "2923461067493"
       },
-      "id": "mw195eep-11",
-      "ts": 1793744486884
-    },
-    {
-      "kind": "decision",
-      "message": "buyer-e5.sandbox decides to join pool 1 with 4 units unconditionally",
-      "pool_id": 1,
-      "agent_id": "buyer-e5.sandbox",
-      "reason": "Entry price 1.00 is within my 1.00 limit. Joining now.",
-      "id": "mw195eep-12",
-      "ts": 1793744488046
-    },
-    {
-      "kind": "pool_joined",
-      "message": "buyer-e5.sandbox joined pool 1: 4 units, unconditional",
-      "pool_id": 1,
-      "agent_id": "buyer-e5.sandbox",
-      "reason": "Entry price 1.00 is within my 1.00 limit. Joining now.",
-      "tx": {
-        "hash": "Cxzg8ceTMrEExFviowsR3MtkNRAgjaYJdsh8oR3tbXQ8",
-        "signer": "buyer-e5.sandbox",
-        "receiver": "coop.sandbox",
-        "method": "join_pool",
-        "gas_burnt": "2921079763058"
-      },
-      "id": "mw195eep-13",
-      "ts": 1793744488405
+      "id": "mw1a54m3-11",
+      "ts": 1793746153853
     },
     {
       "kind": "decision",
@@ -640,8 +558,8 @@
       "pool_id": 1,
       "agent_id": "buyer-b201.sandbox",
       "reason": "In if the group reaches 20. I only buy at 0.70 or less.",
-      "id": "mw195eep-14",
-      "ts": 1793744489544
+      "id": "mw1a54m3-12",
+      "ts": 1793746154967
     },
     {
       "kind": "pool_joined",
@@ -650,14 +568,14 @@
       "agent_id": "buyer-b201.sandbox",
       "reason": "In if the group reaches 20. I only buy at 0.70 or less.",
       "tx": {
-        "hash": "5cvezEBBVPf1L25DXTb3Xo6hW5ZBqBaXTDd585s7arr2",
+        "hash": "2fxefQ8LzoKWuDGEjWqjnNsHEB7xdrdNy4xVgp1gUy89",
         "signer": "buyer-b201.sandbox",
         "receiver": "coop.sandbox",
         "method": "join_pool",
-        "gas_burnt": "2924002273625"
+        "gas_burnt": "2924103578060"
       },
-      "id": "mw195eep-15",
-      "ts": 1793744489919
+      "id": "mw1a54m3-13",
+      "ts": 1793746155257
     },
     {
       "kind": "decision",
@@ -665,8 +583,8 @@
       "pool_id": 1,
       "agent_id": "buyer-b202.sandbox",
       "reason": "In if the group reaches 20. I only buy at 0.70 or less.",
-      "id": "mw195eep-16",
-      "ts": 1793744491045
+      "id": "mw1a54m3-14",
+      "ts": 1793746156470
     },
     {
       "kind": "pool_joined",
@@ -675,14 +593,14 @@
       "agent_id": "buyer-b202.sandbox",
       "reason": "In if the group reaches 20. I only buy at 0.70 or less.",
       "tx": {
-        "hash": "3aCo5ZuoRuBBMhMdJFX6dXwhy7XsJawn4fkZZ6JtNfuv",
+        "hash": "FZXKRMSeRp5zVHHa8RtUYLNLZUyQQpGzRmshawzXremQ",
         "signer": "buyer-b202.sandbox",
         "receiver": "coop.sandbox",
         "method": "join_pool",
-        "gas_burnt": "2932163890325"
+        "gas_burnt": "2932265194760"
       },
-      "id": "mw195eep-17",
-      "ts": 1793744491316
+      "id": "mw1a54m3-15",
+      "ts": 1793746156787
     },
     {
       "kind": "decision",
@@ -690,8 +608,8 @@
       "pool_id": 1,
       "agent_id": "buyer-b203.sandbox",
       "reason": "In if the group reaches 20. I only buy at 0.70 or less.",
-      "id": "mw195eep-18",
-      "ts": 1793744492545
+      "id": "mw1a54m3-16",
+      "ts": 1793746157969
     },
     {
       "kind": "pool_joined",
@@ -700,14 +618,14 @@
       "agent_id": "buyer-b203.sandbox",
       "reason": "In if the group reaches 20. I only buy at 0.70 or less.",
       "tx": {
-        "hash": "mggqXYiNx1goAqc1e3DijAAzGoYmnu4UF2tDFg9A1Jd",
+        "hash": "yHAip3cvDYBoSXRjKrdE98i8kwuKNdtsNWPh9uyv47P",
         "signer": "buyer-b203.sandbox",
         "receiver": "coop.sandbox",
         "method": "join_pool",
-        "gas_burnt": "2934443890325"
+        "gas_burnt": "2934545194760"
       },
-      "id": "mw195eep-19",
-      "ts": 1793744492836
+      "id": "mw1a54m3-17",
+      "ts": 1793746158317
     },
     {
       "kind": "decision",
@@ -715,8 +633,8 @@
       "pool_id": 1,
       "agent_id": "buyer-b204.sandbox",
       "reason": "In if the group reaches 20. I only buy at 0.70 or less.",
-      "id": "mw195eep-20",
-      "ts": 1793744494046
+      "id": "mw1a54m3-18",
+      "ts": 1793746159471
     },
     {
       "kind": "pool_joined",
@@ -725,39 +643,14 @@
       "agent_id": "buyer-b204.sandbox",
       "reason": "In if the group reaches 20. I only buy at 0.70 or less.",
       "tx": {
-        "hash": "5or78xafMZkvnkWME3puWwofzeqqNoZwTuy4TgWwW7KB",
+        "hash": "HsATZyNYJopVBS2Ay4MbWdGzdC4iBPcZiNvfJVcEmfP1",
         "signer": "buyer-b204.sandbox",
         "receiver": "coop.sandbox",
         "method": "join_pool",
-        "gas_burnt": "2932163890325"
+        "gas_burnt": "2932265194760"
       },
-      "id": "mw195eep-21",
-      "ts": 1793744494351
-    },
-    {
-      "kind": "decision",
-      "message": "buyer-b205.sandbox decides to join pool 1 with 2 units if the group reaches 20",
-      "pool_id": 1,
-      "agent_id": "buyer-b205.sandbox",
-      "reason": "In if the group reaches 20. I only buy at 0.70 or less.",
-      "id": "mw195eep-22",
-      "ts": 1793744495548
-    },
-    {
-      "kind": "pool_joined",
-      "message": "buyer-b205.sandbox joined pool 1: 2 units, conditional on 20",
-      "pool_id": 1,
-      "agent_id": "buyer-b205.sandbox",
-      "reason": "In if the group reaches 20. I only buy at 0.70 or less.",
-      "tx": {
-        "hash": "FRqXBBsC6VrtDcFpNGemyKRug8D1NoGab14xgSDbdXmR",
-        "signer": "buyer-b205.sandbox",
-        "receiver": "coop.sandbox",
-        "method": "join_pool",
-        "gas_burnt": "2932163890325"
-      },
-      "id": "mw195eep-23",
-      "ts": 1793744495877
+      "id": "mw1a54m3-19",
+      "ts": 1793746159841
     },
     {
       "kind": "decision",
@@ -765,8 +658,8 @@
       "pool_id": 1,
       "agent_id": "buyer-b502.sandbox",
       "reason": "In if the group reaches 50. I only buy at 0.50 or less.",
-      "id": "mw195eep-24",
-      "ts": 1793744497046
+      "id": "mw1a54m3-20",
+      "ts": 1793746160968
     },
     {
       "kind": "pool_joined",
@@ -775,55 +668,41 @@
       "agent_id": "buyer-b502.sandbox",
       "reason": "In if the group reaches 50. I only buy at 0.50 or less.",
       "tx": {
-        "hash": "3zrnDNvNRyJvhv68zuLCifhWLuLFE6BtJ5uh7EXFSoZA",
+        "hash": "2MFSbfX7dAu4RTHFkahBSrq9BzG6tqtqMpoz86yrTvPp",
         "signer": "buyer-b502.sandbox",
         "receiver": "coop.sandbox",
         "method": "join_pool",
-        "gas_burnt": "2932199268833"
+        "gas_burnt": "2932300573268"
       },
-      "id": "mw195eep-25",
-      "ts": 1793744497399
+      "id": "mw1a54m3-21",
+      "ts": 1793746161246
     },
     {
       "kind": "settle",
-      "message": "settle(pool 1): 10 of 12 members processed, status Settling",
+      "message": "settle(pool 1): 10 of 10 members processed, status Settled",
       "pool_id": 1,
       "tx": {
-        "hash": "9JCHjxWs12SfngRTs41gC2JFx5igHxdtmELMH1hivV9K",
+        "hash": "76mVm8kNqcMf7oz7fvkeRaKi9PnHDYy7TGBe4sJAEBQ9",
         "signer": "sandbox",
         "receiver": "coop.sandbox",
         "method": "settle",
-        "gas_burnt": "63696555063667"
+        "gas_burnt": "62521100400027"
       },
-      "id": "mw195eep-26",
-      "ts": 1793744524423
-    },
-    {
-      "kind": "settle",
-      "message": "settle(pool 1): 12 of 12 members processed, status Settled",
-      "pool_id": 1,
-      "tx": {
-        "hash": "DgoVRLs9E5Lb2jPi8qmQuRjdzzV947r6hkZVBXjJfStK",
-        "signer": "sandbox",
-        "receiver": "coop.sandbox",
-        "method": "settle",
-        "gas_burnt": "14734750762878"
-      },
-      "id": "mw195eep-27",
-      "ts": 1793744525048
+      "id": "mw1a54m3-22",
+      "ts": 1793746191237
     },
     {
       "kind": "pool_settled",
-      "message": "Pool 1 settled: 30 units from 10 agents at 0.70 each, seller paid 21.0000 NEAR",
+      "message": "Pool 1 settled: 24 units from 8 agents at 0.70 each, seller paid 16.8000 NEAR",
       "pool_id": 1,
-      "id": "mw195eep-28",
-      "ts": 1793744525050
+      "id": "mw1a54m3-23",
+      "ts": 1793746191242
     }
   ],
   "transactions": [
     {
       "phase": "deploy contracts",
-      "hash": "C8YqyK7W6icS6N8iPg54nNxCkZtKGjP9C44Udzy7phsj",
+      "hash": "7Bbt2oPAVnGyi1Uj3zbd6nM9JUR9CTee2uAjHMGhFJxh",
       "signer": "sandbox",
       "receiver": "coop.sandbox",
       "method": "create_account",
@@ -832,16 +711,16 @@
     },
     {
       "phase": "deploy contracts",
-      "hash": "9JiB49CipZo6CY1ZfbgiHcccTdiWDr6F97NvMDDxhWmM",
+      "hash": "8dWEimTH7xifWSjFPXhfLVh6uMbRrXFz8W92C5n65DQ9",
       "signer": "coop.sandbox",
       "receiver": "coop.sandbox",
       "method": "deploy+new",
-      "gas_burnt": "22778047910076",
+      "gas_burnt": "22784788107210",
       "events": []
     },
     {
       "phase": "deploy contracts",
-      "hash": "8yuns6haWCyKrkbMNxbHyMB5Yj4zRJJeWvGHJ3JR2dE4",
+      "hash": "C3bmimKRj48GjQ8Ur7fvyYohYwjDK1BsNTawyMHVdYFH",
       "signer": "sandbox",
       "receiver": "credits.sandbox",
       "method": "create_account",
@@ -850,7 +729,7 @@
     },
     {
       "phase": "deploy contracts",
-      "hash": "4WKNuPDZrbNwjjtAigW6yWXQTwVEkvvBF1jdHbuASJMz",
+      "hash": "Aw1ujk2mYtsf1GrHPkNei4VkDdQbXDerqVzdo3i57ZTt",
       "signer": "credits.sandbox",
       "receiver": "credits.sandbox",
       "method": "deploy+new",
@@ -861,7 +740,7 @@
     },
     {
       "phase": "deploy contracts",
-      "hash": "GpsXfAAM52ckEaCwmEiUysThMrxbJUDwRZY7pQNuLahs",
+      "hash": "3DhwvNbw6PPdyj46T73dtkCBVLToVUb8d1N8MiL9zVe3",
       "signer": "sandbox",
       "receiver": "credits.sandbox",
       "method": "storage_deposit",
@@ -870,239 +749,7 @@
     },
     {
       "phase": "provision agents",
-      "hash": "3VRPbpCCJ8bPzymQMpvvTPyxNWWg8zWwV7Gw9bfj82Xn",
-      "signer": "sandbox",
-      "receiver": "buyer-b501.sandbox",
-      "method": "create_account",
-      "gas_burnt": "8349895375000",
-      "events": []
-    },
-    {
-      "phase": "provision agents",
-      "hash": "5Qwx3FcNDTcLwPU5hmMe8fsakyoSBp8v6wZiTnsM63yW",
-      "signer": "buyer-b501.sandbox",
-      "receiver": "buyer-b501.sandbox",
-      "method": "add_key",
-      "gas_burnt": "420635113902",
-      "events": []
-    },
-    {
-      "phase": "provision agents",
-      "hash": "3NJHwRMF3YiTn1XPhyZfKiVvL1DQ4PWPfqNY6RRSHLeu",
-      "signer": "sandbox",
-      "receiver": "coop.sandbox",
-      "method": "register_agent",
-      "gas_burnt": "2206843667667",
-      "events": [
-        "agent_registered"
-      ]
-    },
-    {
-      "phase": "provision agents",
-      "hash": "A8rq9E3hT2ZXGYFq98yy2ao3jxi7xHUcD2oXfPMgVLcf",
-      "signer": "sandbox",
-      "receiver": "buyer-b201.sandbox",
-      "method": "create_account",
-      "gas_burnt": "8349895375000",
-      "events": []
-    },
-    {
-      "phase": "provision agents",
-      "hash": "7shyPfHJ9FPmLKFAMw9xnUGcYbk8dfucJqpA1REZFFbZ",
-      "signer": "buyer-b201.sandbox",
-      "receiver": "buyer-b201.sandbox",
-      "method": "add_key",
-      "gas_burnt": "420635113902",
-      "events": []
-    },
-    {
-      "phase": "provision agents",
-      "hash": "6NnqUyf4kpYviJJRKyUWS5pS5wuCoaJkVZ8iqVqaz1Uv",
-      "signer": "sandbox",
-      "receiver": "coop.sandbox",
-      "method": "register_agent",
-      "gas_burnt": "2193163667667",
-      "events": [
-        "agent_registered"
-      ]
-    },
-    {
-      "phase": "provision agents",
-      "hash": "DNGDDAYVPAeEsaWKmMfijCxNxzZ3Eh7aFNZUwJex29E1",
-      "signer": "sandbox",
-      "receiver": "buyer-b202.sandbox",
-      "method": "create_account",
-      "gas_burnt": "8349895375000",
-      "events": []
-    },
-    {
-      "phase": "provision agents",
-      "hash": "EKfpRySLg84uxA78ijfeeSGD1rNHaPMCR48Z4TKhuJAj",
-      "signer": "buyer-b202.sandbox",
-      "receiver": "buyer-b202.sandbox",
-      "method": "add_key",
-      "gas_burnt": "420635113902",
-      "events": []
-    },
-    {
-      "phase": "provision agents",
-      "hash": "HYLJoWDa6epnDxUTVebEAuG1wAkVNpbtJt97iqNoHadK",
-      "signer": "sandbox",
-      "receiver": "coop.sandbox",
-      "method": "register_agent",
-      "gas_burnt": "2193163667667",
-      "events": [
-        "agent_registered"
-      ]
-    },
-    {
-      "phase": "provision agents",
-      "hash": "4ouoSQ1V3yKfBMxhVTEUUxcnbEkRCBhBKHWFzt1u7Tnn",
-      "signer": "sandbox",
-      "receiver": "buyer-e3.sandbox",
-      "method": "create_account",
-      "gas_burnt": "8349895375000",
-      "events": []
-    },
-    {
-      "phase": "provision agents",
-      "hash": "FHSMuJqckCLDezyPkHhvsGuL6yD9qorYyKcZLfovEBTk",
-      "signer": "buyer-e3.sandbox",
-      "receiver": "buyer-e3.sandbox",
-      "method": "add_key",
-      "gas_burnt": "420635113902",
-      "events": []
-    },
-    {
-      "phase": "provision agents",
-      "hash": "np2dVnd3csz5AiZ4yfHAQx1iqMYi22etarP2JJaPYqi",
-      "signer": "sandbox",
-      "receiver": "coop.sandbox",
-      "method": "register_agent",
-      "gas_burnt": "2192116524030",
-      "events": [
-        "agent_registered"
-      ]
-    },
-    {
-      "phase": "provision agents",
-      "hash": "E1UfMuBAFFj3CEhZMsvbEuTD5MmSkkLLF5vBDwmDKrw2",
-      "signer": "sandbox",
-      "receiver": "buyer-e4.sandbox",
-      "method": "create_account",
-      "gas_burnt": "8349895375000",
-      "events": []
-    },
-    {
-      "phase": "provision agents",
-      "hash": "2FGWsCh15jW89T9UmcEfy2yhAek7tMbYvE26Ncy7Rsy9",
-      "signer": "buyer-e4.sandbox",
-      "receiver": "buyer-e4.sandbox",
-      "method": "add_key",
-      "gas_burnt": "420635113902",
-      "events": []
-    },
-    {
-      "phase": "provision agents",
-      "hash": "ArqhgPVE5sEZbY8HEUExrLs8wow2TjxMrZFTPbkinZEH",
-      "signer": "sandbox",
-      "receiver": "coop.sandbox",
-      "method": "register_agent",
-      "gas_burnt": "2192116524030",
-      "events": [
-        "agent_registered"
-      ]
-    },
-    {
-      "phase": "provision agents",
-      "hash": "6MnDNPLh4s3RBVZS1YDaNNTz6AP1mcDHPPF9jAsLys8F",
-      "signer": "sandbox",
-      "receiver": "buyer-e5.sandbox",
-      "method": "create_account",
-      "gas_burnt": "8349895375000",
-      "events": []
-    },
-    {
-      "phase": "provision agents",
-      "hash": "5aGDgvrT9xxSKCpjHtdLkp6DpoMQSSLrKJxdP3U387Yk",
-      "signer": "buyer-e5.sandbox",
-      "receiver": "buyer-e5.sandbox",
-      "method": "add_key",
-      "gas_burnt": "420635113902",
-      "events": []
-    },
-    {
-      "phase": "provision agents",
-      "hash": "3hdTntrbU1QJFVhqChAXvRaWuZGiYYHjsMy7rWy9oEgM",
-      "signer": "sandbox",
-      "receiver": "coop.sandbox",
-      "method": "register_agent",
-      "gas_burnt": "2192116524030",
-      "events": [
-        "agent_registered"
-      ]
-    },
-    {
-      "phase": "provision agents",
-      "hash": "9Dajkp6sZUrdYx9DTfQAyngJx3AXiFsxRRpQyf7vTu3z",
-      "signer": "sandbox",
-      "receiver": "buyer-e1.sandbox",
-      "method": "create_account",
-      "gas_burnt": "8349895375000",
-      "events": []
-    },
-    {
-      "phase": "provision agents",
-      "hash": "EE8kzYyLE7q9LyCCrH3gahjgH8dkg1CRnRfTeRUfhMC1",
-      "signer": "buyer-e1.sandbox",
-      "receiver": "buyer-e1.sandbox",
-      "method": "add_key",
-      "gas_burnt": "420635113902",
-      "events": []
-    },
-    {
-      "phase": "provision agents",
-      "hash": "6o2JwtLBXJrtnxoBrqsmNLxtaG6zdnmZAmssMDCTR6pv",
-      "signer": "sandbox",
-      "receiver": "coop.sandbox",
-      "method": "register_agent",
-      "gas_burnt": "2192116524030",
-      "events": [
-        "agent_registered"
-      ]
-    },
-    {
-      "phase": "provision agents",
-      "hash": "DtWzUTZZJKC3vzD7GJ6bw4kcz2WHvxKh8zFmzL9rQosC",
-      "signer": "sandbox",
-      "receiver": "buyer-e2.sandbox",
-      "method": "create_account",
-      "gas_burnt": "8349895375000",
-      "events": []
-    },
-    {
-      "phase": "provision agents",
-      "hash": "5HB8G5UVkouH7cez43vbUZNYRY3XMcZoERvAKb989NHY",
-      "signer": "buyer-e2.sandbox",
-      "receiver": "buyer-e2.sandbox",
-      "method": "add_key",
-      "gas_burnt": "420635113902",
-      "events": []
-    },
-    {
-      "phase": "provision agents",
-      "hash": "6JgEQ83pWRAS57Q55qcLi4VnTM3LHHqKAKUdzTTc8AtJ",
-      "signer": "sandbox",
-      "receiver": "coop.sandbox",
-      "method": "register_agent",
-      "gas_burnt": "2192116524030",
-      "events": [
-        "agent_registered"
-      ]
-    },
-    {
-      "phase": "provision agents",
-      "hash": "7S1FwWS5NiNSxxsaudqfud8rSS9TkPAuo1hDQiv9dQkS",
+      "hash": "N5N1JwkXK9gQe6pWs1bGDwLVSg6ALpUsLDuWhg7XsTk",
       "signer": "sandbox",
       "receiver": "buyer-b203.sandbox",
       "method": "create_account",
@@ -1111,7 +758,7 @@
     },
     {
       "phase": "provision agents",
-      "hash": "3sztdmc6ixyeQiqMwb71kkQRu6EnLWNZDHPbPMkDWArN",
+      "hash": "FGpm9s5gxhmPBEzmeXGrvYoV8MYwJkABJUSgHMNrp7eo",
       "signer": "buyer-b203.sandbox",
       "receiver": "buyer-b203.sandbox",
       "method": "add_key",
@@ -1120,47 +767,221 @@
     },
     {
       "phase": "provision agents",
-      "hash": "7EJ6onAVz7UCT4DnnXgFe2eE5fgTXFfF99mBEMj1ohDh",
+      "hash": "4sunrf6ZUEvsdeFcAecUx7sjBDffHBRVkhYPGjrVVqcE",
       "signer": "sandbox",
       "receiver": "coop.sandbox",
       "method": "register_agent",
-      "gas_burnt": "2204563667667",
+      "gas_burnt": "2204472638904",
       "events": [
         "agent_registered"
       ]
     },
     {
       "phase": "provision agents",
-      "hash": "EErARrZfhXbGozKNt156jpAeE16R8tSucN2aKieBEfNB",
+      "hash": "5uBrdWzfJEM5Uv1DMVKNYV5A3qKmuMs8pTQJFCQtwz7z",
       "signer": "sandbox",
-      "receiver": "buyer-b204.sandbox",
+      "receiver": "buyer-b501.sandbox",
       "method": "create_account",
       "gas_burnt": "8349895375000",
       "events": []
     },
     {
       "phase": "provision agents",
-      "hash": "DKTQNRmrm8yuqkN38fa1348rokHoWbQ8SX97dnQmme6Q",
-      "signer": "buyer-b204.sandbox",
-      "receiver": "buyer-b204.sandbox",
+      "hash": "7YbVVDCWkXc5tCy2kM4cETXv7KaYVuccQgzDWz2d2HN1",
+      "signer": "buyer-b501.sandbox",
+      "receiver": "buyer-b501.sandbox",
       "method": "add_key",
       "gas_burnt": "420635113902",
       "events": []
     },
     {
       "phase": "provision agents",
-      "hash": "2zXgMjpb3dDQ7W5unPteeEThy8kubVc5HNKGRo43XBQN",
+      "hash": "3UKieGMHhSGN6MoiJfdnvSogssnku28nF3KaZJ5vRjtV",
       "signer": "sandbox",
       "receiver": "coop.sandbox",
       "method": "register_agent",
-      "gas_burnt": "2202283667667",
+      "gas_burnt": "2204472638904",
       "events": [
         "agent_registered"
       ]
     },
     {
       "phase": "provision agents",
-      "hash": "2mscTAgzmyXxruf46VzDVce182QX9XRsuC2X31z3kVJv",
+      "hash": "HfaLNMorQvXFSJJ8cn54TjnhywqfQLYUfJW4mq36Jdwz",
+      "signer": "sandbox",
+      "receiver": "buyer-e3.sandbox",
+      "method": "create_account",
+      "gas_burnt": "8349895375000",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "4vksruNioxNTNHS3Mzi1kbmtXPFbuXcR3h5j3vBMndpR",
+      "signer": "buyer-e3.sandbox",
+      "receiver": "buyer-e3.sandbox",
+      "method": "add_key",
+      "gas_burnt": "420635113902",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "98JsEiwCGdJ2GzY9zkbx99gCm1bAC5g2k7MH6v2QQVkc",
+      "signer": "sandbox",
+      "receiver": "coop.sandbox",
+      "method": "register_agent",
+      "gas_burnt": "2203431254559",
+      "events": [
+        "agent_registered"
+      ]
+    },
+    {
+      "phase": "provision agents",
+      "hash": "CSyYDND3Ums3PKoNFsGYY6SgioN1gWB6DJyeTNQYSSRP",
+      "signer": "sandbox",
+      "receiver": "buyer-e1.sandbox",
+      "method": "create_account",
+      "gas_burnt": "8349895375000",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "8Q2imqHbERri18uKB2VXmQskvn4v9JNSrQ3GApMP4wB9",
+      "signer": "buyer-e1.sandbox",
+      "receiver": "buyer-e1.sandbox",
+      "method": "add_key",
+      "gas_burnt": "420635113902",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "AQZrzHyAPy7oBB7N9WpPxDrsRJdHRWrNjRdMyYGLAMPu",
+      "signer": "sandbox",
+      "receiver": "coop.sandbox",
+      "method": "register_agent",
+      "gas_burnt": "2203431254559",
+      "events": [
+        "agent_registered"
+      ]
+    },
+    {
+      "phase": "provision agents",
+      "hash": "Co1KDkDZjkM1Mepuv3M5URXEkVo3DJdgt4bw2mXh2Uxr",
+      "signer": "sandbox",
+      "receiver": "buyer-e2.sandbox",
+      "method": "create_account",
+      "gas_burnt": "8349895375000",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "7uE2j4WFUvPc784Dw4QAqhkpJsyt6Gdsx9TGasLgTGDS",
+      "signer": "buyer-e2.sandbox",
+      "receiver": "buyer-e2.sandbox",
+      "method": "add_key",
+      "gas_burnt": "420635113902",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "2gSoEnTpBHgcpG2q7h2Zp7PuSv11YkZEaNZJVhy5PU6D",
+      "signer": "sandbox",
+      "receiver": "coop.sandbox",
+      "method": "register_agent",
+      "gas_burnt": "2203431254559",
+      "events": [
+        "agent_registered"
+      ]
+    },
+    {
+      "phase": "provision agents",
+      "hash": "AyBfpDy9r9XPyi7MA51ZcNpGZtD8f7AbWB3DHdZp7wPw",
+      "signer": "sandbox",
+      "receiver": "buyer-b202.sandbox",
+      "method": "create_account",
+      "gas_burnt": "8349895375000",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "94aviDjF6m734crAcYegsRie9a2bnbg6gbNvP5tb4Cr7",
+      "signer": "buyer-b202.sandbox",
+      "receiver": "buyer-b202.sandbox",
+      "method": "add_key",
+      "gas_burnt": "420635113902",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "6BPbKofqUry5URcfNRh6MGH7mvhniazrrgLwdzdX5sfV",
+      "signer": "sandbox",
+      "receiver": "coop.sandbox",
+      "method": "register_agent",
+      "gas_burnt": "2204472638904",
+      "events": [
+        "agent_registered"
+      ]
+    },
+    {
+      "phase": "provision agents",
+      "hash": "BsjKrEWQzPm7Zmh6s2wMpM8afRxq9aCMuyX4u9xRFFr1",
+      "signer": "sandbox",
+      "receiver": "buyer-b201.sandbox",
+      "method": "create_account",
+      "gas_burnt": "8349895375000",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "DzUuSbz8QLJLfZcwuXuThUSweTiUQdbAyKgofjktxoBZ",
+      "signer": "buyer-b201.sandbox",
+      "receiver": "buyer-b201.sandbox",
+      "method": "add_key",
+      "gas_burnt": "420635113902",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "3DPjGmfoPWvuEqsFUxT8wjmkoji1b6t4vxSZnDYiZ5Rk",
+      "signer": "sandbox",
+      "receiver": "coop.sandbox",
+      "method": "register_agent",
+      "gas_burnt": "2204472638904",
+      "events": [
+        "agent_registered"
+      ]
+    },
+    {
+      "phase": "provision agents",
+      "hash": "Fj7F144DQXayqvxbkieznjniJFmWR8DG7YQ5z9ebbYiR",
+      "signer": "sandbox",
+      "receiver": "buyer-e4.sandbox",
+      "method": "create_account",
+      "gas_burnt": "8349895375000",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "FLd5WMFAHSrxhpoWGuYJqtYvdsUeLBnwKbpqQhybqAwd",
+      "signer": "buyer-e4.sandbox",
+      "receiver": "buyer-e4.sandbox",
+      "method": "add_key",
+      "gas_burnt": "420635113902",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "J4p1LWtv6nXZi8HtEuztkXDJxsPnjRjMirGEwt9zKG7D",
+      "signer": "sandbox",
+      "receiver": "coop.sandbox",
+      "method": "register_agent",
+      "gas_burnt": "2217111254559",
+      "events": [
+        "agent_registered"
+      ]
+    },
+    {
+      "phase": "provision agents",
+      "hash": "7x6yBuEoZ7s4RrbmVq8EnPfqrShFkRA7cVvqXgXmaaF2",
       "signer": "sandbox",
       "receiver": "buyer-b502.sandbox",
       "method": "create_account",
@@ -1169,7 +990,7 @@
     },
     {
       "phase": "provision agents",
-      "hash": "5bguMuz9DTjEaeK6WrEALgQ87fnRxv6eUPgwKrjW5W8V",
+      "hash": "8MEqXFj5YmCexFRUeyn66fzh7LbytYLEwnHaPQzzCkm3",
       "signer": "buyer-b502.sandbox",
       "receiver": "buyer-b502.sandbox",
       "method": "add_key",
@@ -1178,62 +999,62 @@
     },
     {
       "phase": "provision agents",
-      "hash": "4A7ucKKeAfeMzpZ9iWKGjvNEjhm6N319wo5cmN4kgmRh",
+      "hash": "9XYDfDgyNGWUEZw3PMJYb6fUvBp6Nq8ffztzczCrHvEk",
       "signer": "sandbox",
       "receiver": "coop.sandbox",
       "method": "register_agent",
-      "gas_burnt": "2225083667667",
+      "gas_burnt": "2236392638904",
       "events": [
         "agent_registered"
       ]
     },
     {
       "phase": "provision agents",
-      "hash": "Aws4MHiJeUj8RhZndf8MXsxC9JshrrVndcgtacWpR9RE",
+      "hash": "DmtHtTaPiydqv2xnsfYzK4bpADf3oGbcQjLCburwDxp1",
       "signer": "sandbox",
-      "receiver": "buyer-b205.sandbox",
+      "receiver": "buyer-b204.sandbox",
       "method": "create_account",
       "gas_burnt": "8349895375000",
       "events": []
     },
     {
       "phase": "provision agents",
-      "hash": "4tFw8wP3kWWabea32zeZJnF2VDNByCwSh9V41stvQEdU",
-      "signer": "buyer-b205.sandbox",
-      "receiver": "buyer-b205.sandbox",
+      "hash": "5XyzKg979G6teN1SvwJehiomHDNr6xAPHXef1GCdhaBo",
+      "signer": "buyer-b204.sandbox",
+      "receiver": "buyer-b204.sandbox",
       "method": "add_key",
       "gas_burnt": "420635113902",
       "events": []
     },
     {
       "phase": "provision agents",
-      "hash": "FnLte7yQbqa3G9jP3g7cfDYpmHoFittxZpjSyg1TB8ZN",
+      "hash": "69ymjVosCEx1ejTtxz26MLSF844PnXvj1FkxKWQ6nMz8",
       "signer": "sandbox",
       "receiver": "coop.sandbox",
       "method": "register_agent",
-      "gas_burnt": "2202283667667",
+      "gas_burnt": "2213592638904",
       "events": [
         "agent_registered"
       ]
     },
     {
       "phase": "offer",
-      "hash": "4KjzPEHFCp6ATASuFHFtMYNwVyEcp3ygvxXXTmjEycNz",
+      "hash": "HApPthgtcLt1U3tAs29wud9kE6NyrXQqF3MrEMG7gKDU",
       "signer": "sandbox",
       "receiver": "coop.sandbox",
       "method": "create_offer",
-      "gas_burnt": "2950730797225",
+      "gas_burnt": "2950832101660",
       "events": [
         "offer_created"
       ]
     },
     {
       "phase": "offer",
-      "hash": "BBg1sQz1En9jGPrzCQ33pDkxF2WZBsCNjhWyNeQTRATv",
+      "hash": "7iQfrvovySYypDP9735wonm98hWrVNQvZDVAkot8iLbf",
       "signer": "sandbox",
       "receiver": "credits.sandbox",
       "method": "ft_transfer_call",
-      "gas_burnt": "6426986824853",
+      "gas_burnt": "6427088129288",
       "events": [
         "ft_transfer",
         "inventory_deposited",
@@ -1242,146 +1063,123 @@
     },
     {
       "phase": "agents act (function-call key)",
-      "hash": "3DcL96bZEn2pnCVRgNzMe6n7cSc1YMhk9Fq6EdYk2oSt",
+      "hash": "AwKQjLSwo5LktiWPctDsf1ucjnxYpGp1MfMXv9KGqrqp",
       "signer": "buyer-e1.sandbox",
       "receiver": "coop.sandbox",
       "method": "join_pool",
-      "gas_burnt": "2900244324422",
+      "gas_burnt": "2900345628857",
       "events": [
         "pool_joined"
       ]
     },
     {
       "phase": "agents act (function-call key)",
-      "hash": "266Zmg9cqqBXXJzxt9gYVdtMCZomZgTaV7ao2Gkoyfu5",
+      "hash": "6h1G26Nyp3v19Ej6wxGgEpP1X5MoqLvoXt4EQf32LvKj",
       "signer": "buyer-e2.sandbox",
       "receiver": "coop.sandbox",
       "method": "join_pool",
-      "gas_burnt": "2904804324422",
+      "gas_burnt": "2904905628857",
       "events": [
         "pool_joined"
       ]
     },
     {
       "phase": "agents act (function-call key)",
-      "hash": "CbL13P8ZmocuZr8waKod9njDqjL1SgNbLwMdJmrCWqnv",
-      "signer": "buyer-e3.sandbox",
-      "receiver": "coop.sandbox",
-      "method": "join_pool",
-      "gas_burnt": "2909364324422",
-      "events": [
-        "pool_joined"
-      ]
-    },
-    {
-      "phase": "agents act (function-call key)",
-      "hash": "2XHWWJv9UGsDmYSJbarRYFD6SzV8gt9UHU7gxr7LFJfq",
+      "hash": "5NXAodVJne3BfZNuqaWLoXjRdFJCFe3xGksMMXwU31eZ",
       "signer": "buyer-b501.sandbox",
       "receiver": "coop.sandbox",
       "method": "join_pool",
-      "gas_burnt": "2916226333841",
+      "gas_burnt": "2916327638276",
       "events": [
         "pool_joined"
       ]
     },
     {
       "phase": "agents act (function-call key)",
-      "hash": "A7h2ZzQpmSQ3QdUVb5wBpuhCmhKUn92JzYj9kp6JqvtH",
+      "hash": "AXJs3YkNmS67XUmHobAt5GYB8Lb2SztLAn51E5AvGaKu",
+      "signer": "buyer-e3.sandbox",
+      "receiver": "coop.sandbox",
+      "method": "join_pool",
+      "gas_burnt": "2921181067493",
+      "events": [
+        "pool_joined"
+      ]
+    },
+    {
+      "phase": "agents act (function-call key)",
+      "hash": "9tYQgSeJMpvQoUW3kBnosgiuGo2E9SR8GhoKjJ4XScQX",
       "signer": "buyer-e4.sandbox",
       "receiver": "coop.sandbox",
       "method": "join_pool",
-      "gas_burnt": "2923359763058",
+      "gas_burnt": "2923461067493",
       "events": [
         "pool_joined"
       ]
     },
     {
       "phase": "agents act (function-call key)",
-      "hash": "Cxzg8ceTMrEExFviowsR3MtkNRAgjaYJdsh8oR3tbXQ8",
-      "signer": "buyer-e5.sandbox",
-      "receiver": "coop.sandbox",
-      "method": "join_pool",
-      "gas_burnt": "2921079763058",
-      "events": [
-        "pool_joined"
-      ]
-    },
-    {
-      "phase": "agents act (function-call key)",
-      "hash": "5cvezEBBVPf1L25DXTb3Xo6hW5ZBqBaXTDd585s7arr2",
+      "hash": "2fxefQ8LzoKWuDGEjWqjnNsHEB7xdrdNy4xVgp1gUy89",
       "signer": "buyer-b201.sandbox",
       "receiver": "coop.sandbox",
       "method": "join_pool",
-      "gas_burnt": "2924002273625",
+      "gas_burnt": "2924103578060",
       "events": [
         "pool_joined"
       ]
     },
     {
       "phase": "agents act (function-call key)",
-      "hash": "3aCo5ZuoRuBBMhMdJFX6dXwhy7XsJawn4fkZZ6JtNfuv",
+      "hash": "FZXKRMSeRp5zVHHa8RtUYLNLZUyQQpGzRmshawzXremQ",
       "signer": "buyer-b202.sandbox",
       "receiver": "coop.sandbox",
       "method": "join_pool",
-      "gas_burnt": "2932163890325",
+      "gas_burnt": "2932265194760",
       "events": [
         "pool_joined"
       ]
     },
     {
       "phase": "agents act (function-call key)",
-      "hash": "mggqXYiNx1goAqc1e3DijAAzGoYmnu4UF2tDFg9A1Jd",
+      "hash": "yHAip3cvDYBoSXRjKrdE98i8kwuKNdtsNWPh9uyv47P",
       "signer": "buyer-b203.sandbox",
       "receiver": "coop.sandbox",
       "method": "join_pool",
-      "gas_burnt": "2934443890325",
+      "gas_burnt": "2934545194760",
       "events": [
         "pool_joined"
       ]
     },
     {
       "phase": "agents act (function-call key)",
-      "hash": "5or78xafMZkvnkWME3puWwofzeqqNoZwTuy4TgWwW7KB",
+      "hash": "HsATZyNYJopVBS2Ay4MbWdGzdC4iBPcZiNvfJVcEmfP1",
       "signer": "buyer-b204.sandbox",
       "receiver": "coop.sandbox",
       "method": "join_pool",
-      "gas_burnt": "2932163890325",
+      "gas_burnt": "2932265194760",
       "events": [
         "pool_joined"
       ]
     },
     {
       "phase": "agents act (function-call key)",
-      "hash": "FRqXBBsC6VrtDcFpNGemyKRug8D1NoGab14xgSDbdXmR",
-      "signer": "buyer-b205.sandbox",
-      "receiver": "coop.sandbox",
-      "method": "join_pool",
-      "gas_burnt": "2932163890325",
-      "events": [
-        "pool_joined"
-      ]
-    },
-    {
-      "phase": "agents act (function-call key)",
-      "hash": "3zrnDNvNRyJvhv68zuLCifhWLuLFE6BtJ5uh7EXFSoZA",
+      "hash": "2MFSbfX7dAu4RTHFkahBSrq9BzG6tqtqMpoz86yrTvPp",
       "signer": "buyer-b502.sandbox",
       "receiver": "coop.sandbox",
       "method": "join_pool",
-      "gas_burnt": "2932199268833",
+      "gas_burnt": "2932300573268",
       "events": [
         "pool_joined"
       ]
     },
     {
       "phase": "settle",
-      "hash": "9JCHjxWs12SfngRTs41gC2JFx5igHxdtmELMH1hivV9K",
+      "hash": "76mVm8kNqcMf7oz7fvkeRaKi9PnHDYy7TGBe4sJAEBQ9",
       "signer": "sandbox",
       "receiver": "coop.sandbox",
       "method": "settle",
-      "gas_burnt": "63696555063667",
+      "gas_burnt": "62521100400027",
       "events": [
         "pool_resolved",
-        "member_filled",
         "member_filled",
         "member_filled",
         "member_excluded",
@@ -1390,162 +1188,127 @@
         "member_filled",
         "member_filled",
         "member_filled",
-        "member_filled",
-        "ft_transfer",
-        "ft_transfer",
-        "ft_transfer",
-        "ft_transfer",
-        "ft_transfer",
-        "ft_transfer",
-        "ft_transfer",
-        "ft_transfer",
-        "ft_transfer"
-      ]
-    },
-    {
-      "phase": "settle",
-      "hash": "DgoVRLs9E5Lb2jPi8qmQuRjdzzV947r6hkZVBXjJfStK",
-      "signer": "sandbox",
-      "receiver": "coop.sandbox",
-      "method": "settle",
-      "gas_burnt": "14734750762878",
-      "events": [
         "member_filled",
         "member_excluded",
         "seller_paid",
         "pool_settled",
         "ft_transfer",
+        "ft_transfer",
+        "ft_transfer",
+        "ft_transfer",
+        "ft_transfer",
+        "ft_transfer",
+        "ft_transfer",
+        "ft_transfer",
         "ft_transfer"
       ]
     },
     {
       "phase": "owner withdraws leftovers",
-      "hash": "3XuVJoKGGThvS1bYZcu2wCtRGE85jwGj9wsw2C2zyMKw",
+      "hash": "C3hPmHbpnNEmhAaxdbCgjZ3Y9xWdhKRFVp9qa2Gy7uYK",
       "signer": "sandbox",
       "receiver": "coop.sandbox",
       "method": "withdraw",
-      "gas_burnt": "2694272820827",
+      "gas_burnt": "2694732071225",
       "events": [
         "agent_withdrew"
       ]
     },
     {
       "phase": "owner withdraws leftovers",
-      "hash": "CWqePSAtxaKDHauEuNRFjLdrJyMzBbr3STZSQGv7g2Av",
+      "hash": "3jXexpAEoXvig1JeHuFvqX4VVW3RqxbLAxGLnp4cvmFH",
       "signer": "sandbox",
       "receiver": "coop.sandbox",
       "method": "withdraw",
-      "gas_burnt": "2694630766790",
+      "gas_burnt": "2697314083835",
       "events": [
         "agent_withdrew"
       ]
     },
     {
       "phase": "owner withdraws leftovers",
-      "hash": "Ko7gHhZB9ZN94pHhPEABcvSEM1HGmgAXV5CMu4SK1KG",
+      "hash": "F7Am9b6Pw8nHqSQoi7Ae1n4XhGc2dke3ZZMDiAJQ7kim",
       "signer": "sandbox",
       "receiver": "coop.sandbox",
       "method": "withdraw",
-      "gas_burnt": "2697212779400",
+      "gas_burnt": "2695034083835",
       "events": [
         "agent_withdrew"
       ]
     },
     {
       "phase": "owner withdraws leftovers",
-      "hash": "5CwV3cKcMaxGHrq5kwWREqVqQfY9AZCHSjuA7j7ujspc",
+      "hash": "5SzzhumyjqNYgw215YvL5ibofYxbm92RVt1WxGK8FAMB",
       "signer": "sandbox",
       "receiver": "coop.sandbox",
       "method": "withdraw",
-      "gas_burnt": "2694630766790",
+      "gas_burnt": "2694374125262",
       "events": [
         "agent_withdrew"
       ]
     },
     {
       "phase": "owner withdraws leftovers",
-      "hash": "5dcDNatWtM9ZRi6rBVwrmS6tx65hb3QTRSJbDensv7wW",
+      "hash": "Ahg93UzN4uFUJXgABigLX1wpdtjesTNHCENRmVWv3Y3o",
       "signer": "sandbox",
       "receiver": "coop.sandbox",
       "method": "withdraw",
-      "gas_burnt": "2697923734790",
+      "gas_burnt": "2697314083835",
       "events": [
         "agent_withdrew"
       ]
     },
     {
       "phase": "owner withdraws leftovers",
-      "hash": "A6FJK9GXmg2cg14BkE8hCYkC53Zton349jUYfDfXUUfy",
+      "hash": "36YeEbHZvssjKVP95XT1Ld7WmLVJZCA8KQ27JqvvtPhu",
       "signer": "sandbox",
       "receiver": "coop.sandbox",
       "method": "withdraw",
-      "gas_burnt": "2694932779400",
+      "gas_burnt": "2697012071225",
       "events": [
         "agent_withdrew"
       ]
     },
     {
       "phase": "owner withdraws leftovers",
-      "hash": "CgwAA7CjaijxxUXAqc9qY5uNMY5FsQmK6nky9jhJ8kh3",
+      "hash": "3fzto6GzCj5sDfRamVrtCyVQDtAgUgiqDJjCJE7VbYKg",
       "signer": "sandbox",
       "receiver": "coop.sandbox",
       "method": "withdraw",
-      "gas_burnt": "2696910766790",
+      "gas_burnt": "2715252071225",
       "events": [
         "agent_withdrew"
       ]
     },
     {
       "phase": "owner withdraws leftovers",
-      "hash": "8M7hm2DnFApV26Z26wvtNWPWEmsBYM85WzvZMLHQqc3e",
+      "hash": "ERLkJy1HD45VZt4KG6CxE5GxcJjjGuPDgyVSs68rabo1",
       "signer": "sandbox",
       "receiver": "coop.sandbox",
       "method": "withdraw",
-      "gas_burnt": "2715150766790",
+      "gas_burnt": "2698025039225",
       "events": [
         "agent_withdrew"
       ]
     },
     {
       "phase": "owner withdraws leftovers",
-      "hash": "B8ZApazzv5PzeNxnBGKEk3Mxtkov9uBX7yQ8sVcD9f7u",
+      "hash": "6miuYR7kx1hYtUy2LuP6YWV4cHpELeUfmT4vhRgnVf1T",
       "signer": "sandbox",
       "receiver": "coop.sandbox",
       "method": "withdraw",
-      "gas_burnt": "2694932779400",
+      "gas_burnt": "2698025039225",
       "events": [
         "agent_withdrew"
       ]
     },
     {
       "phase": "owner withdraws leftovers",
-      "hash": "8D16dTLGgRhDFsYqy5zAfWHB4H8ruk4RqduaTFh9izNS",
+      "hash": "7xfmhhAQXGrQ89asyo9SYpKztVWLuUDxsnLLyWyWzCqv",
       "signer": "sandbox",
       "receiver": "coop.sandbox",
       "method": "withdraw",
-      "gas_burnt": "2717732779400",
-      "events": [
-        "agent_withdrew"
-      ]
-    },
-    {
-      "phase": "owner withdraws leftovers",
-      "hash": "GsbUW7MCmRj9RskxXsbF8pWFceHXwbhVq8rbEsD7UF6e",
-      "signer": "sandbox",
-      "receiver": "coop.sandbox",
-      "method": "withdraw",
-      "gas_burnt": "2697923734790",
-      "events": [
-        "agent_withdrew"
-      ]
-    },
-    {
-      "phase": "owner withdraws leftovers",
-      "hash": "EFt7iGeWrLDBCy3JjmiPir1enDzTHVXewBaVjvcj4ZkX",
-      "signer": "sandbox",
-      "receiver": "coop.sandbox",
-      "method": "withdraw",
-      "gas_burnt": "2694932779400",
+      "gas_burnt": "2715554083835",
       "events": [
         "agent_withdrew"
       ]
