@@ -1,0 +1,27 @@
+{
+  "name": "@coop/checks",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Capability checks 01-06 (PRD section 11)",
+  "scripts": {
+    "typecheck": "tsc -p .",
+    "check": "tsc -p .",
+    "01": "tsx 01-faucet.ts",
+    "02": "tsx 02-fckey.ts",
+    "03": "tsx 03-sandbox.ts",
+    "04": "tsx 04-settle-gas.ts",
+    "05": "tsx 05-rpc.ts",
+    "06": "tsx 06-llm.ts"
+  },
+  "dependencies": {
+    "@coop/agents": "workspace:*",
+    "near-api-js": "7.4.0",
+    "near-sandbox": "0.3.4"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "tsx": "4.23.15",
+    "typescript": "6.0.3"
+  }
+}

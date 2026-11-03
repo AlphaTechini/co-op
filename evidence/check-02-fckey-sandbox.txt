@@ -1,0 +1,14 @@
+02 function-call key joins with zero deposit (sandbox)
+run at 2026-11-03T22:01:31.741Z
+
+PASS  offer opened for the check  | offer 1, tx 8EqcshrWtRuUFSCPLW4aThgj3LJz4bEq2H3F2yrQZm8r
+PASS  sub-account fckey.sandbox created, function-call key added  | create tx 3xffBx69jf3dWJTL1HrT2GWZ9qPD4cWo6ACHH3ALY7N8, key permission {"FunctionCall":{"allowance":"250000000000000000000000","method_names":["join_pool","leave_pool"],"receiver_id":"coop.sandbox"}}
+PASS  register_agent accepted the direct sub-account  | owner sandbox, budget 2997840000000000000000000
+PASS  join_pool with the function-call key and 0 deposit succeeds  | MaiW6G1evHT2yoP5EThc2HUwFcFr6B9ozwv8jpsSWbe, gas burnt 2.87 Tgas, events pool_joined
+PASS  attaching 1 yocto with the key is rejected  | leave_pool on coop.sandbox failed: AccessKeyDepositWithFunctionCallActionError: Deposit is not allowed with function call
+PASS  withdraw with the key is rejected (method not allowed)  | withdraw on coop.sandbox failed: AccessKeyMethodNameMismatchActionError: Access key does not allow method withdraw
+PASS  a plain NEAR transfer with the key is rejected  | Access key requires full access
+PASS  calling another contract with the key is rejected  | ft_transfer on credits.sandbox failed: AccessKeyReceiverMismatchActionError: Access key receiver coop.sandbox does not match transaction receiver credits.sandbox
+PASS  leave_pool with the key returns the lock to the budget  | 768ZUmw8m9DqpARB7Bytfud2ERPJEvTTqCAAgJkczioD, budget_locked 0
+PASS  pool settles after the deadline  | Refunded, 7CNDEruQKJw8yXz6YGBDF68AohiEpPBvTy7TSAHTqPLm
+PASS  02 function-call key joins with zero deposit (sandbox)
