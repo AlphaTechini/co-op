@@ -6,7 +6,7 @@ This file is the contract between the components (Rust contract, TypeScript agen
 
 - NEAR amounts are yoctoNEAR, JSON-encoded as decimal strings (`U128`).
 - Timestamps are nanoseconds since epoch, JSON-encoded as decimal strings (`U64`).
-- Ids (`offer_id`, `pool_id`) are `u64` JSON numbers. `pool_id == offer_id` (every offer has exactly one pool, created with it).
+- Ids (`offer_id`, `pool_id`) are `u64` JSON numbers. `pool_id == offer_id` (every offer has exactly one pool, created with it). Ids start at 1.
 - Unit counts are `u32` JSON numbers.
 - Item token amounts are `U128` strings in the token's base units. `unit_amount` = token base units per unit.
 - Enum statuses serialize as their variant name string, e.g. `"Open"`.
@@ -76,7 +76,7 @@ AgentView { agent_id, owner, budget_available: U128, budget_locked: U128, limits
             active_pools: Vec<u64>, registered_at_ns: U64 }
 ```
 
-`get_claimable(agent_id) -> Vec<{ token: AccountId, amount: U128 }>`
+`get_claimable(account_id) -> Vec<{ token: AccountId, amount: U128 }>`
 
 `get_stats() -> { offers: u64, pools_settled: u64, pools_refunded: u64, agents: u64, volume: U128, units_delivered: u64 }`
 
@@ -96,7 +96,7 @@ AgentView { agent_id, owner, budget_available: U128, budget_locked: U128, limits
 | `settle(pool_id, max_members: Option<u32>) -> SettleProgress` | anyone | — | Only at/after `deadline`. Chunked, idempotent. See 1.5. |
 | `claim(agent_id, token)` | agent or its owner | none | Retries delivery of a claimable balance. |
 
-`SettleProgress { status, processed: u32, remaining: u32 }`
+`SettleProgress { status, processed: u32, remaining: u32 }` (`processed` is the cumulative cursor, not this call's count; `remaining == 0` with status `Settling` means one more call finishes: seller payout + unsold inventory return)
 
 ### 1.4 join_pool rules
 
@@ -170,3 +170,12 @@ TxRef { hash, signer, receiver, method, explorer_url? }
 ```
 
 The web app must work without the server (state comes straight from RPC views); the server adds the activity feed, tx hashes and spawning.
+
+## 4. Implementation notes (contract)
+
+- A pool with no reachable tier has `result = { units: 0, members_in: 0, seller_payout: "0", ... }`; members get `outcome = "Refunded"` and a `member_excluded` event; status goes `Settling` -> `Refunded` on the finishing call.
+- `ft_on_transfer` refuses deposits once settlement has started; a malformed `msg` returns the full amount.
+- Membership storage is charged from the agent's budget at join (returned on leave, spent after settlement) and is not part of `locked`.
+- NEP-145 refunds for already-registered accounts accrue to the contract balance and fund `claim` retries.
+- `claim` / `get_claimable` also cover the seller (failed unsold-inventory return).
+- Gas: a filled member costs roughly 40 Tgas of a `settle` call (18 Tgas attached to the token batch + callback, plus receipt overhead), so one 300 Tgas call settles about 6 members; `settle` sizes chunks from remaining gas, `DEFAULT_CHUNK` is a ceiling.

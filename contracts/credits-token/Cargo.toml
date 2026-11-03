@@ -1,0 +1,16 @@
+[package]
+name = "credits_token"
+version = "1.0.0"
+edition = "2021"
+license = "MIT"
+description = "Demo NEP-141 API credit voucher token for Co-op"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+near-sdk = { workspace = true }
+near-contract-standards = { workspace = true }
+
+[dev-dependencies]
+near-sdk = { workspace = true, features = ["unit-testing"] }
