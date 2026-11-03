@@ -8,6 +8,8 @@ Built for NEAR HACKATHON. Tracks: **AI Swarms** (`swarms`, primary) and **Agent 
 
 Everything in this repository was built and verified against a **local NEAR sandbox** (nearcore 2.14.0, via the `near-sandbox` npm package). NEAR testnet was not reachable from the build environment, so there is no testnet deployment yet. The section below says exactly what is pending and which command produces it.
 
+**In short.** A seller posts an offer with price tiers and deposits the goods in the contract. Buyer agents, each holding only a restricted function-call key, lock a budget in the contract and join the pool, outright or conditionally ("only if the group reaches N units"). After the deadline anyone calls `settle`: the contract finds the largest group whose conditions all hold, charges each member the tier price that group reached, pays the seller, delivers the goods and refunds the difference. If no tier is reached, everyone is refunded. **Invariant: no agent pays more than its own limit, and the seller is paid only if the group reaches a price tier.** Run `make verify` (Node 22+ and pnpm, no Rust, no keys) to see a 10-agent pool settle on a local sandbox and the invariants recomputed from chain views.
+
 ## Live deployment (builder fills this in)
 
 | Item | Value | Status |
@@ -43,7 +45,7 @@ Until those are filled, the way to see Co-op work is local: `make verify` (one c
 
 Sellers of digital goods price in volume tiers: one unit at full price, a discount at 20 units, a deeper one at 50. An agent that needs 1 to 4 units never reaches a tier, so it always pays the top price.
 
-Agents could buy together, but nobody wants to send money to another agent or to a coordinator and hope it buys the right thing. There is no neutral place that holds everyone's money, applies the tier the group actually reached, delivers the goods and refunds the difference. A public review of agent marketplaces on NEAR found the demand side to be the weak one: sellers are plentiful and funded buyers are few ([source](https://dev.to/nuncius-ghost/i-checked-the-platforms-where-ai-agents-supposedly-get-paid-the-names-are-real-the-demand-isnt-5eha)). Pooling small, scattered demand into orders worth bidding on is the missing piece. (This README quotes no figure from that review because the page could not be re-opened to confirm one.)
+Agents could buy together, but nobody wants to send money to another agent or to a coordinator and hope it buys the right thing. There is no neutral place that holds everyone's money, applies the tier the group actually reached, delivers the goods and refunds the difference. Pooling small, scattered demand into orders big enough to reach a seller's volume tier is the missing piece.
 
 ## 4. How it works
 
@@ -128,7 +130,42 @@ on-chain code_hash of credits.sandbox = B3tcfYujz3uvFUJ1W7Pu4FkzGQwv3VGvbvABYxXT
 [+ 47.5s] settle        settle(pool 1): 10 of 10 members processed, status Settled
 [+ 47.5s] pool_settled  Pool 1 settled: 24 units from 8 agents at 0.70 each, seller paid 16.8000 NEAR
 
-__RECEIPT__
+SETTLEMENT RECEIPT  pool 1  "Demo API credits (volume pricing)"
+seller sandbox   item token credits.sandbox
+tiers  1+ at 1.00 | 20+ at 0.70 | 50+ at 0.50
+RESULT SETTLED at tier 2 (20+ units): 24 units from 8 of 10 agents at 0.70 NEAR each
+
+agent           units  joined       limit  outcome    price/unit      paid    refund  tokens  delivery
+------------------------------------------------------------------------------------------------------
+buyer-e1            4  now           1.00  Filled           0.70      2.80      1.20       4  Delivered
+buyer-e2            4  now           1.10  Filled           0.70      2.80      1.20       4  Delivered
+buyer-b501          4  if >= 50      0.55  Excluded            -      0.00    2.0013       0  -
+buyer-e3            3  now           1.00  Filled           0.70      2.10      0.90       3  Delivered
+buyer-e4            4  now           1.10  Filled           0.70      2.80      1.20       4  Delivered
+buyer-b201          2  if >= 20      0.90  Filled           0.70      1.40      0.00       2  Delivered
+buyer-b202          2  if >= 20      0.90  Filled           0.70      1.40      0.00       2  Delivered
+buyer-b203          3  if >= 20      0.90  Filled           0.70      2.10      0.00       3  Delivered
+buyer-b204          2  if >= 20      0.90  Filled           0.70      1.40      0.00       2  Delivered
+buyer-b502          4  if >= 50      0.55  Excluded            -      0.00    2.0013       0  -
+------------------------------------------------------------------------------------------------------
+total paid 16.80 NEAR | total refunded 8.5025 NEAR | seller payout 16.80 NEAR
+the same 24 units at the entry price would have cost 24.00 NEAR: the group saved 7.20 NEAR
+
+INVARIANT CHECK (recomputed from chain views)
+  [PASS] pool is finished: status Settled, 10 members
+  [PASS] every member paid <= units x its own limit: 10 members checked
+  [PASS] paid + refunded + storage == locked, per member: 10 members balance to the yocto
+  [PASS] filled members paid units x tier price, the rest paid nothing: tier price 0.70
+  [PASS] sum of member payments == seller payout: 16.800000 vs 16.800000 NEAR
+  [PASS] seller_paid event matches payout: 16.800000 NEAR in events
+  [PASS] group size matches the resolved result: 24 units from 8 members
+  [PASS] seller paid only if a tier was reached: tier 1
+  [PASS] token balances match units delivered: 24 units delivered
+  [PASS] inventory fully accounted for (seller kept the unsold units): seller 1000000 -> 999976, escrow 0 -> 0
+  [PASS] no budget left locked: budget_locked is 0 for every member
+  [PASS] membership storage cost is small and non-negative: 10 members, 0.00257 to 0.00278 NEAR each
+  [PASS] owner withdrew every leftover budget (full-access key, 1 yocto): 8.7415 NEAR withdrawn from 10 agents
+ALL INVARIANTS HOLD
 ```
 
 How to read it: tiers are 1+ at 1.00, 20+ at 0.70, 50+ at 0.50 NEAR. The group reached 24 units, so tier 2 applies and everyone in the group pays 0.70. The two "if >= 50" agents never had their condition met and were refunded in full. The agent with limit 1.00 paid 0.70 and got 1.20 back on 4 units. Every agent's `paid` is at or below `units x limit`. The final line, "the same 24 units at the entry price would have cost 24.00 NEAR", is the saving from pooling.
@@ -150,11 +187,11 @@ Related commands:
 
 | Do | See |
 |---|---|
-| Open the home page | The open pool with its price tier ladder, the current projected price marker, member count, and countdowns to lock and deadline |
-| Open the pool page and watch for a minute | A live feed of agents joining, each with its one-line reason ("In if the group reaches 50. I only buy at 0.50 or less."). Conditional agents show as waiting; the marker moves as units arrive |
+| Open the home page | The invariant statement and the list of pools (open and finished) |
+| Open the open pool and watch for a minute | The tier ladder with a marker at the current projected price, countdowns to lock and deadline, and a live feed of agents joining, each with its one-line reason ("In if the group reaches 50. I only buy at 0.50 or less."). Conditional agents are listed as waiting; the marker moves as units arrive |
 | Wait for the deadline | The pool turns to Settled; the settlement receipt shows the final tier, units per agent, what each paid against its limit, refunds, the seller payout, and a transaction chip per step (local sandbox, so no explorer link) |
 | Open "Spawn your agent", enter a name, a brief such as `buy 3 credits if the price drops below 0.60`, a budget of 1 or 2, and submit | The page shows the parsed policy (and whether the rules parser or an LLM produced it) and the transactions that created the sub-account, added the function-call key and registered the agent. The agent then joins the next open pool and appears in the feed |
-| Spawn 4 agents from the same address within an hour (default limit is 3 per hour) | The fourth is refused with a "Spawn limit reached" message |
+| Spawn 4 agents from the same address within an hour (default limit is 3 per hour) | The fourth is refused (HTTP 429, the page shows "Hourly limit reached") |
 | Open "How it works" | The mechanism and a diagram |
 
 ### Hosted (pending a testnet deploy and hosting)
