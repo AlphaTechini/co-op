@@ -2,10 +2,10 @@
 import type { FastifyInstance } from "fastify";
 import type { Account } from "near-api-js";
 import { parseBrief, llmConfigFromEnv } from "@coop/agents/brief";
-import { CoopClient, accountFromKey, agentSigner, createProvider } from "@coop/agents/chain";
+import { CoopClient, agentSigner, createProvider } from "@coop/agents/chain";
 import { explorerTxUrl, networkConfig, parseNetwork, requireEnv, type NetworkConfig, type NetworkName } from "@coop/agents/config";
 import { AgentRuntime } from "@coop/agents/runtime";
-import { createSandboxWorld, provisionAgent, worldFromEnv, type World } from "@coop/agents/world";
+import { provisionAgent, worldFromEnv, type World } from "@coop/agents/world";
 import { ActivityHub } from "./activity.js";
 import { buildServer, type ServerInfo } from "./app.js";
 import { SellerLoop, type SellerLoopOptions } from "./seller-loop.js";
@@ -188,4 +188,3 @@ export async function createCoop(o: CreateCoopOptions): Promise<Coop> {
   };
 }
 
-export { createSandboxWorld, accountFromKey };
