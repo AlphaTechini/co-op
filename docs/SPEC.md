@@ -76,7 +76,7 @@ AgentView { agent_id, owner, budget_available: U128, budget_locked: U128, limits
             active_pools: Vec<u64>, registered_at_ns: U64 }
 ```
 
-`get_claimable(account_id) -> Vec<{ token: AccountId, amount: U128 }>`
+`get_claimable(agent_id) -> Vec<{ token: AccountId, amount: U128 }>`
 
 `get_stats() -> { offers: u64, pools_settled: u64, pools_refunded: u64, agents: u64, volume: U128, units_delivered: u64 }`
 
@@ -178,4 +178,4 @@ The web app must work without the server (state comes straight from RPC views); 
 - Membership storage is charged from the agent's budget at join (returned on leave, spent after settlement) and is not part of `locked`.
 - NEP-145 refunds for already-registered accounts accrue to the contract balance and fund `claim` retries.
 - `claim` / `get_claimable` also cover the seller (failed unsold-inventory return).
-- Gas: a filled member costs roughly 40 Tgas of a `settle` call (18 Tgas attached to the token batch + callback, plus receipt overhead), so one 300 Tgas call settles about 6 members; `settle` sizes chunks from remaining gas, `DEFAULT_CHUNK` is a ceiling.
+- Gas (measured by `checks/04-settle-gas.ts`, see `evidence/gas.md`): a filled member burns about 7.2 Tgas; `settle` sizes each chunk from remaining prepaid gas and stops at `DEFAULT_CHUNK` (10) members, so a 300 Tgas call settles 10 members and 50 members take 5 calls. Largest receipt log measured: about 5 KB of the 16 KB cap.
