@@ -5,7 +5,7 @@
  */
 import { EventEmitter } from "node:events";
 import type { Account } from "near-api-js";
-import { CoopTxError, sleep, type CoopClient } from "./chain.js";
+import { CoopTxError, type CoopClient } from "./chain.js";
 import { formatNear, formatPrice } from "./money.js";
 import { decide, type Decision } from "./policy.js";
 import type { SellerAgent } from "./seller.js";
@@ -367,4 +367,3 @@ export class AgentRuntime {
   }
 }
 
-export { sleep };

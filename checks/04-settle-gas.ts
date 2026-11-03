@@ -129,18 +129,20 @@ function summarize(scenario: string) {
 function writeEvidence(): string {
   const scenarios = [...new Set(rows.map((r) => r.scenario))];
   const sums = scenarios.map(summarize);
-  const at300 = sums.filter((s) => s.attached === 300 && s.scenario.includes("filled"));
-  const m300 = Math.max(...at300.map((s) => s.perCall));
+  const at300 = sums.filter((s) => s.attached === 300 && s.scenario.includes("filled") && !s.scenario.includes("max_members"));
+  const gasBound = rows.find((r) => r.scenario.includes("max_members 25") && r.attachedTgas === 300 && r.call === 1);
+  const defaultCeiling = Math.max(...at300.map((s) => s.perCall));
+  const m300 = gasBound?.processedNow ?? defaultCeiling;
   const big = sums.find((s) => s.attached === 1000);
   const refund = sums.find((s) => s.scenario.includes("refund"));
   const perMemberBurn = at300.reduce((a, s) => a + s.perMember, 0) / Math.max(1, at300.length);
-  const logPerMember = Math.max(...rows.filter((r) => r.processedNow > 0 && r.scenario.includes("filled")).map((r) => r.maxReceiptLogBytes / r.processedNow));
+  const logPerMember = Math.max(...rows.filter((r) => r.processedNow >= 5 && r.scenario.includes("filled")).map((r) => r.maxReceiptLogBytes / r.processedNow));
   const logCapMembers = Math.floor(LOG_CAP_BYTES / logPerMember);
 
-  const recommend =
-    m300 >= 10
-      ? "keep DEFAULT_CHUNK = 10"
-      : `set DEFAULT_CHUNK = ${m300}`;
+  // Largest multiple of 5 that a default 300 Tgas call can always finish (so the gas guard never cuts a default call short),
+  // and well below what the 16 KB log cap would allow.
+  const recommendedChunk = Math.max(5, Math.min(Math.floor(m300 / 5) * 5, Math.floor(logCapMembers / 2)));
+  const recommend = recommendedChunk === 10 ? "keep DEFAULT_CHUNK = 10" : `set DEFAULT_CHUNK = ${recommendedChunk}`;
   const lines: string[] = [];
   lines.push("# Settlement gas (check 04)");
   lines.push("");
@@ -165,7 +167,7 @@ function writeEvidence(): string {
   lines.push("");
   lines.push("## What the numbers say");
   lines.push("");
-  lines.push(`- A single 300 Tgas \`settle\` call processed up to **${m300} filled members**. The contract sizes each call from the gas left after its first filled member (\`env::used_gas()\`, which counts the 18 Tgas it attaches to the token batch and callback plus receipt fees), capped by \`DEFAULT_CHUNK\`.`);
+  lines.push(`- With the default \`DEFAULT_CHUNK\` a 300 Tgas \`settle\` call processes **${defaultCeiling} filled members** (the ceiling binds). Asking for more (\`max_members: 25\`) shows where the contract's own gas guard stops at 300 Tgas: **${m300} filled members per call**. The guard sizes each call from the gas left after the first filled member (\`env::used_gas()\`, which counts the 18 Tgas it attaches to the token batch and callback plus receipt fees).`);
   lines.push(`- What actually burns is far less than what the contract reserves: **${perMemberBurn.toFixed(1)} Tgas per filled member** across the whole receipt tree (settle work, \`storage_deposit\`, \`ft_transfer\`, \`on_delivered\`). Unused attached gas is refunded to the caller, so reserving more than is burnt costs extra transactions, not extra money.`);
   if (big) lines.push(`- Attaching 1000 Tgas (the protocol maximum on protocol 88) with an explicit \`max_members\` of ${big.members} processed ${big.perCall} members in one call (${big.calls} call${big.calls === 1 ? "" : "s"} for the ${big.members}-member pool). 300 Tgas is still the recommended cap for wallets and CLIs.`);
   if (refund) lines.push(`- A refunded pool is cheaper per member (no promises): ${refund.members} members took ${refund.calls} call${refund.calls === 1 ? "" : "s"} at ${refund.attached} Tgas, ${refund.perMember.toFixed(2)} Tgas burnt per member.`);
@@ -177,7 +179,7 @@ function writeEvidence(): string {
   lines.push("");
   lines.push(`**${recommend}** (\`contracts/coop/src/settle.rs\`, currently ${10}).`);
   lines.push("");
-  lines.push(`Reason: it is the number of filled members one default 300 Tgas call settled in this measurement (${m300}). \`DEFAULT_CHUNK\` is only a ceiling, because the contract also stops when the gas left is below its per-member estimate, so a value that is too high cannot make a call run out of gas; a value that is too low only costs extra transactions. The runtime's settler loops until the pool is finished, so a ${at300.length > 0 ? Math.max(...at300.map((s) => s.members)) : 50}-member pool takes ${at300.length > 0 ? Math.max(...at300.map((s) => s.calls)) : "?"} transactions. The 100-member cap (\`MAX_MEMBERS\`) bounds the worst case at about ${Math.ceil(100 / Math.max(1, m300))} calls.`);
+  lines.push(`Reason: at 300 Tgas the gas guard lets ${m300} filled members through one call, so a ceiling of ${recommendedChunk} is the largest multiple of 5 that every default call can finish inside 300 Tgas (${Math.round((1 - recommendedChunk / m300) * 100)}% of headroom for a heavier first member), and it stays far below the 16 KB log cap (about ${logCapMembers} members). \`DEFAULT_CHUNK\` is only a ceiling, because the contract also stops when the gas left is below its per-member estimate, so a value that is too high cannot make a call run out of gas; a value that is too low only costs extra transactions. The runtime's settler loops until the pool is finished, so a 50-member pool takes ${Math.ceil(50 / recommendedChunk)} settle transactions at this ceiling (measured with the current ceiling of 10: ${at300.length > 0 ? Math.max(...at300.map((s) => s.calls)) : "?"}). The 100-member cap (\`MAX_MEMBERS\`) bounds the worst case at about ${Math.ceil(100 / recommendedChunk)} calls.`);
   lines.push("");
   lines.push("This file does not change the contract; the number is a recommendation only.");
   lines.push("");
@@ -205,6 +207,10 @@ async function main(): Promise<void> {
 
     // The same 50 agents again (already registered on the token, so cheaper) in a pool that cannot reach its tier.
     await measure(world, "50 members, pool refunded (no tier)", a50, { tiers: unreachable, attachedTgas: 300, expect: "Refunded" });
+
+    // Where the contract's own gas guard stops at 300 Tgas when DEFAULT_CHUNK is not the limit (max_members above it).
+    const c25 = await freshAgents(world, 25, "g25z");
+    await measure(world, "25 members, all filled, 300 Tgas, max_members 25", c25, { tiers: flat, attachedTgas: 300, maxMembers: 25, expect: "Settled" });
 
     // What a bigger gas attachment buys: 25 fresh members, 1000 Tgas, ask for all 25 in one call.
     const b25 = await freshAgents(world, 25, "g25y");

@@ -1,0 +1,86 @@
+sandbox nearcore 2.14.0 at http://127.0.0.1:35439
+coop.wasm          sha256 c5c2df759a708257ff2bf5d7bb81e9393bae6898679a5dac1399a595be650e08 (matches SHA256SUMS)
+credits_token.wasm sha256 9552645d00607863d952741f41e91a3eba2f73530021fb78b7fc3fb4c54f20f7 (matches SHA256SUMS)
+on-chain code_hash of coop.sandbox = EJyfTRxLhtVFcAPU8YDmqJwFYxewpDCYyVtkTzpuDisq (matches)
+on-chain code_hash of credits.sandbox = B3tcfYujz3uvFUJ1W7Pu4FkzGQwv3VGvbvABYxXTVAy4 (matches)
+[+  0.0s] provisioning 12 agents (sub-accounts of sandbox, function-call keys, budgets)
+[+  1.6s] posting offer and depositing inventory
+[+  2.7s] offer 1 open: lock in 35s, deadline in 45s
+[+  2.7s] pool 1 Open: 0 members, 0+0 units, projected tier none
+[+  2.7s] offer_created Offer 1: Demo API credits (volume pricing) (1+ at 1.00, 20+ at 0.70, 50+ at 0.50; up to 60 units)
+[+  3.7s] decision      buyer-e1.sandbox decides to join pool 1 with 4 units unconditionally  | "Entry price 1.00 is within my 1.00 limit. Joining now."
+[+  4.1s] pool_joined   buyer-e1.sandbox joined pool 1: 4 units, unconditional  | "Entry price 1.00 is within my 1.00 limit. Joining now."
+[+  5.2s] decision      buyer-e2.sandbox decides to join pool 1 with 4 units unconditionally  | "Entry price 1.00 is within my 1.10 limit. Joining now."
+[+  5.5s] pool_joined   buyer-e2.sandbox joined pool 1: 4 units, unconditional  | "Entry price 1.00 is within my 1.10 limit. Joining now."
+[+  6.7s] decision      buyer-e3.sandbox decides to join pool 1 with 3 units unconditionally  | "Entry price 1.00 is within my 1.00 limit. Joining now."
+[+  7.0s] pool_joined   buyer-e3.sandbox joined pool 1: 3 units, unconditional  | "Entry price 1.00 is within my 1.00 limit. Joining now."
+[+  7.7s] pool 1 Open: 3 members, 11+0 units, projected tier 1
+[+  8.2s] decision      buyer-b501.sandbox decides to join pool 1 with 4 units if the group reaches 50  | "In if the group reaches 50. I only buy at 0.50 or less."
+[+  8.5s] pool_joined   buyer-b501.sandbox joined pool 1: 4 units, conditional on 50  | "In if the group reaches 50. I only buy at 0.50 or less."
+[+  9.7s] decision      buyer-e4.sandbox decides to join pool 1 with 4 units unconditionally  | "Entry price 1.00 is within my 1.10 limit. Joining now."
+[+ 10.0s] pool_joined   buyer-e4.sandbox joined pool 1: 4 units, unconditional  | "Entry price 1.00 is within my 1.10 limit. Joining now."
+[+ 11.2s] decision      buyer-e5.sandbox decides to join pool 1 with 4 units unconditionally  | "Entry price 1.00 is within my 1.00 limit. Joining now."
+[+ 11.5s] pool_joined   buyer-e5.sandbox joined pool 1: 4 units, unconditional  | "Entry price 1.00 is within my 1.00 limit. Joining now."
+[+ 12.7s] decision      buyer-b201.sandbox decides to join pool 1 with 2 units if the group reaches 20  | "In if the group reaches 20. I only buy at 0.70 or less."
+[+ 12.7s] pool 1 Open: 6 members, 19+4 units, projected tier 1
+[+ 13.0s] pool_joined   buyer-b201.sandbox joined pool 1: 2 units, conditional on 20  | "In if the group reaches 20. I only buy at 0.70 or less."
+[+ 14.2s] decision      buyer-b202.sandbox decides to join pool 1 with 2 units if the group reaches 20  | "In if the group reaches 20. I only buy at 0.70 or less."
+[+ 14.4s] pool_joined   buyer-b202.sandbox joined pool 1: 2 units, conditional on 20  | "In if the group reaches 20. I only buy at 0.70 or less."
+[+ 15.7s] decision      buyer-b203.sandbox decides to join pool 1 with 3 units if the group reaches 20  | "In if the group reaches 20. I only buy at 0.70 or less."
+[+ 16.0s] pool_joined   buyer-b203.sandbox joined pool 1: 3 units, conditional on 20  | "In if the group reaches 20. I only buy at 0.70 or less."
+[+ 17.2s] decision      buyer-b204.sandbox decides to join pool 1 with 2 units if the group reaches 20  | "In if the group reaches 20. I only buy at 0.70 or less."
+[+ 17.5s] pool_joined   buyer-b204.sandbox joined pool 1: 2 units, conditional on 20  | "In if the group reaches 20. I only buy at 0.70 or less."
+[+ 17.8s] pool 1 Open: 10 members, 19+13 units, projected tier 2
+[+ 18.7s] decision      buyer-b205.sandbox decides to join pool 1 with 2 units if the group reaches 20  | "In if the group reaches 20. I only buy at 0.70 or less."
+[+ 19.0s] pool_joined   buyer-b205.sandbox joined pool 1: 2 units, conditional on 20  | "In if the group reaches 20. I only buy at 0.70 or less."
+[+ 20.2s] decision      buyer-b502.sandbox decides to join pool 1 with 4 units if the group reaches 50  | "In if the group reaches 50. I only buy at 0.50 or less."
+[+ 20.5s] pool_joined   buyer-b502.sandbox joined pool 1: 4 units, conditional on 50  | "In if the group reaches 50. I only buy at 0.50 or less."
+[+ 22.8s] pool 1 Open: 12 members, 19+19 units, projected tier 2
+[+ 27.9s] pool 1 Open: 12 members, 19+19 units, projected tier 2
+[+ 32.9s] pool 1 Open: 12 members, 19+19 units, projected tier 2
+[+ 37.9s] pool 1 Locked: 12 members, 19+19 units, projected tier 2
+[+ 43.0s] pool 1 Locked: 12 members, 19+19 units, projected tier 2
+[+ 47.5s] settle        settle(pool 1): 10 of 12 members processed, status Settling
+[+ 48.2s] settle        settle(pool 1): 12 of 12 members processed, status Settled
+[+ 48.2s] pool_settled  Pool 1 settled: 30 units from 10 agents at 0.70 each, seller paid 21.0000 NEAR
+
+SETTLEMENT RECEIPT  pool 1  "Demo API credits (volume pricing)"
+seller sandbox   item token credits.sandbox
+tiers  1+ at 1.00 | 20+ at 0.70 | 50+ at 0.50
+RESULT SETTLED at tier 2 (20+ units): 30 units from 10 of 12 agents at 0.70 NEAR each
+
+agent           units  joined       limit  outcome    price/unit      paid    refund  tokens  delivery
+------------------------------------------------------------------------------------------------------
+buyer-e1            4  now           1.00  Filled           0.70      2.80      1.20       4  Delivered
+buyer-e2            4  now           1.10  Filled           0.70      2.80      1.20       4  Delivered
+buyer-e3            3  now           1.00  Filled           0.70      2.10      0.90       3  Delivered
+buyer-b501          4  if >= 50      0.55  Excluded            -      0.00    2.0013       0  -
+buyer-e4            4  now           1.10  Filled           0.70      2.80      1.20       4  Delivered
+buyer-e5            4  now           1.00  Filled           0.70      2.80      1.20       4  Delivered
+buyer-b201          2  if >= 20      0.90  Filled           0.70      1.40      0.00       2  Delivered
+buyer-b202          2  if >= 20      0.90  Filled           0.70      1.40      0.00       2  Delivered
+buyer-b203          3  if >= 20      0.90  Filled           0.70      2.10      0.00       3  Delivered
+buyer-b204          2  if >= 20      0.90  Filled           0.70      1.40      0.00       2  Delivered
+buyer-b205          2  if >= 20      0.90  Filled           0.70      1.40      0.00       2  Delivered
+buyer-b502          4  if >= 50      0.55  Excluded            -      0.00    2.0013       0  -
+------------------------------------------------------------------------------------------------------
+total paid 21.00 NEAR | total refunded 9.7025 NEAR | seller payout 21.00 NEAR
+the same 30 units at the entry price would have cost 30.00 NEAR: the group saved 9.00 NEAR
+
+INVARIANT CHECK (recomputed from chain views)
+  [PASS] pool is finished: status Settled, 12 members
+  [PASS] every member paid <= units x its own limit: 12 members checked
+  [PASS] paid + refunded + storage == locked, per member: 12 members balance to the yocto
+  [PASS] filled members paid units x tier price, the rest paid nothing: tier price 0.70
+  [PASS] sum of member payments == seller payout: 21.000000 vs 21.000000 NEAR
+  [PASS] seller_paid event matches payout: 21.000000 NEAR in events
+  [PASS] group size matches the resolved result: 30 units from 10 members
+  [PASS] seller paid only if a tier was reached: tier 1
+  [PASS] token balances match units delivered: 30 units delivered
+  [PASS] inventory fully accounted for (seller kept the unsold units): seller 1000000 -> 999970, escrow 0 -> 0
+  [PASS] no budget left locked: budget_locked is 0 for every member
+  [PASS] membership storage cost is small and non-negative: 12 members, 0.00257 to 0.00278 NEAR each
+  [PASS] owner withdrew every leftover budget (full-access key, 1 yocto): 9.9894 NEAR withdrawn from 12 agents
+ALL INVARIANTS HOLD
+
+JSON log: evidence/sandbox-run.json
