@@ -3,6 +3,7 @@ import type { KeyPairString } from "near-api-js";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { loadWasm } from "../../src/deploy.js";
 import { WASM_DIR } from "../../src/config.js";
+import { parseNear } from "../../src/money.js";
 import { takeSnapshot, verifyPool } from "../../src/verify.js";
 import { createSandboxWorld, type World } from "../../src/world.js";
 import { agent, eagerPolicy, near, offer } from "./fixture.js";
@@ -20,6 +21,8 @@ const wasmPath = (name: string): string => `${WASM_DIR}/${name}`;
 /** Replaces the code on the item-token account (its full-access key is the operator key); state is kept. */
 async function redeploy(name: string): Promise<void> {
   const wasm = loadWasm(wasmPath(name));
+  // The other wasm may be larger than the one funded at deploy time: top up the storage balance first.
+  await world.operator.transfer({ receiverId: world.tokenId, amount: parseNear("5") });
   const tokenAccount = new Account(world.tokenId, world.provider, world.operatorSecret as KeyPairString);
   await tokenAccount.signAndSendTransaction({ receiverId: world.tokenId, actions: [actions.deployContract(wasm.bytes)] });
 }
@@ -46,13 +49,17 @@ describe("failed delivery becomes a claimable balance, then a successful claim",
     expect(await world.client.getClaimable(buyer.id)).toEqual([{ token: world.tokenId, amount: "2" }]);
     expect(await world.client.getClaimable(world.operator.accountId)).toEqual([{ token: world.tokenId, amount: "8" }]);
 
+    // Token works again (same state); the owner claims and receives the units.
+    await redeploy("credits_token.wasm");
+    // (verifyPool reads ft balances, so it runs once the real token code is back.)
     // Seller payout and refunds still happened: invariants hold.
     const v = await verifyPool(world.client, posted.offerId, snapshot, txs);
     expect(v.pool.status).toBe("Settled");
-    expect(v.checks.filter((c) => !c.pass && !/deliver|token|ft_|unit/i.test(c.name))).toEqual([]);
-
-    // Token works again (same state); the owner claims and receives the units.
-    await redeploy("credits_token.wasm");
+    // Only the two delivery-dependent checks fail while the units are still claimable; all money checks pass.
+    expect(v.checks.filter((c) => !c.pass).map((c) => c.name).sort()).toEqual([
+      "inventory fully accounted for (seller kept the unsold units)",
+      "token balances match units delivered",
+    ]);
     expect(await world.client.ftBalanceOf(world.coopId)).toBe(coopBefore + 10n);
     const claim = await world.client.claim(world.operator, buyer.id, world.tokenId);
     expect(claim.events.map((e) => e.event)).not.toContain("delivery_failed");
@@ -66,5 +73,9 @@ describe("failed delivery becomes a claimable balance, then a successful claim",
     expect(await world.client.getClaimable(world.operator.accountId)).toEqual([]);
     expect(await world.client.ftBalanceOf(world.operator.accountId)).toBe(sellerBefore - 2n); // posted 10, 2 sold, 8 claimed back
     expect(await world.client.ftBalanceOf(world.coopId)).toBe(coopBefore);
+
+    // With everything claimed, every invariant holds.
+    const final = await verifyPool(world.client, posted.offerId, snapshot, txs);
+    expect(final.checks.filter((c) => !c.pass)).toEqual([]);
   });
 });
