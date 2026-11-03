@@ -89,10 +89,10 @@ A pool is capped at 100 members (`MAX_MEMBERS`).
 
 ### Gas
 
-Attached per filled member: `storage_deposit` 6 Tgas, `ft_transfer` 6 Tgas, callback 6 Tgas. With receipt fees
-a filled member costs about 40 Tgas of the call's budget (native `used_gas` measurement), so a 300 Tgas
-`settle` handles roughly 6 members. `DEFAULT_CHUNK` and the gas constants are in `src/settle.rs` and are meant
-to be tuned from the sandbox measurements (`checks/04`).
+Attached per filled member: `storage_deposit` 6 Tgas, `ft_transfer` 6 Tgas, callback 6 Tgas. `settle` sizes
+each chunk from the prepaid gas left (keeping a reserve for the finishing step) and stops at `DEFAULT_CHUNK`
+(10). Measured on a nearcore 2.14.0 sandbox (`checks/04-settle-gas.ts`, results in `evidence/gas.md`): a filled
+member burns about 7.2 Tgas, a 300 Tgas call settles 10 members, and a 50-member pool settles in 5 calls.
 
 ## `credits_token`
 

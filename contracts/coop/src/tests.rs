@@ -604,6 +604,16 @@ fn register_agent_rejects_non_direct_subaccount() {
 }
 
 #[test]
+#[should_panic(expected = "The Co-op contract cannot be an agent")]
+fn register_agent_rejects_contract_account() {
+    // Contract is coop.near (see ctx). Predecessor `near` makes coop.near a direct
+    // sub-account, so only the contract-account check can reject it.
+    let mut fx = Fx::new();
+    set_env("near", 10 * NEAR, T0);
+    fx.c.register_agent(acct("coop.near"), limits(NEAR, 5));
+}
+
+#[test]
 #[should_panic(expected = "already registered")]
 fn register_agent_twice_fails() {
     let mut fx = Fx::new();

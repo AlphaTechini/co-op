@@ -130,6 +130,7 @@ impl Coop {
             matches!(label, Some(l) if !l.is_empty() && !l.contains('.')),
             "agent_id must be a direct sub-account of the caller"
         );
+        require!(agent_id != env::current_account_id(), "The Co-op contract cannot be an agent");
         require!(!self.agents.contains_key(&agent_id), "Agent is already registered");
         validate_limits(&limits, now);
 

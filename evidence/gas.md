@@ -1,6 +1,6 @@
 # Settlement gas (check 04)
 
-Measured on a local near-sandbox, nearcore 2.14.0 (protocol 88), 2026-11-03T22:28:03.616Z, with `checks/04-settle-gas.ts`.
+Measured on a local near-sandbox, nearcore 2.14.0 (protocol 88), 2026-11-03T22:41:37.748Z, with `checks/04-settle-gas.ts`.
 Every member is a fresh agent, so each fill really does `storage_deposit` (NEP-145 registration) + `ft_transfer` on the item token, then the `on_delivered` callback. Gas is the sum of `gas_burnt` over the transaction and every receipt it spawned (the callbacks and the token calls are included because the harness waits for all receipts).
 
 ## Per scenario
@@ -18,7 +18,7 @@ Every member is a fresh agent, so each fill really does `storage_deposit` (NEP-1
 
 | scenario | call | members processed in this call | cursor after | remaining | status after | tx gas burnt, all receipts (Tgas) | settle receipt alone (Tgas) | receipts | log bytes, largest receipt | log lines | all receipts succeeded |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| 10 members, all filled | 1 | 10 | 10 | 0 | Settled | 74.3 | 19.0 | 37 | 2242 | 24 | yes |
+| 10 members, all filled | 1 | 10 | 10 | 0 | Settled | 74.3 | 19.1 | 37 | 2242 | 24 | yes |
 | 25 members, all filled | 1 | 10 | 10 | 15 | Settling | 69.6 | 18.0 | 32 | 1998 | 21 | yes |
 | 25 members, all filled | 2 | 10 | 20 | 5 | Settling | 69.6 | 17.9 | 32 | 1830 | 20 | yes |
 | 25 members, all filled | 3 | 5 | 25 | 0 | Settled | 41.0 | 11.1 | 22 | 1159 | 13 | yes |
@@ -44,7 +44,7 @@ Every member is a fresh agent, so each fill really does `storage_deposit` (NEP-1
 - Attaching 1000 Tgas (the protocol maximum on protocol 88) with an explicit `max_members` of 25 processed 25 members in one call (1 call for the 25-member pool). 300 Tgas is still the recommended cap for wallets and CLIs.
 - A refunded pool is cheaper per member (no promises): 50 members took 5 calls at 300 Tgas, 0.90 Tgas burnt per member.
 - **Log size is not the binding limit.** The protocol allows 16384 bytes of logs per receipt (and 100 lines). One `member_filled` event is about 232 bytes, so a single receipt could carry about 70 members' events before hitting the cap, far more than the 12 that gas allows per 300 Tgas call.
-- Worst case for the agents' own calls: with 100 members in the pool (MAX_MEMBERS), `join_pool` burnt 2.86 Tgas and the first member's `leave_pool` (which shifts the member list) burnt 19.85 Tgas. The runtime attaches 50 Tgas to each.
+- Worst case for the agents' own calls: with 100 members in the pool (MAX_MEMBERS), `join_pool` burnt 2.86 Tgas and the first member's `leave_pool` (which shifts the member list) burnt 19.95 Tgas. The runtime attaches 50 Tgas to each.
 
 ## Recommended DEFAULT_CHUNK
 
