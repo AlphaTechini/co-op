@@ -137,9 +137,12 @@
       void config.recheck();
     } else if (res.status === 429) {
       rateUntil = Date.now() + (res.retryAfterSec ?? 3600) * 1000;
-    } else if (res.status !== 503) {
-      toasts.push('negative', 'Spawn failed', res.error);
+    } else if (res.status === 400 && /name|taken|registered|exists/i.test(res.error ?? '')) {
+      // the name collided on chain: show it on the field, not as a second banner
+      nameCheck = 'taken';
+      result = null;
     }
+    // other failures are shown once, in the inline banner above the button
   }
 
   function txLabel(tx: SpawnResponse['txs'][number], i: number): string {
@@ -154,13 +157,13 @@
 
 <svelte:head><title>Spawn an agent · Co-op</title></svelte:head>
 
-<main class="page">
+<main id="main" tabindex="-1" class="page">
   <div class="container">
     <header class="page-head">
       <div class="page-head__row">
         <div style="display:grid;gap:var(--space-4);max-inline-size:40rem">
           <h1 class="t-display-l">Spawn an agent</h1>
-          <p class="t-body-l text-secondary">Give it a name, a one-line brief and a budget. It gets its own testnet account and a key that can only join or leave pools.</p>
+          <p class="t-body-l text-secondary">Give it a name, a one-line brief and a budget. It gets its own {config.network} account and a key that can only join or leave pools.</p>
         </div>
         <div class="page-head__meta">
           <span class="tag"><Icon name="cpu" size="xs" />{tagText}</span>
@@ -218,7 +221,7 @@
             <div class="field__label-row"><label class="field__label" for="name">Agent name</label></div>
             <div class="input input--mono" data-valid={nameOk ? '' : undefined} data-invalid={nameError ? '' : undefined} data-disabled={locked ? '' : undefined}>
               <input
-                id="name" name="name" bind:value={name} autocomplete="off" autocapitalize="none" spellcheck="false" disabled={locked}
+                id="name" name="name" bind:value={name} placeholder="rin" autocomplete="off" autocapitalize="none" spellcheck="false" disabled={locked}
                 aria-invalid={nameError ? 'true' : undefined} aria-describedby="name-msg"
                 oninput={() => { name = name.toLowerCase(); nameCheck = 'idle'; }} onblur={checkName}
               />
@@ -226,7 +229,7 @@
             </div>
             <p class="field__msg {nameError ? 'field__msg--error' : nameOk ? 'field__msg--ok' : 'field__hint'}" id="name-msg" class:field__hint={!nameError && !nameOk}>
               {#if nameError}<Icon name="alert" />{nameError}
-              {:else if nameOk}<Icon name="check-circle" />{name}{suffix} is available
+              {:else if nameOk && !locked}<Icon name="check-circle" />{name}{suffix} is available
               {:else if nameCheck === 'checking'}Checking {name}{suffix}
               {:else}Lowercase letters, digits and hyphens. 2 to 24 characters.{/if}
             </p>
@@ -291,19 +294,19 @@
               {/if}
             </p>
             <dl class="dl">
-              <div class="dl__row"><dt>Archetype</dt>{#if policy.archetype}<dd><span class="tag">{policy.archetype}</span></dd>{:else}<dd class="is-empty">Not found</dd>{/if}</div>
+              <div class="dl__row"><dt>Archetype</dt>{#if policy.archetype}<dd><span class="tag">{policy.archetype}</span></dd>{:else}<dd class="is-empty">{previewBrief.trim() ? 'Not found' : 'None yet'}</dd>{/if}</div>
               <div class="dl__row"><dt>Max price per unit</dt>
                 {#if policy.maxPriceText}<dd>{policy.maxPriceText}<span class="unit">NEAR</span></dd>
                 {:else if policy.maxPriceNote}<dd>{policy.maxPriceNote}</dd>
-                {:else}<dd class="is-empty">Not found</dd>{/if}
+                {:else}<dd class="is-empty">{previewBrief.trim() ? 'Not found' : 'None yet'}</dd>{/if}
               </div>
-              <div class="dl__row"><dt>Units</dt>{#if policy.unitsText}<dd>{policy.unitsText}</dd>{:else}<dd class="is-empty">Not found</dd>{/if}</div>
-              <div class="dl__row"><dt>Joins</dt>{#if policy.joinsText}<dd>{policy.joinsText}</dd>{:else}<dd class="is-empty">Not found</dd>{/if}</div>
-              <div class="dl__row"><dt>Locks at most</dt>{#if policy.locksText}<dd>{policy.locksText}<span class="unit">NEAR</span></dd>{:else}<dd class="is-empty">Not found</dd>{/if}</div>
+              <div class="dl__row"><dt>Units</dt>{#if policy.unitsText}<dd>{policy.unitsText}</dd>{:else}<dd class="is-empty">{previewBrief.trim() ? 'Not found' : 'None yet'}</dd>{/if}</div>
+              <div class="dl__row"><dt>Joins</dt>{#if policy.joinsText}<dd>{policy.joinsText}</dd>{:else}<dd class="is-empty">{previewBrief.trim() ? 'Not found' : 'None yet'}</dd>{/if}</div>
+              <div class="dl__row"><dt>Locks at most</dt>{#if policy.locksText}<dd>{policy.locksText}<span class="unit">NEAR</span></dd>{:else}<dd class="is-empty">{previewBrief.trim() ? 'Not found' : 'None yet'}</dd>{/if}</div>
               <div class="dl__row"><dt>Best match now</dt>
                 {#if policy.match}<dd><a class="link" href="/pool?id={policy.match.poolId}">Pool #{policy.match.poolId} at {formatNear(policy.match.price)}</a></dd>
                 {:else if policy.ok}<dd class="is-empty">No open pool fits yet</dd>
-                {:else}<dd class="is-empty">Not found</dd>{/if}
+                {:else}<dd class="is-empty">{previewBrief.trim() ? 'Not found' : 'None yet'}</dd>{/if}
               </div>
             </dl>
           </div>

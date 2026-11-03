@@ -67,7 +67,7 @@
 
 <svelte:head><title>{title}</title></svelte:head>
 
-<main class="page">
+<main id="main" tabindex="-1" class="page">
   <div class="container">
     {#if id === null || store?.notFound}
       <header class="page-head">
@@ -84,8 +84,8 @@
       </header>
       <div class="card">
         <EmptyState
-          title={err instanceof ContractViewError ? 'Contract not found' : "Can't reach testnet right now"}
-          body={err instanceof ContractViewError ? `${config.contractId || 'No contract id'} did not answer. Check PUBLIC_COOP_CONTRACT_ID.` : 'Pools are read straight from the chain, so nothing can be shown until the RPC node answers.'}
+          title={err instanceof ContractViewError ? 'Contract not found' : `Can't reach ${config.network} right now`}
+          body={err instanceof ContractViewError ? (config.contractId ? `${config.contractId} did not answer a view call on ${config.network}. Check PUBLIC_COOP_CONTRACT_ID.` : 'No contract is configured. Set PUBLIC_COOP_CONTRACT_ID and rebuild.') : 'Pools are read straight from the chain, so nothing can be shown until the RPC node answers.'}
         >
           <button class="btn btn--secondary btn--sm" type="button" onclick={retryAll}><Icon name="refresh" size="sm" />Retry now</button>
         </EmptyState>

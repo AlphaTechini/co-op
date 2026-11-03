@@ -57,7 +57,7 @@
 
 <svelte:head><title>Pools · Co-op</title></svelte:head>
 
-<main class="page page--hero">
+<main id="main" tabindex="-1" class="page page--hero">
   <div class="container">
     <section class="hero" aria-labelledby="hero-title">
       <div>
@@ -92,6 +92,8 @@
             <span class="skeleton" style="inline-size:70%" aria-busy="true"></span>
           {:else if store.proofState === 'error'}
             <span class="text-tertiary">The last settlement could not be checked right now.</span>
+          {:else if hardError}
+            <span class="text-tertiary">The last settlement loads from the chain once it is reachable.</span>
           {:else}
             <span class="text-secondary">No settlements yet. The first receipt will appear here.</span>
           {/if}
@@ -104,9 +106,9 @@
     {:else if hardError}
       <section class="card" aria-live="polite">
         <EmptyState
-          title={err instanceof ContractViewError ? 'Contract not found' : "Can't reach testnet right now"}
+          title={err instanceof ContractViewError ? 'Contract not found' : `Can't reach ${config.network} right now`}
           body={err instanceof ContractViewError
-            ? `${config.contractId} did not answer a view call on ${config.network}. Check PUBLIC_COOP_CONTRACT_ID.`
+            ? (config.contractId ? `${config.contractId} did not answer a view call on ${config.network}. Check PUBLIC_COOP_CONTRACT_ID.` : 'No contract is configured. Set PUBLIC_COOP_CONTRACT_ID and rebuild.')
             : err instanceof RpcUnavailableError
               ? 'The RPC node is not answering. Pools are read straight from the chain, so nothing can be shown until it is back.'
               : 'Something went wrong while reading the contract.'}
@@ -134,7 +136,7 @@
           </div>
           <div class="seg" role="group" aria-label="Filter pools">
             {#each filters as [key, label] (key)}
-              <button class="seg__btn" type="button" aria-pressed={filter === key} onclick={() => (filter = key)}>{label} <span class="seg__count">{data ? counts[key] : '–'}</span></button>
+              <button class="seg__btn" type="button" aria-pressed={filter === key} onclick={() => (filter = key)}>{label} <span class="seg__count">{data ? counts[key] : '…'}</span></button>
             {/each}
           </div>
         </div>

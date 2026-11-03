@@ -73,12 +73,12 @@
         {#if refunded}
           <div class="stat"><dt class="stat__label">Units pledged</dt><dd class="stat__value">{model.pledged}</dd><dd class="stat__meta">from {plural(pool.member_count, 'agent')}</dd></div>
           <div class="stat"><dt class="stat__label">Seller payout</dt><dd class="stat__value">0.00<span class="unit">NEAR</span></dd><dd class="stat__meta">no tier reached</dd></div>
-          <div class="stat"><dt class="stat__label">Refunded</dt><dd class="stat__value" title="{r ? formatNearExact(r.totals.locked, 2) : ''} NEAR">{r ? formatNear(r.totals.refunded, { min: 2, max: 2 }) : '–'}<span class="unit">NEAR</span></dd><dd class="stat__meta">back to agent budgets</dd></div>
+          <div class="stat"><dt class="stat__label">Refunded</dt><dd class="stat__value" title="{r ? formatNearExact(r.totals.locked, 2) : ''} NEAR">{r ? formatNear(r.totals.refunded, { min: 2, max: 2 }) : '…'}<span class="unit">NEAR</span></dd><dd class="stat__meta">back to agent budgets</dd></div>
           <div class="stat"><dt class="stat__label">Agents refunded</dt><dd class="stat__value">{pool.member_count}</dd><dd class="stat__meta">in full</dd></div>
         {:else}
           <div class="stat"><dt class="stat__label">Units delivered</dt><dd class="stat__value">{result?.units ?? 0}</dd><dd class="stat__meta">to {plural(result?.members_in ?? 0, 'agent')}</dd></div>
-          <div class="stat"><dt class="stat__label">Seller payout</dt><dd class="stat__value" title="{result ? formatNearExact(result.seller_payout, 2) : ''} NEAR">{result ? formatNear(result.seller_payout, { min: 2, max: 2 }) : '–'}<span class="unit">NEAR</span></dd><dd class="stat__meta">{result?.units ?? 0} {'×'} {price ? formatNear(price) : '–'}</dd></div>
-          <div class="stat"><dt class="stat__label">Refunded</dt><dd class="stat__value" title="{r ? formatNearExact(r.totals.refunded, 2) : ''} NEAR">{r ? formatNear(r.totals.refunded, { min: 2, max: 2 }) : '–'}<span class="unit">NEAR</span></dd><dd class="stat__meta">back to agent budgets</dd></div>
+          <div class="stat"><dt class="stat__label">Seller payout</dt><dd class="stat__value" title="{result ? formatNearExact(result.seller_payout, 2) : ''} NEAR">{result ? formatNear(result.seller_payout, { min: 2, max: 2 }) : '…'}<span class="unit">NEAR</span></dd><dd class="stat__meta">{result?.units ?? 0} {'×'} {price ? formatNear(price) : '…'}</dd></div>
+          <div class="stat"><dt class="stat__label">Refunded</dt><dd class="stat__value" title="{r ? formatNearExact(r.totals.refunded, 2) : ''} NEAR">{r ? formatNear(r.totals.refunded, { min: 2, max: 2 }) : '…'}<span class="unit">NEAR</span></dd><dd class="stat__meta">back to agent budgets</dd></div>
           <div class="stat"><dt class="stat__label">Saved vs list</dt><dd class="stat__value text-positive" title="{formatNearExact(saved, 2)} NEAR">{formatNear(saved, { min: 2, max: 2 })}<span class="unit">NEAR</span></dd><dd class="stat__meta">against {formatNear(list)} per unit</dd></div>
         {/if}
       </dl>
@@ -129,7 +129,7 @@
           {#if refunded}
             The group stopped at {model.pledged} {model.pledged === 1 ? 'unit' : 'units'}, short of the first tier at {pool.offer.tiers[0].min_units}. The seller was not paid.
           {:else}
-            The tightest limit in the group was {r.tightestLimit !== null ? formatNear(r.tightestLimit) : '–'}. Everyone paid {r.unitPrice ? formatNear(r.unitPrice) : '–'}.{#if r.excludedCount > 0} {plural(r.excludedCount, 'agent')} {r.excludedCount === 1 ? 'was' : 'were'} excluded and refunded in full.{/if}
+            The tightest limit in the group was {r.tightestLimit !== null ? formatNear(r.tightestLimit) : 'unknown'}. Everyone paid {r.unitPrice ? formatNear(r.unitPrice) : 'the tier price'}.{#if r.excludedCount > 0}{' '}{plural(r.excludedCount, 'agent')} {r.excludedCount === 1 ? 'was' : 'were'} excluded and refunded in full.{/if}
           {/if}
         </p>
       </div>

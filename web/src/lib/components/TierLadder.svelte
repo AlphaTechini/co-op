@@ -35,7 +35,7 @@
       {:else if s.v === 'refunded'}
         The group reached <b>{plural(s.units, 'unit')}</b>, short of the first tier at {s.min}. Everyone was refunded in full.
       {:else if s.v === 'frozen'}
-        Membership is frozen.{#if s.priceText} The group settles at <b>{s.priceText}</b> with <b>{plural(s.units, 'unit')}</b>.{:else} The group is below the first tier, so everyone will be refunded.{/if}
+        Membership is frozen.{' '}{#if s.priceText}The group settles at <b>{s.priceText}</b> with <b>{plural(s.units, 'unit')}</b>.{:else}The group is below the first tier, so everyone will be refunded.{/if}
       {:else if s.v === 'notier'}
         <b>{plural(s.pledged, 'unit')}</b> pledged.
         {#if s.away !== null}<b>{s.away} more</b> reach the first tier at <b>{s.priceText}</b>.{:else}The first tier is not reachable with current capacity.{/if}

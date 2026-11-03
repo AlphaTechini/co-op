@@ -45,6 +45,15 @@ table { border-collapse: collapse; }
   border-radius: var(--radius-s);
 }
 
+.skip-link {
+  position: fixed; inset-block-start: var(--space-3); inset-inline-start: var(--space-3); z-index: calc(var(--z-toast) + 1);
+  padding: var(--space-3) var(--space-4); border-radius: var(--radius-m);
+  background: var(--ink); color: var(--text-on-ink); font-weight: var(--fw-medium);
+  transform: translateY(-200%); transition: transform var(--dur-fast) var(--ease-out);
+}
+.skip-link:focus-visible { transform: none; }
+main:focus { outline: none; }
+
 .visually-hidden {
   position: absolute !important;
   inline-size: 1px; block-size: 1px;
@@ -332,7 +341,7 @@ table { border-collapse: collapse; }
   font-size: var(--fs-body-s); color: var(--text-tertiary);
 }
 @media (max-width: 639px) {
-  .card__head { padding: var(--space-4) var(--space-5); }
+  .card__head { padding: var(--space-4) var(--space-5); flex-wrap: wrap; row-gap: var(--space-2); }
   .card__body { padding: var(--space-5); }
   .card__foot { padding: var(--space-4) var(--space-5); }
 }
@@ -374,6 +383,7 @@ table { border-collapse: collapse; }
 .countdown__value { font-family: var(--font-mono); font-size: var(--fs-num-m); line-height: var(--lh-num-m); font-weight: var(--fw-medium); letter-spacing: -0.01em; }
 .countdown__at { font-size: var(--fs-body-s); color: var(--text-tertiary); }
 .countdown__item[data-urgent] .countdown__value { color: var(--warning); }
+.countdown__value--text { font-family: var(--font-sans); letter-spacing: 0; }
 /* timeline: created -> lock_at -> deadline */
 .timeline { position: relative; block-size: 6px; border-radius: var(--radius-pill); background: var(--track); overflow: visible; }
 .timeline__open { position: absolute; inset-block: 0; inset-inline-start: 0; inline-size: var(--lock); border-radius: var(--radius-pill) 0 0 var(--radius-pill); }
@@ -578,9 +588,10 @@ table { border-collapse: collapse; }
 .member[data-state="excluded"] .member__glyph { background: var(--excluded-subtle); color: var(--excluded); border-color: var(--border); }
 .member[data-state="excluded"] .member__units { text-decoration: line-through; color: var(--text-tertiary); }
 /* the flip: add data-flipped for 1.2s when a member goes waiting -> in */
-.member[data-flipped] { animation: member-flip 1200ms var(--ease-out); }
+.member { background: var(--surface); }   /* opaque, so rows sliding past each other (animate:flip) never show text through */
+.member[data-flipped] { position: relative; z-index: 1; animation: member-flip 1200ms var(--ease-out); }
 .member[data-flipped] .member__glyph { animation: glyph-pop var(--dur-slow) var(--ease-spring); }
-@keyframes member-flip { 0% { background: var(--accent-subtle); } 100% { background: transparent; } }
+@keyframes member-flip { 0% { background: var(--accent-subtle); } 70% { box-shadow: var(--shadow-2); } 100% { background: var(--surface); box-shadow: none; } }
 @keyframes glyph-pop { 0% { transform: scale(0.8); } 100% { transform: scale(1); } }
 
 @container members (max-width: 560px) {
@@ -649,6 +660,7 @@ table { border-collapse: collapse; }
   white-space: nowrap;
   transition: border-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
 }
+button.tx { cursor: copy; }
 .tx:hover { border-color: var(--border-strong); color: var(--text-primary); background: var(--surface-hover); }
 .tx .icon { inline-size: 11px; block-size: 11px; stroke-width: 1.75; color: var(--text-tertiary); }
 .tx__method { color: var(--text-tertiary); padding-inline-end: 4px; margin-inline-end: 2px; border-inline-end: 1px solid var(--border); }
@@ -1064,6 +1076,7 @@ table { border-collapse: collapse; }
 @media (max-width: 899px) {
   .pool-layout { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; grid-template-areas: "ladder" "facts" "feed" "members"; }
   .pool-layout__ladder { position: static; }
+  .feed-scroll { max-block-size: none; overflow: visible; }   /* no scroll trap inside the page on phones */
 }
 
 .pool-facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }

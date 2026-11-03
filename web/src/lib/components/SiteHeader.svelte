@@ -32,17 +32,23 @@
         {/each}
       </nav>
       <div class="site-header__end">
-        <a
-          class="net-chip"
-          href={config.contractId ? config.accountUrl(config.contractId) : config.explorerAccountBase}
-          target="_blank"
-          rel="noopener"
-          data-rpc={health}
-          title={chipTitle}
-          aria-label="{config.network} network, {chipTitle}"
-        >
-          <span class="net-chip__dot" aria-hidden="true"></span><span class="net-chip__label">{config.network}</span>{#if config.contractId}<span class="net-chip__contract">{config.contractId}</span>{/if}
-        </a>
+        {#if config.hasExplorer}
+          <a
+            class="net-chip"
+            href={config.contractId ? config.accountUrl(config.contractId) : config.explorerAccountBase}
+            target="_blank"
+            rel="noopener"
+            data-rpc={health}
+            title={chipTitle}
+            aria-label="{config.network} network, {chipTitle}"
+          >
+            <span class="net-chip__dot" aria-hidden="true"></span><span class="net-chip__label">{config.network}</span>{#if config.contractId}<span class="net-chip__contract">{config.contractId}</span>{/if}
+          </a>
+        {:else}
+          <span class="net-chip" data-rpc={health} title={chipTitle} aria-label="{config.network} network, {chipTitle}">
+            <span class="net-chip__dot" aria-hidden="true"></span><span class="net-chip__label">{config.network}</span>{#if config.contractId}<span class="net-chip__contract">{config.contractId}</span>{/if}
+          </span>
+        {/if}
         <button class="icon-btn theme-toggle" type="button" aria-label="Switch theme" onclick={() => theme.toggle()}>
           <Icon name="sun" class="icon--sun" /><Icon name="moon" class="icon--moon" />
         </button>

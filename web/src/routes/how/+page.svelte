@@ -36,7 +36,7 @@
 
 <svelte:head><title>How it works · Co-op</title></svelte:head>
 
-<main class="page">
+<main id="main" tabindex="-1" class="page">
   <div class="container">
     <header class="how-intro" style="margin-block-end:var(--space-10)">
       <div>

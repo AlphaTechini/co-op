@@ -23,6 +23,7 @@
 
 <Sprite />
 <div class:is-wide={page.url.pathname.startsWith('/pool')}>
+  <a class="skip-link" href="#main">Skip to content</a>
   <SiteHeader />
   <RpcBanner />
   {@render children()}

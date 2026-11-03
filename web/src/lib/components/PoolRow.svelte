@@ -23,12 +23,12 @@
     const now = clock.now;
     if (pool.status === 'Settled' || pool.status === 'Refunded') {
       const at = pool.result ? nsToMs(pool.result.resolved_at_ns) : 0;
-      return at ? { value: fmtClock(at), caption: dayCaption(at, now) } : { value: '–', caption: '' };
+      return at ? { value: fmtClock(at), caption: dayCaption(at, now) } : { value: 'Done', caption: '' };
     }
     if (status === 'Settling') return { value: `${pool.settle_cursor}/${pool.member_count}`, caption: 'settling' };
     if (status === 'Expired') return { value: 'due', caption: 'to settle' };
     if (status === 'Locked') return { value: fmtCountdown(nsToMs(pool.offer.deadline_ns) - now), caption: 'to settle' };
-    if (status === 'AwaitingInventory') return { value: '–', caption: 'no inventory' };
+    if (status === 'AwaitingInventory') return { value: 'Not open', caption: 'no inventory' };
     return { value: fmtCountdown(nsToMs(pool.offer.lock_at_ns) - now), caption: 'to lock' };
   });
 </script>

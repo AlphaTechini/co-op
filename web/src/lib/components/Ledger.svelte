@@ -16,6 +16,7 @@
   const t = $derived(receipt.totals);
   const delivered = $derived(receipt.rows.filter((r) => r.filled && r.member.delivery === 'Delivered').reduce((a, r) => a + r.units, 0));
   const exactTotal = $derived(t.locked);
+  const pledgedUnits = $derived(receipt.rows.reduce((a, r) => a + r.units, 0));
   const equal = $derived(t.locked === t.paid + t.refunded + t.storage);
 </script>
 
@@ -49,7 +50,7 @@
                   <span class="headroom__bar" style="--ratio:{(r.permille / 10).toFixed(1)}%" aria-hidden="true"></span>
                 </span>
               {:else if r.filled && r.perUnit !== null}
-                <span class="text-tertiary" title="The agent's limit could not be read">{formatNear(r.perUnit)} / {'–'}</span>
+                <span class="text-tertiary" title="The agent's limit could not be read">{formatNear(r.perUnit)} / limit unknown</span>
               {:else}
                 <span class="text-tertiary">{m.outcome === 'Refunded' ? 'Refunded' : 'Excluded'}</span>
               {/if}
@@ -57,13 +58,13 @@
             <td class="num num--strong" data-label="Paid">{formatNearExact(r.paid, 2)}</td>
             <td class="num" class:is-muted={r.refunded === 0n} data-label="Refund">{formatNearExact(r.refunded, 2)}</td>
             <td data-label="Delivery">
-              {#if !r.filled}<span class="delivery" data-state="pending" style="color:var(--text-disabled)">{'–'}</span>
+              {#if !r.filled}<span class="delivery" data-state="pending">None</span>
               {:else if m.delivery === 'Delivered'}<span class="delivery" data-state="delivered"><Icon name="check-circle" />{r.units} delivered</span>
               {:else if m.delivery === 'Claimable'}<span class="delivery" data-state="claimable"><Icon name="alert" />Claimable</span>
               {:else}<span class="delivery" data-state="pending"><Icon name="clock" />Pending</span>{/if}
             </td>
             <td class="ledger__cell-tx" data-label="Joined in">
-              {#if joinTx.get(m.agent_id)}{@const tx = joinTx.get(m.agent_id)!}<TxChip hash={tx.hash} explorerUrl={tx.explorer_url} />{:else}<span class="text-disabled" title={hasServer ? 'No transaction recorded' : 'Needs the Co-op server'}>{'–'}</span>{/if}
+              {#if joinTx.get(m.agent_id)}{@const tx = joinTx.get(m.agent_id)!}<TxChip hash={tx.hash} explorerUrl={tx.explorer_url} />{:else}<span class="text-disabled" title={hasServer ? 'No transaction recorded' : 'Needs the Co-op server'}>{hasServer ? 'Not recorded' : 'Needs server'}</span>{/if}
             </td>
           </tr>
         {/each}
@@ -71,11 +72,11 @@
       <tfoot>
         <tr>
           <td data-label="Agents">{receipt.rows.length} {receipt.rows.length === 1 ? 'agent' : 'agents'}</td>
-          <td class="num" data-label="Units">{t.units}</td>
-          <td class="num" data-label="Price">{receipt.unitPrice ? `${formatNear(receipt.unitPrice)} for all` : '–'}</td>
+          <td class="num" data-label="Units">{receipt.unitPrice ? t.units : pledgedUnits}</td>
+          <td class="num" data-label="Price">{receipt.unitPrice ? `${formatNear(receipt.unitPrice)} for all` : 'No tier'}</td>
           <td class="num num--strong" data-label="Paid">{formatNearExact(t.paid, 2)}</td>
           <td class="num" data-label="Refunded">{formatNearExact(t.refunded, 2)}</td>
-          <td data-label="Delivered">{delivered} of {t.units}</td>
+          <td data-label="Delivered">{receipt.unitPrice ? `${delivered} of ${t.units}` : 'Nothing delivered'}</td>
           <td></td>
         </tr>
       </tfoot>

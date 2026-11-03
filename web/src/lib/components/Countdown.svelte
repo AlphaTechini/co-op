@@ -22,12 +22,12 @@
   <div class="countdown__row">
     <div class="countdown__item" data-urgent={locked || urgent ? '' : undefined}>
       <span class="countdown__label"><Icon name="lock" size="sm" />{locked ? 'Locked' : 'Locks in'}</span>
-      <span class="countdown__value" role="timer" aria-live="off">{locked ? 'Frozen' : fmtCountdown(lock - now)}</span>
+      <span class="countdown__value" class:countdown__value--text={locked} role="timer" aria-live="off">{locked ? 'Frozen' : fmtCountdown(lock - now)}</span>
       <span class="countdown__at">{fmtClock(lock)} UTC</span>
     </div>
     <div class="countdown__item">
       <span class="countdown__label"><Icon name="timer" size="sm" />{past ? 'Deadline passed' : 'Settles in'}</span>
-      <span class="countdown__value" role="timer" aria-live="off">{status === 'Settling' ? `${pool.settle_cursor} of ${pool.member_count}` : past ? 'Awaiting settlement' : fmtCountdown(deadline - now)}</span>
+      <span class="countdown__value" class:countdown__value--text={status !== 'Settling' && past} role="timer" aria-live="off">{status === 'Settling' ? `${pool.settle_cursor} of ${pool.member_count}` : past ? 'Awaiting settlement' : fmtCountdown(deadline - now)}</span>
       <span class="countdown__at">{fmtClock(deadline)} UTC</span>
     </div>
   </div>

@@ -95,6 +95,21 @@ class AppConfig {
     }
   }
 
+  /** A local sandbox has no public explorer: links become plain text there. */
+  get hasExplorer(): boolean {
+    return this.network !== 'sandbox' && !!this.explorerTxBase;
+  }
+
+  /** Human name of the explorer, for link labels ("NearBlocks" or the host). */
+  get explorerName(): string {
+    try {
+      const host = new URL(this.explorerTxBase).hostname;
+      return host.includes('nearblocks') ? 'NearBlocks' : host;
+    } catch {
+      return 'the explorer';
+    }
+  }
+
   txUrl(hash: string, explorerUrl?: string): string {
     return explorerUrl || `${this.explorerTxBase}${hash}`;
   }

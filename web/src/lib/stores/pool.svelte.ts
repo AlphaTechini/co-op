@@ -243,11 +243,14 @@ export class PoolPage {
     if (!live) return;
 
     const before = new Map(prev.members.map((m) => [m.agent_id, m]));
-    const nowIn = next.members.filter((m) => m.projected_in && !before.get(m.agent_id)?.projected_in).map((m) => m.agent_id);
+    // "now in" means a member that was already waiting and just got pulled in, not a brand-new joiner
+    const nowIn = next.members.filter((m) => m.projected_in && before.has(m.agent_id) && !before.get(m.agent_id)!.projected_in).map((m) => m.agent_id);
     const flips = next.members.filter((m) => m.threshold_units !== null && m.projected_in && before.get(m.agent_id) && !before.get(m.agent_id)!.projected_in);
-    for (const m of flips) {
-      this.#flash('flip', m.agent_id);
-      this.#announce(`${m.agent_id.split('.')[0]} is now in.`);
+    for (const m of flips) this.#flash('flip', m.agent_id);
+    if (flips.length) {
+      const names = flips.map((m) => m.agent_id.split('.')[0]);
+      const list = names.length === 1 ? names[0] : `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`;
+      this.#announce(`${list} ${names.length === 1 ? 'is' : 'are'} now in.`);
     }
 
     if (tier1 !== tier0) {

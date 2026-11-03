@@ -17,10 +17,11 @@
       <Icon name="wifi-off" />
       <p class="rpc-banner__text">
         Can't reach {config.network} RPC.
-        <span>
-          {#if rpcState.lastOkAt}Showing data from {fmtClock(rpcState.lastOkAt, true)} UTC.{/if}
-          {#if secs !== null}Retrying in {secs}s{/if}{#if urls.length > 1} across {urls.length} endpoints{:else if rpcState.host} with {rpcState.host}{/if}.
-        </span>
+        <span>{[
+          rpcState.lastOkAt ? `Showing data from ${fmtClock(rpcState.lastOkAt, true)} UTC.` : 'No data yet.',
+          (secs !== null ? `Retrying in ${secs}s` : 'Retrying') +
+            (urls.length > 1 ? ` across ${urls.length} endpoints.` : rpcState.host ? ` with ${rpcState.host}.` : '.')
+        ].join(' ')}</span>
       </p>
       <button class="btn btn--secondary btn--sm" type="button" onclick={retryAll}><Icon name="refresh" size="sm" />Retry now</button>
     </div>
