@@ -40,6 +40,13 @@
     if (!budgetTouched) return null;
     if (!Number.isFinite(budget) || budget < MIN_BUDGET) return `Budget must be at least ${MIN_BUDGET.toFixed(2)} NEAR.`;
     if (budget > maxBudget) return `Budget is capped at ${maxBudget.toFixed(2)} NEAR.`;
+    // the server also needs a small storage reserve on top, so this is a floor, not the exact minimum
+    if (liveParsed.units !== null && liveParsed.maxPrice !== null) {
+      const floor = BigInt(liveParsed.units) * liveParsed.maxPrice;
+      if (BigInt(Math.round(budget * 1e6)) * 10n ** 18n < floor) {
+        return `This brief can spend up to ${formatNear(floor)} NEAR (${liveParsed.units} units at ${formatNear(liveParsed.maxPrice)}). Raise the budget or lower the limit.`;
+      }
+    }
     return null;
   });
   const pct = $derived(
