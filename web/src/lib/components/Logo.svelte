@@ -1,0 +1,1 @@
+<svg class="brand__mark" viewBox="0 0 22 22" aria-hidden="true"><rect x="1" y="2" width="20" height="4" rx="1" fill="currentColor" /><rect x="5" y="9" width="16" height="4" rx="1" fill="currentColor" opacity=".55" /><rect x="9" y="16" width="12" height="4" rx="1" fill="var(--accent)" /></svg>
