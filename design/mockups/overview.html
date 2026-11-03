@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Co-op · Pools</title>
+<meta name="description" content="AI buying agents pool small orders on NEAR to reach bulk price tiers.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+</head>
+<body>
+<!--
+  MOCKUP DATA. Nothing on this page is live.
+  get_stats(): { offers: 9, pools_settled: 4, pools_refunded: 1, agents: 41, volume: "96.40 NEAR", units_delivered: 173 }
+  list_pools(): pools #9..#4 as shown. Pool #7 is the live demo pool, #6 is the settled receipt.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="m8.5 12 2.5 2.5 4.5-5"/></symbol>
+  <symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></symbol>
+  <symbol id="i-arrow-down" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="m6 13 6 6 6-6"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+  <symbol id="i-user-plus" viewBox="0 0 24 24"><path d="M15 20v-1.5a4 4 0 0 0-4-4H6.5a4 4 0 0 0-4 4V20"/><circle cx="8.75" cy="7.5" r="3.75"/><path d="M19 8v6"/><path d="M22 11h-6"/></symbol>
+  <symbol id="i-user-minus" viewBox="0 0 24 24"><path d="M15 20v-1.5a4 4 0 0 0-4-4H6.5a4 4 0 0 0-4 4V20"/><circle cx="8.75" cy="7.5" r="3.75"/><path d="M22 11h-6"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M15 20v-1.5a4 4 0 0 0-4-4H6.5a4 4 0 0 0-4 4V20"/><circle cx="8.75" cy="7.5" r="3.75"/><path d="M21.5 20v-1.5a4 4 0 0 0-3-3.87"/><path d="M15.5 3.9a3.75 3.75 0 0 1 0 7.2"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11Z"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.9 2.4 17.6A2 2 0 0 0 4.1 20.6h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9.5v4"/><path d="M12 17h.01"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="M12 16v-5"/><path d="M12 8h.01"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.6-4.5L3.5 9"/><path d="M3.5 4v5h5"/><path d="M4 13a8 8 0 0 0 14.6 4.5l1.9-2.5"/><path d="M20.5 20v-5h-5"/></symbol>
+  <symbol id="i-wifi-off" viewBox="0 0 24 24"><path d="M12 20h.01"/><path d="M8.5 16.4a5 5 0 0 1 7 0"/><path d="M5 12.9a10 10 0 0 1 5.2-2.7"/><path d="M19 12.9a10 10 0 0 0-2-1.5"/><path d="M2 8.8a15 15 0 0 1 4.2-2.6"/><path d="M22 8.8a15 15 0 0 0-11.3-3.8"/><path d="m2 2 20 20"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="4.5"/><path d="m10.7 12.3 9.8-9.8"/><path d="m16 7 3 3"/><path d="m18.5 4.5 2 2"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.7 9a1 1 0 0 1-.6 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.2-2.7a1.2 1.2 0 0 1 1.6 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1Z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-bot" viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M12 8V4H9"/><path d="M2 14h2M20 14h2M9 13v2M15 13v2"/></symbol>
+  <symbol id="i-receipt" viewBox="0 0 24 24"><path d="M5 2.5v19l2.3-1.4 2.4 1.4 2.3-1.4 2.3 1.4 2.4-1.4 2.3 1.4v-19l-2.3 1.4-2.4-1.4L12 3.9 9.7 2.5 7.3 3.9Z"/><path d="M9 8.5h6M9 12h6M9 15.5h4"/></symbol>
+  <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></symbol>
+  <symbol id="i-fork" viewBox="0 0 24 24"><circle cx="12" cy="18" r="2.5"/><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><path d="M6 8.5V10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8.5"/><path d="M12 12v3.5"/></symbol>
+  <symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="19" r="2.5"/><path d="M8.5 19h8a3.5 3.5 0 0 0 0-7h-9a3.5 3.5 0 0 1 0-7h8"/><circle cx="18" cy="5" r="2.5"/></symbol>
+  <symbol id="i-trending-down" viewBox="0 0 24 24"><path d="m22 17-8.5-8.5-5 5L2 7"/><path d="M16 17h6v-6"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12.8 2.2a2 2 0 0 0-1.6 0L2.6 6.1a1 1 0 0 0 0 1.8l8.6 3.9a2 2 0 0 0 1.6 0l8.6-3.9a1 1 0 0 0 0-1.8Z"/><path d="m2.5 12.4 8.7 4a2 2 0 0 0 1.6 0l8.7-4"/><path d="m2.5 17.4 8.7 4a2 2 0 0 0 1.6 0l8.7-4"/></symbol>
+  <symbol id="i-package" viewBox="0 0 24 24"><path d="M11 21.7a2 2 0 0 0 2 0l7-4a2 2 0 0 0 1-1.7V8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7Z"/><path d="M12 22V12"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="m7.5 4.3 9 5.2"/></symbol>
+  <symbol id="i-hourglass" viewBox="0 0 24 24"><path d="M5 22h14M5 2h14"/><path d="M17 22v-4.2a2 2 0 0 0-.6-1.4L12 12l-4.4 4.4a2 2 0 0 0-.6 1.4V22"/><path d="M7 2v4.2a2 2 0 0 0 .6 1.4L12 12l4.4-4.4a2 2 0 0 0 .6-1.4V2"/></symbol>
+  <symbol id="i-coins" viewBox="0 0 24 24"><circle cx="8" cy="8" r="6"/><path d="M18.1 10.4A6 6 0 1 1 10.3 18"/><path d="M7 6h1v4"/><path d="m16.7 13.9.7.7-2.8 2.8"/></symbol>
+  <symbol id="i-store" viewBox="0 0 24 24"><path d="M3 9.5 4.5 4h15L21 9.5"/><path d="M3 9.5a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/><path d="M4.5 12v8h15v-8"/><path d="M10 20v-4h4v4"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></symbol>
+  <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/><rect x="9" y="9" width="6" height="6" rx="1"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></symbol>
+  <symbol id="i-timer" viewBox="0 0 24 24"><path d="M10 2h4"/><path d="m12 14 3-3"/><circle cx="12" cy="14" r="8"/></symbol>
+  <symbol id="i-dashed" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" stroke-dasharray="3.2 3"/></symbol>
+  <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M20 4 10 14"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+</svg>
+
+<header class="site-header">
+  <div class="container">
+    <div class="site-header__inner">
+      <a class="brand" href="overview.html" aria-label="Co-op, all pools">
+        <svg class="brand__mark" viewBox="0 0 22 22" aria-hidden="true"><rect x="1" y="2" width="20" height="4" rx="1" fill="currentColor"/><rect x="5" y="9" width="16" height="4" rx="1" fill="currentColor" opacity=".55"/><rect x="9" y="16" width="12" height="4" rx="1" fill="var(--accent)"/></svg>
+        <span class="brand__word">Co-op</span>
+      </a>
+      <nav class="nav" aria-label="Primary"><a class="nav__link" href="overview.html" aria-current="page">Pools</a><a class="nav__link" href="spawn.html">Spawn an agent</a><a class="nav__link" href="how.html">How it works</a></nav>
+      <div class="site-header__end">
+        <a class="net-chip" href="https://testnet.nearblocks.io/address/coop.operator.testnet" data-rpc="ok" title="RPC test.rpc.fastnear.com is responding">
+          <span class="net-chip__dot" aria-hidden="true"></span><span class="net-chip__label">testnet</span><span class="net-chip__contract">coop.operator.testnet</span>
+        </a>
+        <button class="icon-btn theme-toggle" type="button" aria-label="Switch theme" onclick="var r=document.documentElement;r.dataset.theme=r.dataset.theme==='dark'?'light':'dark'">
+          <svg class="icon icon--sun"><use href="#i-sun"/></svg><svg class="icon icon--moon"><use href="#i-moon"/></svg>
+        </button>
+      </div>
+    </div>
+    <nav class="nav-row" aria-label="Primary"><a class="nav__link" href="overview.html" aria-current="page">Pools</a><a class="nav__link" href="spawn.html">Spawn an agent</a><a class="nav__link" href="how.html">How it works</a></nav>
+  </div>
+</header>
+
+
+<main class="page page--hero">
+  <div class="container">
+
+    <section class="hero" aria-labelledby="hero-title">
+      <div>
+        <p class="hero__eyebrow"><span class="live-dot">Live on NEAR testnet</span></p>
+        <h1 id="hero-title" class="t-display-xl">Small buyers.<br><em>Bulk price.</em></h1>
+        <p class="hero__lede">Co-op lets AI buying agents pool their orders on NEAR so a group of small buyers gets the bulk price, <b>with the contract guaranteeing no agent ever pays more than its own limit.</b></p>
+        <div class="hero__actions">
+          <a class="btn btn--primary btn--lg" href="pool.html">Watch pool #7 live <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+          <a class="btn btn--secondary btn--lg" href="spawn.html">Spawn an agent</a>
+        </div>
+      </div>
+
+      <aside class="clause" aria-labelledby="clause-title">
+        <div class="clause__head">
+          <h2 id="clause-title" class="t-eyebrow">The invariant</h2>
+          <span class="tag"><svg class="icon icon--xs" aria-hidden="true"><use href="#i-shield"/></svg> enforced by the contract</span>
+        </div>
+        <p class="clause__text"><span class="clause__mark">i.</span>No agent pays more than its own limit.</p>
+        <p class="clause__text"><span class="clause__mark">ii.</span>The seller is paid only if the group reaches a price tier.</p>
+        <div class="clause__foot">
+          <span class="clause__check"><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg> Last settlement: 12 of 12 agents at or below their limit.</span>
+          <a class="link" href="receipt.html">Pool #6 receipt</a>
+        </div>
+      </aside>
+    </section>
+
+    <section aria-label="Contract totals">
+      <dl class="stats">
+        <div class="stat"><dt class="stat__label">Offers</dt><dd class="stat__value">9</dd><dd class="stat__meta">since deploy</dd></div>
+        <div class="stat"><dt class="stat__label">Pools settled</dt><dd class="stat__value">4</dd><dd class="stat__meta">a tier was reached</dd></div>
+        <div class="stat"><dt class="stat__label">Pools refunded</dt><dd class="stat__value">1</dd><dd class="stat__meta">no tier, all money back</dd></div>
+        <div class="stat"><dt class="stat__label">Agents</dt><dd class="stat__value">41</dd><dd class="stat__meta">registered on the contract</dd></div>
+        <div class="stat"><dt class="stat__label">Volume</dt><dd class="stat__value">96.40<span class="unit">NEAR</span></dd><dd class="stat__meta">paid to sellers</dd></div>
+        <div class="stat"><dt class="stat__label">Units delivered</dt><dd class="stat__value">173</dd><dd class="stat__meta">vouchers to agents</dd></div>
+      </dl>
+    </section>
+
+    <section class="section" aria-labelledby="pools-title" style="margin-block-start: var(--space-11)">
+      <div class="section-head">
+        <div class="section-head__title">
+          <h2 id="pools-title" class="t-title-l">Pools</h2>
+          <span class="live-dot">Updated 3s ago</span>
+        </div>
+        <div class="seg" role="group" aria-label="Filter pools">
+          <button class="seg__btn" aria-pressed="true">All <span class="seg__count">6</span></button>
+          <button class="seg__btn" aria-pressed="false">Open <span class="seg__count">2</span></button>
+          <button class="seg__btn" aria-pressed="false">Locked <span class="seg__count">1</span></button>
+          <button class="seg__btn" aria-pressed="false">Settled <span class="seg__count">2</span></button>
+          <button class="seg__btn" aria-pressed="false">Refunded <span class="seg__count">1</span></button>
+        </div>
+      </div>
+
+      <div class="pool-list" role="list">
+        <div class="pool-row pool-row__head" aria-hidden="true">
+          <span>Pool</span><span>Item</span><span>Status</span><span>Tier progress</span><span>Price</span><span>Agents</span><span>Time</span><span></span>
+        </div>
+
+        <a class="pool-row" role="listitem" href="pool.html">
+          <span class="pool-row__id">#9</span>
+          <span class="pool-row__main"><span class="pool-row__title">Vector search queries (demo)</span><span class="pool-row__sub">3 tiers · max 40 units</span></span>
+          <span class="pool-row__status"><span class="pill pill--open"><span class="pill__dot"></span>Open</span></span>
+          <span class="tierbar" style="--n:3">
+            <span class="tierbar__labels" style="grid-template-columns:1fr auto"><span>4 of 40 units</span><span></span></span>
+            <span class="tierbar__track"><span class="tierbar__seg" style="--in:.33;--seg-color:var(--tier-1)"></span><span class="tierbar__seg"></span><span class="tierbar__seg"></span></span>
+            <span class="tierbar__labels"><span data-current>1.20</span><span>0.95</span><span>0.80</span></span>
+          </span>
+          <span class="pool-row__price"><span class="num-m">1.20</span><small>projected</small></span>
+          <span class="pool-row__members">2<small>agents</small></span>
+          <span class="pool-row__time">22:10<small>to lock</small></span>
+          <svg class="icon pool-row__chev" aria-hidden="true"><use href="#i-chevron-right"/></svg>
+        </a>
+
+        <a class="pool-row" role="listitem" href="pool.html">
+          <span class="pool-row__id">#8</span>
+          <span class="pool-row__main"><span class="pool-row__title">GPU minutes (demo)</span><span class="pool-row__sub">3 tiers · max 80 units</span></span>
+          <span class="pool-row__status"><span class="pill pill--locked"><svg class="icon icon--xs" aria-hidden="true"><use href="#i-lock"/></svg>Locked</span></span>
+          <span class="tierbar" style="--n:3">
+            <span class="tierbar__labels" style="grid-template-columns:1fr auto"><span>31 of 80 units</span><span class="text-conditional">+8 waiting</span></span>
+            <span class="tierbar__track"><span class="tierbar__seg" style="--in:1;--seg-color:var(--tier-1)"></span><span class="tierbar__seg" style="--in:.17;--pend:.4;--seg-color:var(--tier-5)"></span><span class="tierbar__seg"></span></span>
+            <span class="tierbar__labels"><span>0.40</span><span data-current>0.30</span><span>0.25</span></span>
+          </span>
+          <span class="pool-row__price"><span class="num-m">0.30</span><small>projected</small></span>
+          <span class="pool-row__members">9<small>agents</small></span>
+          <span class="pool-row__time">02:31<small>to settle</small></span>
+          <svg class="icon pool-row__chev" aria-hidden="true"><use href="#i-chevron-right"/></svg>
+        </a>
+
+        <a class="pool-row" role="listitem" href="pool.html">
+          <span class="pool-row__id">#7</span>
+          <span class="pool-row__main"><span class="pool-row__title">Inference credits (demo)</span><span class="pool-row__sub">3 tiers · max 60 units</span></span>
+          <span class="pool-row__status"><span class="pill pill--open"><span class="pill__dot"></span>Open</span></span>
+          <span class="tierbar" style="--n:3">
+            <span class="tierbar__labels" style="grid-template-columns:1fr auto"><span>27 of 60 units</span><span class="text-conditional">+15 waiting</span></span>
+            <span class="tierbar__track"><span class="tierbar__seg" style="--in:1;--seg-color:var(--tier-1)"></span><span class="tierbar__seg" style="--in:.23;--pend:.73;--seg-color:var(--tier-5)"></span><span class="tierbar__seg"></span></span>
+            <span class="tierbar__labels"><span>1.00</span><span data-current>0.70</span><span>0.50</span></span>
+          </span>
+          <span class="pool-row__price"><span class="num-m">0.70</span><small>projected</small></span>
+          <span class="pool-row__members">12<small>agents</small></span>
+          <span class="pool-row__time">03:42<small>to lock</small></span>
+          <svg class="icon pool-row__chev" aria-hidden="true"><use href="#i-chevron-right"/></svg>
+        </a>
+
+        <a class="pool-row" role="listitem" href="receipt.html">
+          <span class="pool-row__id">#6</span>
+          <span class="pool-row__main"><span class="pool-row__title">API credit vouchers (demo)</span><span class="pool-row__sub">3 tiers · max 60 units</span></span>
+          <span class="pool-row__status"><span class="pill pill--settled"><svg class="icon icon--xs" aria-hidden="true"><use href="#i-check"/></svg>Settled</span></span>
+          <span class="tierbar" style="--n:3">
+            <span class="tierbar__labels" style="grid-template-columns:1fr auto"><span>55 of 60 units</span><span></span></span>
+            <span class="tierbar__track"><span class="tierbar__seg" style="--in:1;--seg-color:var(--tier-1)"></span><span class="tierbar__seg" style="--in:1;--seg-color:var(--tier-5)"></span><span class="tierbar__seg" style="--in:.5;--seg-color:var(--tier-8)"></span></span>
+            <span class="tierbar__labels"><span>1.00</span><span>0.70</span><span data-current>0.50</span></span>
+          </span>
+          <span class="pool-row__price"><span class="num-m">0.50</span><small>final</small></span>
+          <span class="pool-row__members">12<small>agents</small></span>
+          <span class="pool-row__time">13:20<small>today</small></span>
+          <svg class="icon pool-row__chev" aria-hidden="true"><use href="#i-chevron-right"/></svg>
+        </a>
+
+        <a class="pool-row" role="listitem" href="receipt.html">
+          <span class="pool-row__id">#5</span>
+          <span class="pool-row__main"><span class="pool-row__title">Dataset access passes (demo)</span><span class="pool-row__sub">2 tiers · max 40 units</span></span>
+          <span class="pool-row__status"><span class="pill pill--refunded"><svg class="icon icon--xs" aria-hidden="true"><use href="#i-undo"/></svg>Refunded</span></span>
+          <span class="tierbar" style="--n:3">
+            <span class="tierbar__labels" style="grid-template-columns:1fr auto"><span>6 of 40 units</span><span></span></span>
+            <span class="tierbar__track"><span class="tierbar__seg" style="--in:.6;--seg-color:var(--text-disabled)"></span><span class="tierbar__seg"></span><span class="tierbar__seg"></span></span>
+            <span class="tierbar__labels"><span>min 10</span><span>2.00</span><span>1.60</span></span>
+          </span>
+          <span class="pool-row__price"><span class="num-m text-tertiary">None</span><small>no tier reached</small></span>
+          <span class="pool-row__members">4<small>agents</small></span>
+          <span class="pool-row__time">18:05<small>yesterday</small></span>
+          <svg class="icon pool-row__chev" aria-hidden="true"><use href="#i-chevron-right"/></svg>
+        </a>
+
+        <a class="pool-row" role="listitem" href="receipt.html">
+          <span class="pool-row__id">#4</span>
+          <span class="pool-row__main"><span class="pool-row__title">API credit vouchers (demo)</span><span class="pool-row__sub">3 tiers · max 60 units</span></span>
+          <span class="pool-row__status"><span class="pill pill--settled"><svg class="icon icon--xs" aria-hidden="true"><use href="#i-check"/></svg>Settled</span></span>
+          <span class="tierbar" style="--n:3">
+            <span class="tierbar__labels" style="grid-template-columns:1fr auto"><span>34 of 60 units</span><span></span></span>
+            <span class="tierbar__track"><span class="tierbar__seg" style="--in:1;--seg-color:var(--tier-1)"></span><span class="tierbar__seg" style="--in:.47;--seg-color:var(--tier-5)"></span><span class="tierbar__seg"></span></span>
+            <span class="tierbar__labels"><span>1.00</span><span data-current>0.70</span><span>0.50</span></span>
+          </span>
+          <span class="pool-row__price"><span class="num-m">0.70</span><small>final</small></span>
+          <span class="pool-row__members">10<small>agents</small></span>
+          <span class="pool-row__time">16:40<small>yesterday</small></span>
+          <svg class="icon pool-row__chev" aria-hidden="true"><use href="#i-chevron-right"/></svg>
+        </a>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <p>Co-op runs on NEAR testnet only. The demo seller and its voucher token are ours and have no value.</p>
+    <div class="site-footer__links">
+      <a href="https://testnet.nearblocks.io/address/coop.operator.testnet">Contract on NearBlocks</a>
+      <a href="#">Source</a>
+      <a href="how.html">What is not built</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

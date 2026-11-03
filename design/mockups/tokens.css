@@ -1,0 +1,355 @@
+/* =============================================================================
+   Co-op design tokens  ·  v1.0
+   Port verbatim to web/src/lib/styles/tokens.css.
+   Layer 1: primitives (never referenced by components directly).
+   Layer 2: semantic tokens (the only thing components use).
+   Theme: light by default; dark via prefers-color-scheme unless the user
+   forced a theme with <html data-theme="light|dark">.
+   ========================================================================== */
+
+:root {
+  /* ---------- Primitives: paper & ink (warm neutrals) ---------- */
+  --paper-0: #ffffff;
+  --paper-25: #fbfaf7;
+  --paper-50: #f5f4ef;
+  --paper-100: #eeece5;
+  --paper-150: #e7e4dc;
+  --paper-200: #dedbd2;
+  --paper-300: #c9c5ba;
+  --ink-400: #96948b;
+  --ink-500: #6f6d66;
+  --ink-600: #5a5953;
+  --ink-800: #2b2a27;
+  --ink-900: #171716;
+
+  --night-0: #0e0e0d;
+  --night-50: #151514;
+  --night-100: #1c1c1a;
+  --night-150: #222220;
+  --night-200: #2a2927;
+  --night-300: #3a3935;
+  --night-400: #5b5a54;
+  --night-500: #8a887f;
+  --night-600: #a8a69e;
+  --night-900: #edece7;
+
+  /* ---------- Primitives: jade (brand, committed, tiers) ---------- */
+  --jade-50: #eef7f2;
+  --jade-100: #e1f0e8;
+  --jade-200: #bfe0cf;
+  --jade-500: #18865e;
+  --jade-600: #0b6e4e;
+  --jade-700: #075a3f;
+  --jade-d-subtle: #11281e;
+  --jade-d-border: #1f4a39;
+  --jade-d-500: #4cc38a;
+  --jade-d-600: #6dd3a7;
+
+  /* ---------- Primitives: cobalt (conditional intent) ---------- */
+  --cobalt-50: #eff2fd;
+  --cobalt-100: #e3e9fc;
+  --cobalt-300: #a9bbf3;
+  --cobalt-600: #2b4bc0;
+  --cobalt-d-subtle: #161c33;
+  --cobalt-d-border: #2c3a6e;
+  --cobalt-d-500: #8ea6f0;
+
+  /* ---------- Primitives: amber (time pressure, warnings) ---------- */
+  --amber-50: #fbf3e2;
+  --amber-200: #ecd3a0;
+  --amber-700: #8f5b00;
+  --amber-d-subtle: #261d0c;
+  --amber-d-border: #57421a;
+  --amber-d-500: #e2b04a;
+
+  /* ---------- Primitives: red (errors only) ---------- */
+  --red-50: #fcefed;
+  --red-200: #f2c4bd;
+  --red-700: #b42318;
+  --red-d-subtle: #2a1513;
+  --red-d-border: #5c2a24;
+  --red-d-500: #f07a6e;
+
+  /* ---------- Typography ---------- */
+  --font-display: "Newsreader", "Iowan Old Style", "Times New Roman", serif;
+  --font-sans: "Host Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  /* size / line-height pairs. Display uses the serif, num-* use the mono. */
+  --fs-display-xl: 4.75rem;   --lh-display-xl: 0.98;     /* 76/74 */
+  --fs-display-l: 2.75rem;    --lh-display-l: 1.05;      /* 44/46 */
+  --fs-display-m: 2rem;       --lh-display-m: 1.125;     /* 32/36 */
+  --fs-title-l: 1.375rem;     --lh-title-l: 1.75rem;     /* 22/28 */
+  --fs-title-m: 1.0625rem;    --lh-title-m: 1.5rem;      /* 17/24 */
+  --fs-body-l: 1.0625rem;     --lh-body-l: 1.625rem;     /* 17/26 */
+  --fs-body: 0.9375rem;       --lh-body: 1.375rem;       /* 15/22 */
+  --fs-body-s: 0.8125rem;     --lh-body-s: 1.125rem;     /* 13/18 */
+  --fs-label: 0.8125rem;      --lh-label: 1rem;          /* 13/16 */
+  --fs-eyebrow: 0.6875rem;    --lh-eyebrow: 1rem;        /* 11/16 mono caps */
+  --fs-num-hero: 4rem;        --lh-num-hero: 1;          /* 64/64 */
+  --fs-num-l: 1.75rem;        --lh-num-l: 2rem;          /* 28/32 */
+  --fs-num-m: 1.125rem;       --lh-num-m: 1.5rem;        /* 18/24 */
+  --fs-num-s: 0.8125rem;      --lh-num-s: 1.125rem;      /* 13/18 */
+  --fs-num-xs: 0.75rem;       --lh-num-xs: 1rem;         /* 12/16 */
+
+  --tracking-display: -0.022em;
+  --tracking-title: -0.012em;
+  --tracking-body: 0;
+  --tracking-num-hero: -0.045em;
+  --tracking-num: -0.02em;
+  --tracking-eyebrow: 0.08em;
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+
+  /* ---------- Spacing (4px grid) ---------- */
+  --space-0: 0;
+  --space-1: 0.125rem;  /* 2 */
+  --space-2: 0.25rem;   /* 4 */
+  --space-3: 0.5rem;    /* 8 */
+  --space-4: 0.75rem;   /* 12 */
+  --space-5: 1rem;      /* 16 */
+  --space-6: 1.25rem;   /* 20 */
+  --space-7: 1.5rem;    /* 24 */
+  --space-8: 2rem;      /* 32 */
+  --space-9: 2.5rem;    /* 40 */
+  --space-10: 3rem;     /* 48 */
+  --space-11: 4rem;     /* 64 */
+  --space-12: 5rem;     /* 80 */
+  --space-13: 6rem;     /* 96 */
+
+  --gutter: var(--space-8);          /* page side padding, 16px on phones */
+  --container: 77.5rem;              /* 1240px max content width */
+  --header-h: 3.5rem;                /* 56px */
+
+  /* ---------- Radii ---------- */
+  --radius-xs: 3px;
+  --radius-s: 6px;
+  --radius-m: 8px;
+  --radius-l: 12px;
+  --radius-xl: 16px;
+  --radius-pill: 999px;
+
+  /* ---------- Motion ---------- */
+  --dur-instant: 80ms;
+  --dur-fast: 140ms;
+  --dur-base: 220ms;
+  --dur-slow: 360ms;
+  --dur-marker: 640ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.36, 0.64, 1);
+
+  /* ---------- Z ---------- */
+  --z-header: 20;
+  --z-toast: 50;
+
+  color-scheme: light;
+
+  /* ======================= SEMANTIC: LIGHT ======================= */
+  --bg: var(--paper-50);
+  --bg-sunken: var(--paper-100);
+  --surface: var(--paper-25);
+  --elevated: var(--paper-0);
+  --surface-hover: var(--paper-100);
+  --border: var(--paper-200);
+  --border-strong: var(--paper-300);
+  --border-subtle: var(--paper-150);
+
+  --text-primary: var(--ink-900);
+  --text-secondary: var(--ink-600);
+  --text-tertiary: var(--ink-500);
+  --text-disabled: var(--ink-400);
+  --text-on-ink: var(--paper-25);       /* text on the ink (primary) button */
+  --text-on-accent: #ffffff;
+
+  --ink: var(--ink-900);                /* primary button fill */
+  --ink-hover: var(--ink-800);
+
+  --accent: var(--jade-600);            /* links, focus, marker, active nav */
+  --accent-hover: var(--jade-700);
+  --accent-subtle: var(--jade-100);
+  --accent-border: var(--jade-200);
+
+  --positive: var(--jade-600);
+  --positive-subtle: var(--jade-100);
+  --positive-border: var(--jade-200);
+  --warning: var(--amber-700);
+  --warning-subtle: var(--amber-50);
+  --warning-border: var(--amber-200);
+  --negative: var(--red-700);
+  --negative-subtle: var(--red-50);
+  --negative-border: var(--red-200);
+
+  /* member states */
+  --committed: var(--jade-600);
+  --committed-subtle: var(--jade-100);
+  --committed-border: var(--jade-200);
+  --conditional: var(--cobalt-600);
+  --conditional-subtle: var(--cobalt-50);
+  --conditional-border: var(--cobalt-300);
+  --excluded: var(--ink-500);
+  --excluded-subtle: var(--paper-100);
+
+  /* tier ladder data palette: sequential jade, entry tier lightest.
+     For n tiers use --tier-k with k = round(i * 7 / max(n - 1, 1)) + 1. */
+  --tier-1: #a9d8c2;
+  --tier-2: #86c7a9;
+  --tier-3: #64b591;
+  --tier-4: #45a27b;
+  --tier-5: #2b8f67;
+  --tier-6: #187d58;
+  --tier-7: #0b6e4e;
+  --tier-8: #075a3f;
+  --track: var(--paper-150);            /* unreached part of any bar */
+  --hatch: var(--cobalt-600);           /* pending conditional units */
+  --hatch-bg: var(--cobalt-50);
+
+  /* elevation: the UI is flat with hairlines; shadows only for floating layers */
+  --shadow-0: none;
+  --shadow-1: 0 1px 0 rgb(23 23 22 / 0.04);
+  --shadow-2: 0 1px 2px rgb(23 23 22 / 0.06), 0 4px 12px rgb(23 23 22 / 0.06);
+  --shadow-3: 0 2px 4px rgb(23 23 22 / 0.06), 0 12px 32px rgb(23 23 22 / 0.12);
+  --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+
+  --skeleton-base: var(--paper-150);
+  --skeleton-shine: var(--paper-50);
+}
+
+/* ======================= SEMANTIC: DARK ======================= */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: var(--night-0);
+    --bg-sunken: #0a0a09;
+    --surface: var(--night-50);
+    --elevated: var(--night-100);
+    --surface-hover: var(--night-150);
+    --border: var(--night-200);
+    --border-strong: var(--night-300);
+    --border-subtle: #1f1f1d;
+    --text-primary: var(--night-900);
+    --text-secondary: var(--night-600);
+    --text-tertiary: var(--night-500);
+    --text-disabled: var(--night-400);
+    --text-on-ink: var(--night-0);
+    --text-on-accent: var(--night-0);
+    --ink: var(--night-900);
+    --ink-hover: #ffffff;
+    --accent: var(--jade-d-500);
+    --accent-hover: var(--jade-d-600);
+    --accent-subtle: var(--jade-d-subtle);
+    --accent-border: var(--jade-d-border);
+    --positive: var(--jade-d-500);
+    --positive-subtle: var(--jade-d-subtle);
+    --positive-border: var(--jade-d-border);
+    --warning: var(--amber-d-500);
+    --warning-subtle: var(--amber-d-subtle);
+    --warning-border: var(--amber-d-border);
+    --negative: var(--red-d-500);
+    --negative-subtle: var(--red-d-subtle);
+    --negative-border: var(--red-d-border);
+    --committed: var(--jade-d-500);
+    --committed-subtle: var(--jade-d-subtle);
+    --committed-border: var(--jade-d-border);
+    --conditional: var(--cobalt-d-500);
+    --conditional-subtle: var(--cobalt-d-subtle);
+    --conditional-border: var(--cobalt-d-border);
+    --excluded: var(--night-500);
+    --excluded-subtle: var(--night-150);
+    --tier-1: #2a5e49;
+    --tier-2: #2f7058;
+    --tier-3: #368466;
+    --tier-4: #3e9a77;
+    --tier-5: #49af88;
+    --tier-6: #5bc398;
+    --tier-7: #74d4ab;
+    --tier-8: #97e3c0;
+    --track: var(--night-150);
+    --hatch: var(--cobalt-d-500);
+    --hatch-bg: var(--cobalt-d-subtle);
+    --shadow-1: 0 1px 0 rgb(0 0 0 / 0.3);
+    --shadow-2: 0 1px 2px rgb(0 0 0 / 0.4), 0 4px 12px rgb(0 0 0 / 0.3);
+    --shadow-3: 0 2px 4px rgb(0 0 0 / 0.4), 0 16px 40px rgb(0 0 0 / 0.5);
+    --skeleton-base: var(--night-150);
+    --skeleton-shine: var(--night-200);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: var(--night-0);
+  --bg-sunken: #0a0a09;
+  --surface: var(--night-50);
+  --elevated: var(--night-100);
+  --surface-hover: var(--night-150);
+  --border: var(--night-200);
+  --border-strong: var(--night-300);
+  --border-subtle: #1f1f1d;
+  --text-primary: var(--night-900);
+  --text-secondary: var(--night-600);
+  --text-tertiary: var(--night-500);
+  --text-disabled: var(--night-400);
+  --text-on-ink: var(--night-0);
+  --text-on-accent: var(--night-0);
+  --ink: var(--night-900);
+  --ink-hover: #ffffff;
+  --accent: var(--jade-d-500);
+  --accent-hover: var(--jade-d-600);
+  --accent-subtle: var(--jade-d-subtle);
+  --accent-border: var(--jade-d-border);
+  --positive: var(--jade-d-500);
+  --positive-subtle: var(--jade-d-subtle);
+  --positive-border: var(--jade-d-border);
+  --warning: var(--amber-d-500);
+  --warning-subtle: var(--amber-d-subtle);
+  --warning-border: var(--amber-d-border);
+  --negative: var(--red-d-500);
+  --negative-subtle: var(--red-d-subtle);
+  --negative-border: var(--red-d-border);
+  --committed: var(--jade-d-500);
+  --committed-subtle: var(--jade-d-subtle);
+  --committed-border: var(--jade-d-border);
+  --conditional: var(--cobalt-d-500);
+  --conditional-subtle: var(--cobalt-d-subtle);
+  --conditional-border: var(--cobalt-d-border);
+  --excluded: var(--night-500);
+  --excluded-subtle: var(--night-150);
+  --tier-1: #2a5e49;
+  --tier-2: #2f7058;
+  --tier-3: #368466;
+  --tier-4: #3e9a77;
+  --tier-5: #49af88;
+  --tier-6: #5bc398;
+  --tier-7: #74d4ab;
+  --tier-8: #97e3c0;
+  --track: var(--night-150);
+  --hatch: var(--cobalt-d-500);
+  --hatch-bg: var(--cobalt-d-subtle);
+  --shadow-1: 0 1px 0 rgb(0 0 0 / 0.3);
+  --shadow-2: 0 1px 2px rgb(0 0 0 / 0.4), 0 4px 12px rgb(0 0 0 / 0.3);
+  --shadow-3: 0 2px 4px rgb(0 0 0 / 0.4), 0 16px 40px rgb(0 0 0 / 0.5);
+  --skeleton-base: var(--night-150);
+  --skeleton-shine: var(--night-200);
+}
+
+@media (max-width: 639px) {
+  :root {
+    --gutter: var(--space-5);
+    --fs-display-xl: 2.625rem;  --lh-display-xl: 1.05;   /* 42/44 */
+    --fs-display-l: 2.125rem;   --lh-display-l: 1.1;     /* 34/38 */
+    --fs-display-m: 1.625rem;   --lh-display-m: 1.15;    /* 26/30 */
+    --fs-num-hero: 3rem;                                  /* 48 */
+    --fs-num-l: 1.5rem;         --lh-num-l: 1.75rem;     /* 24/28 */
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0ms;
+    --dur-base: 0ms;
+    --dur-slow: 0ms;
+    --dur-marker: 0ms;
+  }
+}

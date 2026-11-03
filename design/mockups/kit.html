@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Component kit · Co-op</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<style>
+  /* kit page layout only; not part of the product CSS */
+  .kit { display: grid; grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr)); gap: var(--space-6); align-items: start; }
+  .kit h2 { margin-block-end: var(--space-4); }
+  .row { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }
+</style>
+</head>
+<body>
+<!-- MOCKUP DATA. States and components that do not appear on the five screens. -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="m8.5 12 2.5 2.5 4.5-5"/></symbol>
+  <symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></symbol>
+  <symbol id="i-arrow-down" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="m6 13 6 6 6-6"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+  <symbol id="i-user-plus" viewBox="0 0 24 24"><path d="M15 20v-1.5a4 4 0 0 0-4-4H6.5a4 4 0 0 0-4 4V20"/><circle cx="8.75" cy="7.5" r="3.75"/><path d="M19 8v6"/><path d="M22 11h-6"/></symbol>
+  <symbol id="i-user-minus" viewBox="0 0 24 24"><path d="M15 20v-1.5a4 4 0 0 0-4-4H6.5a4 4 0 0 0-4 4V20"/><circle cx="8.75" cy="7.5" r="3.75"/><path d="M22 11h-6"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M15 20v-1.5a4 4 0 0 0-4-4H6.5a4 4 0 0 0-4 4V20"/><circle cx="8.75" cy="7.5" r="3.75"/><path d="M21.5 20v-1.5a4 4 0 0 0-3-3.87"/><path d="M15.5 3.9a3.75 3.75 0 0 1 0 7.2"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11Z"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.9 2.4 17.6A2 2 0 0 0 4.1 20.6h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9.5v4"/><path d="M12 17h.01"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="M12 16v-5"/><path d="M12 8h.01"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.6-4.5L3.5 9"/><path d="M3.5 4v5h5"/><path d="M4 13a8 8 0 0 0 14.6 4.5l1.9-2.5"/><path d="M20.5 20v-5h-5"/></symbol>
+  <symbol id="i-wifi-off" viewBox="0 0 24 24"><path d="M12 20h.01"/><path d="M8.5 16.4a5 5 0 0 1 7 0"/><path d="M5 12.9a10 10 0 0 1 5.2-2.7"/><path d="M19 12.9a10 10 0 0 0-2-1.5"/><path d="M2 8.8a15 15 0 0 1 4.2-2.6"/><path d="M22 8.8a15 15 0 0 0-11.3-3.8"/><path d="m2 2 20 20"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="4.5"/><path d="m10.7 12.3 9.8-9.8"/><path d="m16 7 3 3"/><path d="m18.5 4.5 2 2"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.7 9a1 1 0 0 1-.6 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.2-2.7a1.2 1.2 0 0 1 1.6 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1Z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-bot" viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M12 8V4H9"/><path d="M2 14h2M20 14h2M9 13v2M15 13v2"/></symbol>
+  <symbol id="i-receipt" viewBox="0 0 24 24"><path d="M5 2.5v19l2.3-1.4 2.4 1.4 2.3-1.4 2.3 1.4 2.4-1.4 2.3 1.4v-19l-2.3 1.4-2.4-1.4L12 3.9 9.7 2.5 7.3 3.9Z"/><path d="M9 8.5h6M9 12h6M9 15.5h4"/></symbol>
+  <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></symbol>
+  <symbol id="i-fork" viewBox="0 0 24 24"><circle cx="12" cy="18" r="2.5"/><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><path d="M6 8.5V10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8.5"/><path d="M12 12v3.5"/></symbol>
+  <symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="19" r="2.5"/><path d="M8.5 19h8a3.5 3.5 0 0 0 0-7h-9a3.5 3.5 0 0 1 0-7h8"/><circle cx="18" cy="5" r="2.5"/></symbol>
+  <symbol id="i-trending-down" viewBox="0 0 24 24"><path d="m22 17-8.5-8.5-5 5L2 7"/><path d="M16 17h6v-6"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12.8 2.2a2 2 0 0 0-1.6 0L2.6 6.1a1 1 0 0 0 0 1.8l8.6 3.9a2 2 0 0 0 1.6 0l8.6-3.9a1 1 0 0 0 0-1.8Z"/><path d="m2.5 12.4 8.7 4a2 2 0 0 0 1.6 0l8.7-4"/><path d="m2.5 17.4 8.7 4a2 2 0 0 0 1.6 0l8.7-4"/></symbol>
+  <symbol id="i-package" viewBox="0 0 24 24"><path d="M11 21.7a2 2 0 0 0 2 0l7-4a2 2 0 0 0 1-1.7V8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7Z"/><path d="M12 22V12"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="m7.5 4.3 9 5.2"/></symbol>
+  <symbol id="i-hourglass" viewBox="0 0 24 24"><path d="M5 22h14M5 2h14"/><path d="M17 22v-4.2a2 2 0 0 0-.6-1.4L12 12l-4.4 4.4a2 2 0 0 0-.6 1.4V22"/><path d="M7 2v4.2a2 2 0 0 0 .6 1.4L12 12l4.4-4.4a2 2 0 0 0 .6-1.4V2"/></symbol>
+  <symbol id="i-coins" viewBox="0 0 24 24"><circle cx="8" cy="8" r="6"/><path d="M18.1 10.4A6 6 0 1 1 10.3 18"/><path d="M7 6h1v4"/><path d="m16.7 13.9.7.7-2.8 2.8"/></symbol>
+  <symbol id="i-store" viewBox="0 0 24 24"><path d="M3 9.5 4.5 4h15L21 9.5"/><path d="M3 9.5a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/><path d="M4.5 12v8h15v-8"/><path d="M10 20v-4h4v4"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></symbol>
+  <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/><rect x="9" y="9" width="6" height="6" rx="1"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></symbol>
+  <symbol id="i-timer" viewBox="0 0 24 24"><path d="M10 2h4"/><path d="m12 14 3-3"/><circle cx="12" cy="14" r="8"/></symbol>
+  <symbol id="i-dashed" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" stroke-dasharray="3.2 3"/></symbol>
+  <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M20 4 10 14"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+</svg>
+
+<header class="site-header">
+  <div class="container">
+    <div class="site-header__inner">
+      <a class="brand" href="overview.html" aria-label="Co-op, all pools">
+        <svg class="brand__mark" viewBox="0 0 22 22" aria-hidden="true"><rect x="1" y="2" width="20" height="4" rx="1" fill="currentColor"/><rect x="5" y="9" width="16" height="4" rx="1" fill="currentColor" opacity=".55"/><rect x="9" y="16" width="12" height="4" rx="1" fill="var(--accent)"/></svg>
+        <span class="brand__word">Co-op</span>
+      </a>
+      <nav class="nav" aria-label="Primary"><a class="nav__link" href="overview.html" aria-current="page">Pools</a><a class="nav__link" href="spawn.html">Spawn an agent</a><a class="nav__link" href="how.html">How it works</a></nav>
+      <div class="site-header__end">
+        <a class="net-chip" href="https://testnet.nearblocks.io/address/coop.operator.testnet" data-rpc="ok" title="RPC test.rpc.fastnear.com is responding">
+          <span class="net-chip__dot" aria-hidden="true"></span><span class="net-chip__label">testnet</span><span class="net-chip__contract">coop.operator.testnet</span>
+        </a>
+        <button class="icon-btn theme-toggle" type="button" aria-label="Switch theme" onclick="var r=document.documentElement;r.dataset.theme=r.dataset.theme==='dark'?'light':'dark'">
+          <svg class="icon icon--sun"><use href="#i-sun"/></svg><svg class="icon icon--moon"><use href="#i-moon"/></svg>
+        </button>
+      </div>
+    </div>
+    <nav class="nav-row" aria-label="Primary"><a class="nav__link" href="overview.html" aria-current="page">Pools</a><a class="nav__link" href="spawn.html">Spawn an agent</a><a class="nav__link" href="how.html">How it works</a></nav>
+  </div>
+</header>
+
+<div class="rpc-banner" role="alert">
+  <div class="container rpc-banner__inner">
+    <svg class="icon" aria-hidden="true"><use href="#i-wifi-off"/></svg>
+    <p class="rpc-banner__text">Can't reach testnet RPC. <span>Showing data from 14:09:12. Retrying in 8s with near-testnet.drpc.org.</span></p>
+    <button class="btn btn--secondary btn--sm" type="button"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-refresh"/></svg>Retry now</button>
+  </div>
+</div>
+<main class="page">
+  <div class="container">
+    <h1 class="t-display-m" style="margin-block-end:var(--space-8)">Component kit</h1>
+    <div class="kit">
+      <section><h2 class="t-eyebrow">Buttons</h2>
+        <div class="row"><button class="btn btn--primary">Spawn agent</button><button class="btn btn--secondary">Secondary</button><button class="btn btn--ghost">Ghost</button><button class="btn btn--primary" aria-busy="true"><span class="spinner"></span>Spawning</button><button class="btn" disabled>Disabled</button><button class="btn btn--primary btn--sm">Small</button></div>
+      </section>
+      <section><h2 class="t-eyebrow">Pool status</h2>
+        <div class="row">
+          <span class="pill pill--awaiting"><svg class="icon icon--xs" aria-hidden="true"><use href="#i-package"/></svg>Awaiting inventory</span>
+          <span class="pill pill--open"><span class="pill__dot"></span>Open</span>
+          <span class="pill pill--locked"><svg class="icon icon--xs" aria-hidden="true"><use href="#i-lock"/></svg>Locked</span>
+          <span class="pill pill--expired"><svg class="icon icon--xs" aria-hidden="true"><use href="#i-hourglass"/></svg>Awaiting settlement</span>
+          <span class="pill pill--settling"><span class="spinner" style="inline-size:10px;block-size:10px"></span>Settling 6 of 12</span>
+          <span class="pill pill--settled"><svg class="icon icon--xs" aria-hidden="true"><use href="#i-check"/></svg>Settled</span>
+          <span class="pill pill--refunded"><svg class="icon icon--xs" aria-hidden="true"><use href="#i-undo"/></svg>Refunded</span>
+        </div>
+      </section>
+      <section><h2 class="t-eyebrow">Member states</h2>
+        <div class="row">
+          <span class="mstate"><span class="mstate__ring"></span>Committed</span>
+          <span class="mstate"><span class="mstate__ring"></span>In at 20</span>
+          <span class="mstate" data-state="waiting"><span class="mstate__ring"></span>Waiting for 50</span>
+          <span class="mstate"><svg class="icon icon--xs" aria-hidden="true"><use href="#i-check"/></svg>Filled</span>
+          <span class="mstate" data-state="excluded"><span class="mstate__ring"></span>Excluded</span>
+          <span class="mstate" data-state="refunded"><span class="mstate__ring"></span>Refunded</span>
+        </div>
+      </section>
+      <section><h2 class="t-eyebrow">Delivery and tx</h2>
+        <div class="row">
+          <span class="delivery" data-state="delivered"><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg>4 delivered</span>
+          <span class="delivery" data-state="pending"><svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg>Pending</span>
+          <span class="delivery" data-state="claimable"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Claimable</span>
+          <a class="tx" href="#">9fKq…B5vF<svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right"/></svg></a>
+          <a class="tx" href="#"><span class="tx__method">settle</span>XBzB…EMD5<svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right"/></svg></a>
+        </div>
+      </section>
+      <section class="card"><div class="card__head"><h2 class="card__title">Members, excluded after settlement</h2></div>
+        <ul class="members">
+          <li class="member" data-state="excluded"><span class="member__glyph">B</span><div class="member__main"><span class="member__id">bargain-04<span class="member__suffix">.operator.testnet</span></span><p class="member__memo">Only worth it at 0.50. My limit is 0.55.</p></div><span class="member__units">5<span class="unit">u</span></span><span class="mstate" data-state="excluded"><span class="mstate__ring"></span>Excluded</span></li>
+          <li class="member" data-flipped><span class="member__glyph">B</span><div class="member__main"><span class="member__id">bargain-01<span class="member__suffix">.operator.testnet</span></span><p class="member__memo">In if the group reaches 20.</p></div><span class="member__units">3<span class="unit">u</span></span><span class="mstate"><span class="mstate__ring"></span>In at 20</span></li>
+        </ul>
+      </section>
+      <section class="card"><div class="card__head"><h2 class="card__title">Loading</h2></div>
+        <div class="card__body" style="display:grid;gap:var(--space-4)" aria-busy="true" aria-label="Loading pool">
+          <span class="skeleton" style="inline-size:40%"></span>
+          <span class="skeleton skeleton--num"></span>
+          <span class="skeleton" style="inline-size:85%"></span>
+          <div style="display:grid;grid-template-columns:28px 1fr 60px;gap:var(--space-4);align-items:center"><span class="skeleton" style="block-size:28px"></span><span class="skeleton"></span><span class="skeleton"></span></div>
+          <div style="display:grid;grid-template-columns:28px 1fr 60px;gap:var(--space-4);align-items:center"><span class="skeleton" style="block-size:28px"></span><span class="skeleton" style="inline-size:70%"></span><span class="skeleton"></span></div>
+        </div>
+      </section>
+      <section class="card"><div class="empty">
+        <svg class="empty__art" width="56" height="40" viewBox="0 0 56 40" aria-hidden="true"><rect x="1" y="2" width="54" height="8" rx="2" fill="none" stroke="currentColor" stroke-dasharray="3 3"/><rect x="9" y="16" width="46" height="8" rx="2" fill="none" stroke="currentColor" stroke-dasharray="3 3"/><rect x="17" y="30" width="38" height="8" rx="2" fill="none" stroke="currentColor" stroke-dasharray="3 3"/></svg>
+        <p class="empty__title">No open pools right now</p>
+        <p class="empty__body">The next demo offer opens on the hour. Settled pools and their receipts are below.</p>
+        <a class="btn btn--secondary btn--sm" href="spawn.html">Spawn an agent for the next one</a>
+      </div></section>
+      <section><h2 class="t-eyebrow">Banners</h2>
+        <div style="display:grid;gap:var(--space-3)">
+          <div class="banner banner--warning" role="status"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><div><p class="banner__title">Pool locked</p><p class="banner__body">Membership is frozen. Settlement can run from 14:20 UTC.</p></div><span></span></div>
+          <div class="banner banner--info" role="status"><svg class="icon" aria-hidden="true"><use href="#i-hourglass"/></svg><div><p class="banner__title">Deadline passed</p><p class="banner__body">Anyone can call settle. Our settler usually does it within a minute.</p></div><span></span></div>
+          <div class="banner banner--negative" role="alert"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg><div><p class="banner__title">Activity feed offline</p><p class="banner__body">Pool state still comes from RPC. Tx links will return with the server.</p></div><div class="banner__actions"><button class="btn btn--ghost btn--sm">Retry</button></div></div>
+        </div>
+      </section>
+      <section><h2 class="t-eyebrow">Field errors</h2>
+        <div class="field">
+          <div class="field__label-row"><label class="field__label" for="n2">Agent name</label></div>
+          <div class="input input--mono" data-invalid><input id="n2" value="Rin_2" aria-invalid="true" aria-describedby="n2m"><span class="input__affix">.operator.testnet</span></div>
+          <p class="field__msg field__msg--error" id="n2m"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Use lowercase letters, digits and hyphens only.</p>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+<div class="toast-region" aria-live="polite">
+  <div class="toast toast--positive" role="status"><svg class="icon toast__icon" aria-hidden="true"><use href="#i-check-circle"/></svg><div><p class="toast__title">rin joined pool #7</p><p class="toast__body">3 units if the group reaches 50.</p></div><button class="icon-btn" aria-label="Dismiss" style="inline-size:24px;block-size:24px"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+  <div class="toast toast--negative" role="alert"><svg class="icon toast__icon" aria-hidden="true"><use href="#i-alert"/></svg><div><p class="toast__title">Spawn failed</p><p class="toast__body">The operator account is out of testnet NEAR. Nothing was charged.</p></div><button class="icon-btn" aria-label="Dismiss" style="inline-size:24px;block-size:24px"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+</div>
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <p>Co-op runs on NEAR testnet only. The demo seller and its voucher token are ours and have no value.</p>
+    <div class="site-footer__links">
+      <a href="https://testnet.nearblocks.io/address/coop.operator.testnet">Contract on NearBlocks</a>
+      <a href="#">Source</a>
+      <a href="how.html">What is not built</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
