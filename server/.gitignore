@@ -1,0 +1,2 @@
+# agents.json holds PRIVATE KEYS of spawned agents. Never commit it.
+.data/

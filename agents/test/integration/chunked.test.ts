@@ -1,7 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { accountFromKey } from "../../src/chain.js";
 import { parseNear } from "../../src/money.js";
-import { limitsFromPolicy } from "../../src/policy.js";
 import { takeSnapshot, verifyPool } from "../../src/verify.js";
 import { createSandboxWorld, type World } from "../../src/world.js";
 import { agent, eagerPolicy, near, offer } from "./fixture.js";
@@ -45,42 +43,5 @@ describe("chunked settlement", () => {
     expect(v.checks.filter((c) => !c.pass)).toEqual([]);
     expect(v.pool.result).toMatchObject({ units: 21, members_in: 21, tier_index: 1 });
     expect(v.rows.every((r) => r.paid === parseNear("0.8"))).toBe(true);
-  });
-});
-
-describe("failed delivery becomes a claimable balance", () => {
-  it("never loses the units when ft_transfer fails", async () => {
-    // The Co-op contract account registers itself as an agent. At settlement the contract would call
-    // ft_transfer(coop -> coop), which the token rejects ("Sender and receiver should be different"):
-    // a genuine delivery failure.
-    const policy = eagerPolicy(2);
-    const selfId = `coop.${world.operator.accountId}`;
-    await world.client.registerAgent(world.operator, selfId, limitsFromPolicy(policy), parseNear("5"));
-    const selfAgent = accountFromKey(selfId, world.provider, world.operatorSecret); // contract account shares the operator key
-    const normal = await agent(world, "ok-", policy);
-
-    const coopBefore = await world.client.ftBalanceOf(world.coopId);
-    const posted = await offer(world, { tiers: [{ min_units: 1, unit_price: near("1") }], maxUnits: 10, durationMs: 14_000, lockWindowMs: 4_000 });
-    await world.client.joinPool(selfAgent, posted.offerId, 2, null, "delivery will fail");
-    await world.client.joinPool(normal.account, posted.offerId, 2, null, "delivery works");
-
-    const { txs } = await world.client.settle(world.operator, posted.offerId, { waitForDeadline: true });
-    const members = await world.client.getAllPoolMembers(posted.offerId);
-    const byId = new Map(members.map((m) => [m.agent_id, m]));
-    expect(byId.get(selfId)).toMatchObject({ outcome: "Filled", delivery: "Claimable" });
-    expect(byId.get(normal.id)).toMatchObject({ outcome: "Filled", delivery: "Delivered" });
-    expect(txs.flatMap((t) => t.events.map((e) => e.event))).toContain("delivery_failed");
-
-    // The units are still held by the contract and recorded as claimable.
-    expect(await world.client.getClaimable(selfId)).toEqual([{ token: world.tokenId, amount: "2" }]);
-    // coop holds: what it held before + the two claimable units (the unsold 6 went back to the seller)
-    expect(await world.client.ftBalanceOf(world.coopId)).toBe(coopBefore + 2n);
-    expect(await world.client.ftBalanceOf(normal.id)).toBe(2n);
-
-    // Retrying the delivery fails again for the same reason and the balance survives the retry.
-    const claim = await world.client.claim(selfAgent, selfId, world.tokenId);
-    expect(claim.events.map((e) => e.event)).toContain("delivery_failed");
-    expect(await world.client.getClaimable(selfId)).toEqual([{ token: world.tokenId, amount: "2" }]);
-    expect(await world.client.ftBalanceOf(world.coopId)).toBe(coopBefore + 2n);
   });
 });

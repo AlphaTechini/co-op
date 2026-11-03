@@ -13,7 +13,7 @@ help:
 	@echo "make check             contract tests (cargo), unit tests and typecheck of every package"
 	@echo "make test-integration  integration tests against a real sandbox"
 	@echo "make checks            capability checks that run locally (02, 03, 04, 06)"
-	@echo "make demo              sandbox + endless scenario + server + web dev servers"
+	@echo "make demo              sandbox + server (seller loop, scripted agents, spawn API) + web dev server"
 	@echo "make wasm              rebuild contracts/res/*.wasm (needs cargo-near 0.22.0)"
 
 install:
@@ -49,20 +49,21 @@ checks-testnet: install
 	pnpm --filter @coop/checks exec tsx 01-faucet.ts
 	pnpm --filter @coop/checks exec tsx 05-rpc.ts
 
-# Sandbox on a fixed port (writes .sandbox/env), a new offer about every two minutes, plus the server and web dev servers.
+# One process: sandbox on a fixed port (writes .sandbox/env), the server with its seller loop and settler, and
+# 12 scripted agents that join each new offer; plus the web dev server. Open the web URL it prints.
 demo: install
 	@rm -f .sandbox/env
-	@$(MAKE) -j3 demo-chain demo-server demo-web
+	@$(MAKE) -j2 demo-server demo-web
 
+demo-server:
+	@$(RAISE_NOFILE); pnpm --filter @coop/server demo
+
+# Chain-only variant (agents package): sandbox + an endless scenario, no HTTP server.
 demo-chain:
 	@$(RAISE_NOFILE); pnpm --filter @coop/agents demo
 
-demo-server:
-	@echo "waiting for .sandbox/env ..."; until [ -f .sandbox/env ]; do sleep 1; done
-	@set -a; . .sandbox/env; set +a; pnpm --filter @coop/server dev
-
 demo-web:
-	@until [ -f .sandbox/env ]; do sleep 1; done
+	@echo "waiting for .sandbox/env ..."; until [ -f .sandbox/env ]; do sleep 1; done
 	@set -a; . .sandbox/env; set +a; pnpm --filter @coop/web dev
 
 clean-sandbox:
