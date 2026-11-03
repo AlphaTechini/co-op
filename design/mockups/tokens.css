@@ -205,6 +205,7 @@
   --track: var(--paper-150);            /* unreached part of any bar */
   --hatch: var(--cobalt-600);           /* pending conditional units */
   --hatch-bg: var(--cobalt-50);
+  --hatch-fill: repeating-linear-gradient(135deg, var(--hatch) 0 1px, var(--hatch-bg) 1px 4.5px);
 
   /* elevation: the UI is flat with hairlines; shadows only for floating layers */
   --shadow-0: none;

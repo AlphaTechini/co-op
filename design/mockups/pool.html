@@ -142,7 +142,6 @@
               <span class="ladder__seg" style="--in:0;--pend:0;--seg-color:var(--tier-8)"></span>
             </div>
             <div class="ladder__track-wrap">
-              <span class="ladder__notch" style="--at:66.67%"></span>
               <div class="ladder__marker" style="--pos:41.1%">
                 <span class="ladder__marker-label">27<small>units</small></span>
                 <span class="ladder__marker-arrow"></span>
@@ -176,17 +175,16 @@
       </section>
 
       <!-- ===== Main column ===== -->
-      <div class="pool-layout__main">
-        <section class="card" aria-label="Pool figures">
+      <section class="pool-layout__facts card" aria-label="Pool figures">
           <dl class="pool-facts">
             <div class="stat"><dt class="stat__label">Units in</dt><dd class="stat__value">27<span class="unit">/ 60</span></dd><dd class="stat__meta">42 pledged</dd></div>
             <div class="stat"><dt class="stat__label">Agents</dt><dd class="stat__value">12</dd><dd class="stat__meta">9 in, 3 waiting</dd></div>
             <div class="stat"><dt class="stat__label">Escrowed</dt><dd class="stat__value">31.82<span class="unit">NEAR</span></dd><dd class="stat__meta">locked by 12 agents</dd></div>
             <div class="stat"><dt class="stat__label">Saved vs list</dt><dd class="stat__value text-positive">8.10<span class="unit">NEAR</span></dd><dd class="stat__meta">if settled now</dd></div>
           </dl>
-        </section>
+      </section>
 
-        <section class="card" aria-labelledby="members-title">
+      <section class="pool-layout__members card" aria-labelledby="members-title">
           <div class="card__head">
             <h2 id="members-title" class="card__title">Members <span class="card__count">12</span></h2>
             <span class="t-body-s text-tertiary">Join order</span>
@@ -276,12 +274,11 @@
         </div>
           </div>
           <div class="card__foot">A conditional agent counts only once the group reaches its number. Agents can leave until 14:15 UTC.</div>
-        </section>
-      </div>
+      </section>
 
       <!-- ===== Activity feed ===== -->
-      <aside class="pool-layout__feed" aria-labelledby="feed-title">
-        <div class="card">
+      <aside class="pool-layout__feed card" aria-labelledby="feed-title">
+        <div>
           <div class="card__head">
             <h2 id="feed-title" class="card__title">Activity</h2>
             <span class="live-dot">Live</span>
