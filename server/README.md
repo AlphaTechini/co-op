@@ -23,7 +23,7 @@ make demo                          # sandbox + this server + scripted agents + w
 | `GET /api/agents` | spawned agents (never keys) |
 | `POST /api/agents` | `{ name, brief, budget_near }` -> `{ agent_id, policy, parser, txs }` |
 
-`POST /api/agents` errors are `{ error, field? }`: 400 validation (name `^[a-z0-9][a-z0-9-]*[a-z0-9]$`, 2-24 chars; brief 3-200 chars; `0 < budget_near <= SPAWN_MAX_BUDGET_NEAR`, at most 6 decimals; the budget must also cover `units x price limit` of the parsed brief), 409 name taken, 429 per-IP limit (with `Retry-After`), 502 chain failure, 503 spawning disabled (no operator key, `SPAWN_MAX_AGENTS` reached, or operator balance below the floor).
+`POST /api/agents` errors are `{ error, field? }`: 400 validation (name `^[a-z0-9][a-z0-9-]*[a-z0-9]$`, 2-24 chars; brief 3-200 chars; `0 < budget_near <= SPAWN_MAX_BUDGET_NEAR`, at most 6 decimals; the budget must also cover `units x price limit` of the parsed brief), 409 name taken, 429 per-IP limit (with `Retry-After`), 502 chain failure, 503 spawning disabled (no operator key, `SPAWN_MAX_AGENTS` reached, operator balance below the floor, or the key file cannot be written).
 
 Spawning creates `<name>.<operator>` with a function-call key limited to `join_pool` / `leave_pool` on the Co-op contract, calls `register_agent` with limits from the parsed policy and the budget, and adds the agent to the running runtime, which joins it to the open pool.
 
@@ -61,7 +61,8 @@ Loaded from the repo-root `.env`; with `NEAR_NETWORK=sandbox`, or when no networ
 - Caps stack: per-IP spawn limit, `SPAWN_MAX_AGENTS`, per-agent budget cap, operator floor checked before provisioning, and one spawn at a time (single operator nonce).
 - Request bodies are limited to 4 KB; every input is validated with zod; responses carry `nosniff`, `no-referrer`, `frame-ancestors 'none'` and `no-store`.
 - `make demo` uses the public near-sandbox key: worthless outside your machine.
-- Partial failure: if account creation succeeds and registration fails, the name stays taken on chain (409 afterwards); pick another name.
+- Keys first: a spawn generates the agent's keys and saves them before its first transaction. If the key file cannot be written, the spawn stops with 503 and nothing is spent.
+- Partial failure: if account creation succeeds and registration fails, the name stays taken on chain (409 afterwards); pick another name. The account's keys are kept in `agents.json.retired`.
 
 ## Docker image and hosting
 

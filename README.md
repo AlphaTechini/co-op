@@ -38,7 +38,7 @@ Until those are filled, the way to see Co-op work is local: `make verify` (one c
 |---|---|---|
 | Multi-agent systems | Yes | Eager, Bargain and Switcher buyers, a Seller agent and a Settler run concurrently ([`agents/src/policy.ts`](agents/src/policy.ts), [`agents/src/seller.ts`](agents/src/seller.ts), [`agents/src/runtime.ts`](agents/src/runtime.ts)) |
 | Sub-accounts | Yes | Every agent is a direct sub-account of its owner (`<agent>.<owner>`), enforced by the contract ([`agent.rs`](contracts/coop/src/agent.rs) line 125) |
-| Function-call keys | Yes | Agents hold only a key limited to `join_pool` / `leave_pool` on the Co-op contract, with zero deposit ([`chain.ts`](agents/src/chain.ts) line 575) |
+| Function-call keys | Yes | Agents hold only a key limited to `join_pool` / `leave_pool` on the Co-op contract, with zero deposit ([`chain.ts`](agents/src/chain.ts) line 576) |
 | NEAR Intents | **No** | NEAR Intents has no testnet, and this project spends no real money. Settlement runs in our own contract. Cross-chain settlement through Intents is roadmap only |
 
 ## 3. The problem
@@ -74,8 +74,8 @@ Why this needs NEAR and not a database: the escrow, the tier calculation and the
 
 | Feature | Where | What breaks without it |
 |---|---|---|
-| **Sub-accounts** | [`agent.rs`](contracts/coop/src/agent.rs) line 125 (`register_agent` accepts only `<label>.<owner>`); [`agents/src/chain.ts`](agents/src/chain.ts) line 543 (`createSubAccount`); [`agents/src/world.ts`](agents/src/world.ts) line 155 (`provisionAgent`) | Agents would be anonymous keys. Identity, deliveries and refunds could not be scoped to and traced back to the owner, and anyone could register an agent for someone else's account |
-| **Function-call keys** | [`agents/src/chain.ts`](agents/src/chain.ts) lines 575 and 595 (`addFunctionCallKey`, `AGENT_METHODS`); proof in [`evidence/check-02-fckey-sandbox.txt`](evidence/check-02-fckey-sandbox.txt) and [`agents/test/integration/fckey.test.ts`](agents/test/integration/fckey.test.ts) | The agent runtime would need a full-access key. A leaked key could drain the account. With the restricted key it cannot move NEAR, call another contract, attach a deposit, or call `withdraw` (all four rejected by the protocol in the evidence file) |
+| **Sub-accounts** | [`agent.rs`](contracts/coop/src/agent.rs) line 125 (`register_agent` accepts only `<label>.<owner>`); [`agents/src/chain.ts`](agents/src/chain.ts) line 543 (`createSubAccount`); [`agents/src/world.ts`](agents/src/world.ts) line 157 (`provisionAgent`) | Agents would be anonymous keys. Identity, deliveries and refunds could not be scoped to and traced back to the owner, and anyone could register an agent for someone else's account |
+| **Function-call keys** | [`agents/src/chain.ts`](agents/src/chain.ts) lines 576 and 596 (`addFunctionCallKey`, `AGENT_METHODS`); proof in [`evidence/check-02-fckey-sandbox.txt`](evidence/check-02-fckey-sandbox.txt) and [`agents/test/integration/fckey.test.ts`](agents/test/integration/fckey.test.ts) | The agent runtime would need a full-access key. A leaked key could drain the account. With the restricted key it cannot move NEAR, call another contract, attach a deposit, or call `withdraw` (all four rejected by the protocol in the evidence file) |
 | **Contract escrow** | [`pool.rs`](contracts/coop/src/pool.rs) line 200 (lock), [`settle.rs`](contracts/coop/src/settle.rs) lines 121 to 181 (charge, refund, pay) | Money would sit with an organiser, who would have to be trusted to apply the tier, deliver and refund |
 | **NEP-141** (fungible tokens) | Inventory in: [`offer.rs`](contracts/coop/src/offer.rs) line 196 (`ft_on_transfer`). Delivery out: [`agent.rs`](contracts/coop/src/agent.rs) line 63 (`delivery_promise`). Demo token: [`contracts/credits-token/src/lib.rs`](contracts/credits-token/src/lib.rs) | Goods could not be escrowed up front or delivered atomically with payment |
 | **NEP-145** (storage management) | [`agent.rs`](contracts/coop/src/agent.rs) line 63: each delivery batch calls `storage_deposit` (registration only) on the item token before `ft_transfer`, paid from `STORAGE_RESERVE` ([`lib.rs`](contracts/coop/src/lib.rs) line 33) | `ft_transfer` to an agent not yet registered on the token would fail, and large pools could not be delivered without a prior registration step per agent |
@@ -92,9 +92,9 @@ Every factual claim in this README is listed in `docs/CLAIMS.md` with a file and
 | Largest consistent group | [`settle.rs`](contracts/coop/src/settle.rs):66 | `resolve_equals_largest_consistent_subset_property`, `two_conditional_25_unit_members_with_threshold_50_both_get_in` |
 | Settlement is chunked and idempotent | [`settle.rs`](contracts/coop/src/settle.rs):232 | `chunked_settlement_matches_single_call`, `settle_twice_is_idempotent`, [`chunked.test.ts`](agents/test/integration/chunked.test.ts) (21 members); [`evidence/gas.md`](evidence/gas.md) |
 | Failed delivery becomes a claimable balance | [`settle.rs`](contracts/coop/src/settle.rs):283, [`agent.rs`](contracts/coop/src/agent.rs):196 | `failed_delivery_becomes_claimable_and_can_be_claimed`, [`claim.test.ts`](agents/test/integration/claim.test.ts) |
-| Agent key can only join/leave, zero deposit | [`chain.ts`](agents/src/chain.ts):575 | [`evidence/check-02-fckey-sandbox.txt`](evidence/check-02-fckey-sandbox.txt), [`fckey.test.ts`](agents/test/integration/fckey.test.ts) |
+| Agent key can only join/leave, zero deposit | [`chain.ts`](agents/src/chain.ts):576 | [`evidence/check-02-fckey-sandbox.txt`](evidence/check-02-fckey-sandbox.txt), [`fckey.test.ts`](agents/test/integration/fckey.test.ts) |
 | Committed wasm matches its SHA-256 and the on-chain code hash | [`deploy.ts`](agents/src/deploy.ts):35, :129; [`Makefile`](Makefile):22 | `make verify` output in section 8 |
-| Spawn endpoint is rate limited and capped | [`spawner.ts`](server/src/spawner.ts):165, :207, :216 | [`app.test.ts`](server/test/unit/app.test.ts) (429 and 503 cases) |
+| Spawn endpoint is rate limited and capped | [`spawner.ts`](server/src/spawner.ts):172, :214, :223 | [`app.test.ts`](server/test/unit/app.test.ts) (429 and 503 cases) |
 | Testnet behaviour (deploy, 12+ agent run, key lock) | | Pending testnet run (section "Live deployment") |
 
 ## 7. What is mocked or not built
@@ -108,7 +108,7 @@ Every factual claim in this README is listed in `docs/CLAIMS.md` with a file and
 
 ## 8. Try it in 30 seconds: `make verify`
 
-Needs Node 22+, pnpm 10 (`corepack enable` is enough), and network access for the package install plus the one-time download of the `near-sandbox` nearcore binary. **No Rust toolchain, no keys, no wallet, no testnet.** It checks the committed wasm against `contracts/res/SHA256SUMS`, starts a local nearcore 2.14.0 sandbox, deploys the committed wasm, runs a 10-agent scenario through real transactions to settlement, prints the receipt, and recomputes the invariants from chain views. The scenario takes about 50 seconds (settlement at +47.5 s in the captured run), plus install and first-time binary download.
+Needs **Linux (x86_64 or arm64) or an Apple Silicon Mac**, Node 22+, pnpm 10 (`corepack enable` is enough), `make`, and network access for the package install plus the one-time download of the `near-sandbox` nearcore binary. **No Rust toolchain, no keys, no wallet, no testnet.** On Windows, run it inside WSL 2 (Ubuntu, where `make` comes from `sudo apt install make` and Node 22+ from your usual installer): `near-sandbox` publishes no Windows or Intel-Mac build of the node, so `make verify`, `make demo`, the integration tests and checks 02 to 04 cannot run natively there. Unit tests, type checks and the web build work on any OS. It checks the committed wasm against `contracts/res/SHA256SUMS`, starts a local nearcore 2.14.0 sandbox, deploys the committed wasm, runs a 10-agent scenario through real transactions to settlement, prints the receipt, and recomputes the invariants from chain views. The scenario takes about 50 seconds (settlement at +47.5 s in the captured run), plus install and first-time binary download.
 
 ```bash
 git clone <this repo> && cd co-op
@@ -119,13 +119,13 @@ Expected output (receipt and invariant section; the full captured run is [`evide
 
 ```text
 == SHA-256 of the committed wasm (the files deployed below)
-1153080653c5267514cab929051d22a7832259da8c907aa78c11f0bca721602a  coop.wasm
-9552645d00607863d952741f41e91a3eba2f73530021fb78b7fc3fb4c54f20f7  credits_token.wasm
+1023254439a84cf4240820728c552fb6f9783881af4e15d0cb866bd237bab4b1  coop.wasm
+345332183cdc391ff269bf71b2c282f10a2201e1cb4e66c5419f6b65614b9848  credits_token.wasm
 coop.wasm: OK
 credits_token.wasm: OK
 
-on-chain code_hash of coop.sandbox = 2AdN8BuqspaUahvm6gp7WsqXE3k5GAaMePeD35YhijE9 (matches)
-on-chain code_hash of credits.sandbox = B3tcfYujz3uvFUJ1W7Pu4FkzGQwv3VGvbvABYxXTVAy4 (matches)
+on-chain code_hash of coop.sandbox = 25zc9skAWedyEjyB2CDDCYaCCkZ6d8bqBqQZxTtZjUwz (matches)
+on-chain code_hash of credits.sandbox = 4XFnBSmdLCTWX4JYv3F8ioUmbdnpZSJBz5n1JFw5bWkf (matches)
 ...
 [+ 47.5s] settle        settle(pool 1): 10 of 10 members processed, status Settled
 [+ 47.5s] pool_settled  Pool 1 settled: 24 units from 8 agents at 0.70 each, seller paid 16.8000 NEAR
@@ -229,7 +229,7 @@ Hosted demo URL: `<fill>`. After hosting, the same table applies, with nearblock
 | Checks | [`checks/`](checks) | Capability checks 01 to 06 |
 | Deploy | [`deploy/`](deploy), [`server/Dockerfile`](server/Dockerfile) | Server image, Caddy HTTPS config, VM settings template and hosting steps |
 
-Interface names and JSON shapes are pinned in [docs/SPEC.md](docs/SPEC.md); contract details in [contracts/README.md](contracts/README.md); server details in [server/README.md](server/README.md).
+Interface names and JSON shapes are pinned in [docs/SPEC.md](docs/SPEC.md); contract details in [contracts/README.md](contracts/README.md); server details in [server/README.md](server/README.md). The full folder map, with a README in every folder and where each piece of logic lives, is [structure.md](structure.md).
 
 ## 11. Measured results
 
@@ -237,13 +237,13 @@ All from a local sandbox (nearcore 2.14.0, protocol 88), by [`checks/04-settle-g
 
 | Measurement | Result |
 |---|---|
-| Gas burnt per filled member (settle work, `storage_deposit`, `ft_transfer`, `on_delivered`, all receipts) | about 7.2 Tgas (7.07 to 7.43 across 10, 25 and 50 member pools) |
+| Gas burnt per filled member (settle work, `storage_deposit`, `ft_transfer`, `on_delivered`, all receipts) | about 7.2 Tgas (7.07 to 7.44 across 10, 25 and 50 member pools) |
 | Gas burnt per member in a refunded pool (no tier) | 0.90 Tgas |
 | Members per `settle` call at 300 Tgas | 10 (the `DEFAULT_CHUNK` ceiling; the gas guard alone would allow 12) |
 | `settle` calls for a 25-member pool / 50-member pool | 3 / 5 |
 | With 1000 Tgas attached and `max_members` 25 | 25 members in one call |
 | Largest log in one receipt | 4987 bytes of the 16384 byte protocol cap |
-| `join_pool` / first member's `leave_pool` at 100 members (the cap) | 2.86 Tgas / 19.95 Tgas |
+| `join_pool` / first member's `leave_pool` at 100 members (the cap) | 2.86 Tgas / 20.83 Tgas |
 | Pool sizes exercised | 10 (`make verify`), 12 (scenario integration test), 21 (chunked integration test), 25 and 50 (gas check), 30 random members (Rust invariant test), 100 (member cap test) |
 | Testnet run stats | Pending testnet run |
 
@@ -275,7 +275,9 @@ make check               # tests and typechecks (cargo test runs if cargo is ins
 make test-integration    # sandbox integration tests
 ```
 
-Rebuilding the wasm (optional, needs Rust and `cargo install cargo-near --version 0.22.0 --locked`): `./contracts/build.sh`, then `(cd contracts/res && sha256sum -c SHA256SUMS)`. The wasm embeds build paths, so a rebuild in another checkout can differ byte for byte from the committed file; the committed hash is the hash of the committed file.
+Without `make` (native Windows), the offline checks still run: `pnpm install --frozen-lockfile`, then `pnpm -r --if-present run check` and `pnpm --filter @coop/web test`. On Windows, `cargo test` needs either the NASM assembler or `AWS_LC_SYS_PREBUILT_NASM=1` for its `aws-lc-sys` dependency, and two server tests that check Unix file mode `0600` fail because Windows has no such modes.
+
+Rebuilding the wasm (optional, needs Rust and `cargo install cargo-near --version 0.22.0 --locked`): `./contracts/build.sh`, then `(cd contracts/res && sha256sum -c SHA256SUMS)`. A rebuild on another machine or Rust version can differ byte for byte from the committed file (built with rustc 1.96.0 and cargo-near 0.22.0); the committed hash is the hash of the committed file.
 
 ### Environment variables
 
@@ -313,7 +315,7 @@ pnpm --filter @coop/agents lock-contract --yes                           # delet
 - **No admin, no owner, no upgrade method** in the contract. `lock-contract` additionally deletes the contract account's full-access keys so the code cannot be swapped; tested in the sandbox ([`lock.test.ts`](agents/test/integration/lock.test.ts)), **pending on testnet**.
 - **Wasm integrity**: `make verify` and the deploy code refuse a wasm whose SHA-256 differs from `contracts/res/SHA256SUMS`, then compare the on-chain `code_hash` after deploy ([`deploy.ts`](agents/src/deploy.ts) lines 35 and 129).
 - **Spawn caps stack**: per-IP hourly limit, total agent cap, per-agent budget cap, an operator balance floor checked before provisioning, one spawn at a time, 4 KB request bodies, zod validation, and a general per-IP rate limit ([`spawner.ts`](server/src/spawner.ts), [`app.ts`](server/src/app.ts)).
-- **Keys**: spawned agents' keys live in `server/.data/agents.json` (mode 0600, git-ignored) and are never returned by any endpoint. `make demo` uses the public sandbox key, which is worthless outside your machine. No secret is committed; `.env` is git-ignored.
+- **Keys**: spawned agents' keys live in `server/.data/agents.json` (mode 0600, git-ignored) and are never returned by any endpoint. They are generated and saved before the first transaction of a spawn, so a failed save spends nothing and a failed transaction leaves the keys in `agents.json.retired`. `make demo` uses the public sandbox key, which is worthless outside your machine. No secret is committed; `.env` is git-ignored.
 
 ### Roadmap
 

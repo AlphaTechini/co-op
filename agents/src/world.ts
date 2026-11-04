@@ -1,5 +1,5 @@
 /** A World bundles everything a run needs: network, provider, client, operator and deployed contracts. */
-import { Account, KeyPair } from "near-api-js";
+import { Account, KeyPair, type KeyPairString } from "near-api-js";
 import {
   AGENT_METHODS,
   CoopClient,
@@ -146,6 +146,8 @@ export interface ProvisionOptions {
   gasBalance?: bigint;
   /** Function-call key allowance; omitted = unlimited, the account balance is then the cap. */
   allowance?: bigint;
+  /** Keys to use instead of fresh ones, so the caller can store them before the first transaction. */
+  keys?: { fullSecret: string; fcSecret: string };
 }
 
 /**
@@ -154,11 +156,14 @@ export interface ProvisionOptions {
  */
 export async function provisionAgent(world: World, options: ProvisionOptions): Promise<ProvisionedAgent> {
   const { client, operator } = world;
-  const created = await createSubAccount(client, operator, options.label, options.gasBalance ?? parseNear("0.25"));
-  const fullKey = created.keyPair as KeyPair;
+  const presetFull = options.keys ? KeyPair.fromString(options.keys.fullSecret as KeyPairString) : undefined;
+  const presetFc = options.keys ? KeyPair.fromString(options.keys.fcSecret as KeyPairString) : undefined;
+  const gas = options.gasBalance ?? parseNear("0.25");
+  const created = await createSubAccount(client, operator, options.label, gas, presetFull?.getPublicKey().toString());
+  const fullKey = presetFull ?? (created.keyPair as KeyPair);
   const agentFull = accountFromKey(created.accountId, world.provider, fullKey.toString());
   const [added, registered]: [AddedKey, TxRef] = await Promise.all([
-    addFunctionCallKey(client, agentFull, world.coopId, [...AGENT_METHODS], options.allowance),
+    addFunctionCallKey(client, agentFull, world.coopId, [...AGENT_METHODS], options.allowance, presetFc),
     client.registerAgent(operator, created.accountId, options.limits, options.budget),
   ]);
   const fcSecret = added.keyPair.toString();

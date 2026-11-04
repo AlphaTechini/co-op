@@ -1,14 +1,14 @@
 02 function-call key joins with zero deposit (sandbox)
-run at 2026-11-03T22:35:31.447Z
+run at 2026-11-04T13:20:30.792Z
 
-PASS  offer opened for the check  | offer 1, tx 5cY4KwQ2FeXDs25q3Nfm2A2Xt3d7Cn3TLQ7nc6BAyS5j
-PASS  sub-account fckey.sandbox created, function-call key added  | create tx BxzWDA6Lkp2EQqvFhqsaV2kTjBe3KQGKNKCVKQEphL68, key permission {"FunctionCall":{"allowance":null,"method_names":["join_pool","leave_pool"],"receiver_id":"coop.sandbox"}}
+PASS  offer opened for the check  | offer 1, tx 53tXYq7dhPVLmZQ3mq5BCZjGh7jnj7PLkFzNTTgemMMB
+PASS  sub-account fckey.sandbox created, function-call key added  | create tx JA4BDn6BUsxmwo2uoHFmMU8QjdgiFaNHLCutaRfBzh2a, key permission {"FunctionCall":{"allowance":null,"method_names":["join_pool","leave_pool"],"receiver_id":"coop.sandbox"}}
 PASS  register_agent accepted the direct sub-account  | owner sandbox, budget 2997840000000000000000000
-PASS  join_pool with the function-call key and 0 deposit succeeds  | D25ciKqDd9L8HE5AVUcH5aYmAmTHBoi2z8ptpzERbxos, gas burnt 2.87 Tgas, events pool_joined
+PASS  join_pool with the function-call key and 0 deposit succeeds  | EeAjJoVcpp5ULHfbTLWh3KnPuWxj19ioArEXEUpJHAsE, gas burnt 2.87 Tgas, events pool_joined
 PASS  attaching 1 yocto with the key is rejected  | leave_pool on coop.sandbox failed: AccessKeyDepositWithFunctionCallActionError: Deposit is not allowed with function call
 PASS  withdraw with the key is rejected (method not allowed)  | withdraw on coop.sandbox failed: AccessKeyMethodNameMismatchActionError: Access key does not allow method withdraw
 PASS  a plain NEAR transfer with the key is rejected  | Access key requires full access
 PASS  calling another contract with the key is rejected  | ft_transfer on credits.sandbox failed: AccessKeyReceiverMismatchActionError: Access key receiver coop.sandbox does not match transaction receiver credits.sandbox
-PASS  leave_pool with the key returns the lock to the budget  | 84Vo4izxaxLqPMg2LJReSDTump6bByD4c3ZMY1in8eHX, budget_locked 0
-PASS  pool settles after the deadline  | Refunded, 8D527ibYEnRX3yz2Pozm69sEVj2P1wDihbwQZNgQ2UyB
+PASS  leave_pool with the key returns the lock to the budget  | FWbAYjv47aUdf2jheyGbMeGTtkiwjgxLj8f2HvdTdTf1, budget_locked 0
+PASS  pool settles after the deadline  | Refunded, GZQ6ogpvf1v3W5QgieJq4nrTWtgGQrYFeccAgwcvy4J9
 PASS  02 function-call key joins with zero deposit (sandbox)

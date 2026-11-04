@@ -9,6 +9,15 @@ Two NEAR contracts (near-sdk 5.30, Rust). Interface names and JSON shapes are pi
 
 Built artifacts and their checksums live in `res/` (`coop.wasm`, `credits_token.wasm`, `SHA256SUMS`).
 
+Folder READMEs: [coop/](coop/README.md), [coop/src/](coop/src/README.md), [credits-token/](credits-token/README.md), [credits-token/src/](credits-token/src/README.md), [res/](res/README.md).
+
+- To find the group resolution and chunked settlement visit [coop/src/settle.rs](coop/src/settle.rs).
+- To find join and leave (the lock that caps what an agent pays) visit [coop/src/pool.rs](coop/src/pool.rs).
+- To find offers, tiers and inventory deposits visit [coop/src/offer.rs](coop/src/offer.rs).
+- To find agent budgets, withdrawals and claims visit [coop/src/agent.rs](coop/src/agent.rs).
+- The item-token connection used for delivery can be found in [coop/src/agent.rs](coop/src/agent.rs) (`delivery_promise`); the demo token itself can be found in [credits-token/src/lib.rs](credits-token/src/lib.rs).
+- To find the build script visit [build.sh](build.sh).
+
 ## Build and test
 
 ```bash
@@ -22,8 +31,11 @@ cargo clippy --all-targets -- -D warnings
 `cargo near build non-reproducible-wasm --no-abi --out-dir res` in each crate: cargo-near applies the
 flags near-sdk needs and runs `wasm-opt`. A plain `cargo build` of a contract is refused by near-sdk;
 use `cargo check --target wasm32-unknown-unknown` to type-check without cargo-near. The wasm embeds
-build paths, so a rebuild in another checkout can differ byte for byte; the committed hash is the hash
-of the committed file.
+source paths in panic messages, so `build.sh` remaps the cargo registry and rustup folders to `/cargo`
+and `/rustup` (no home directory ends up on chain). The output still depends on the rustc version and
+host toolchain, so a rebuild elsewhere can differ byte for byte; the committed files were built with
+rustc 1.96.0 (`stable-x86_64-pc-windows-msvc`) and cargo-near 0.22.0, and the committed hash is the
+hash of the committed file.
 
 ## `coop` methods
 

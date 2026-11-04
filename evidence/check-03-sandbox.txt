@@ -1,10 +1,10 @@
 03 sandbox boots, deploys and time-travels (nearcore 2.14.0)
-run at 2026-11-03T22:35:40.936Z
+run at 2026-11-04T13:28:53.840Z
 
-PASS  sandbox started  | 2.14.0 at http://127.0.0.1:41287 in 2432 ms
+PASS  sandbox started  | 2.14.0 at http://127.0.0.1:42269 in 5497 ms
 PASS  node runs protocol >= 88 (near-sdk 5.30 host functions)  | protocol 88, neard 2.14.0
-PASS  coop.wasm deployed; on-chain code_hash equals the committed SHA-256  | coop.sandbox sha256 1153080653c5267514cab929051d22a7832259da8c907aa78c11f0bca721602a
+PASS  coop.wasm deployed; on-chain code_hash equals the committed SHA-256  | coop.sandbox sha256 1023254439a84cf4240820728c552fb6f9783881af4e15d0cb866bd237bab4b1
 PASS  view get_stats answers  | {"offers":0,"pools_settled":0,"pools_refunded":0,"agents":0,"volume":"0","units_delivered":0}
-PASS  block timestamps follow the wall clock  | chain clock advanced 2916 ms in 3000 ms of waiting
-PASS  sandbox_fast_forward(100 blocks) moves the block timestamp  | height 39 -> 142, chain time +30.0 s, took 1416 ms of wall time
+PASS  block timestamps follow the wall clock  | chain clock advanced 2945 ms in 3000 ms of waiting
+PASS  sandbox_fast_forward(100 blocks) moves the block timestamp  | height 45 -> 147, chain time +29.8 s, took 1213 ms of wall time
 PASS  03 sandbox boots, deploys and time-travels (nearcore 2.14.0)

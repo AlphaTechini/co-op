@@ -571,6 +571,7 @@ export interface AddedKey {
  * long-running agent would use up; here no allowance means unlimited (the agent account's own balance,
  * a few tenths of a NEAR, is then the real cap). If you set one, keep it at 0.5 NEAR or more: gas is
  * bought at 0.001 NEAR per Tgas up front and only refunded a few seconds later.
+ * Pass `keyPair` to add a key the caller already holds (and has stored) instead of a fresh one.
  */
 export async function addFunctionCallKey(
   client: CoopClient,
@@ -578,8 +579,8 @@ export async function addFunctionCallKey(
   contractId: string,
   methods: string[],
   allowance?: bigint,
+  keyPair: KeyPair = KeyPair.fromRandom("ed25519"),
 ): Promise<AddedKey> {
-  const keyPair = KeyPair.fromRandom("ed25519");
   let outcome: TxOutcome;
   try {
     outcome = await account.signAndSendTransaction({

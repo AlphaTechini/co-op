@@ -4,7 +4,7 @@ version = "1.0.0"
 edition = "2021"
 license = "MIT"
 description = "Co-op: pooled tiered purchasing for AI buying agents on NEAR"
-repository = "https://github.com/co-op"
+repository = "https://github.com/AlphaTechini/co-op"
 
 [lib]
 crate-type = ["cdylib", "rlib"]

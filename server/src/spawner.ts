@@ -2,7 +2,7 @@
  * Spawn-your-agent service (PRD 6.6): validates, checks every cap, provisions the sub-account with a
  * function-call key, registers the agent with its budget and hands it to the running runtime.
  */
-import type { Account } from "near-api-js";
+import { KeyPair, type Account } from "near-api-js";
 import { BriefError, type ParsedBrief } from "@coop/agents/brief";
 import { STORAGE_RESERVE, formatNear, parseNear } from "@coop/agents/money";
 import { MEMBERSHIP_STORAGE_HEADROOM, limitsFromPolicy } from "@coop/agents/policy";
@@ -36,7 +36,14 @@ export interface SpawnChainPort {
   operatorBalance(): Promise<bigint>;
   /** Null when the view failed (RPC trouble): the caller keeps the agent. */
   isRegistered(agentId: string): Promise<boolean | null>;
-  provision(options: { label: string; limits: AgentLimits; budget: bigint; gasBalance: bigint }): Promise<ProvisionedPort>;
+  /** Creates the account with the given keys, which the spawner has already stored. */
+  provision(options: {
+    label: string;
+    limits: AgentLimits;
+    budget: bigint;
+    gasBalance: bigint;
+    keys: { fullSecret: string; fcSecret: string };
+  }): Promise<ProvisionedPort>;
   signer(agentId: string, fcSecret: string): Account;
 }
 
@@ -216,26 +223,50 @@ export class Spawner {
         if (balance < budget + this.o.spawnGas + this.o.operatorFloor) {
           throw new SpawnError(503, "Spawning is paused: the operator account is running low on funds.");
         }
-        // The attempt counts against the visitor from here on, successful or not.
-        this.hits.set(input.ip, [...(this.hits.get(input.ip) ?? []), this.now()]);
-        let provisioned: ProvisionedPort;
-        try {
-          provisioned = await chain.provision({ label: input.name, limits: limitsFromPolicy(policy), budget, gasBalance: this.o.spawnGas });
-        } catch (e) {
-          this.o.log?.(`spawn of ${agentId} failed: ${e instanceof Error ? e.message : String(e)}`);
-          throw new SpawnError(502, "The chain rejected the spawn. Nothing was charged to you; try another name in a minute.");
-        }
+        // Keys are generated and stored before the first transaction: if they cannot be saved, nothing
+        // has been spent yet, and once a transaction is sent the keys are already on disk.
+        const keys = { fullSecret: KeyPair.fromRandom("ed25519").toString(), fcSecret: KeyPair.fromRandom("ed25519").toString() };
         const record: AgentRecord = {
-          agent_id: provisioned.id,
+          agent_id: agentId,
           archetype: policy.archetype,
           brief: input.brief,
           policy,
           created_at: this.now(),
-          fc_secret: provisioned.fcSecret,
-          full_secret: provisioned.fullSecret,
+          fc_secret: keys.fcSecret,
+          full_secret: keys.fullSecret,
         };
+        try {
+          this.o.store.save([...this.records.values(), record]);
+        } catch (e) {
+          this.o.log?.(`spawn of ${agentId} stopped before any transaction: key store not writable: ${e instanceof Error ? e.message : String(e)}`);
+          throw new SpawnError(503, "Spawning is paused: the server cannot store agent keys right now.");
+        }
+        // The attempt counts against the visitor from here on, successful or not.
+        this.hits.set(input.ip, [...(this.hits.get(input.ip) ?? []), this.now()]);
+        let provisioned: ProvisionedPort;
+        try {
+          provisioned = await chain.provision({ label: input.name, limits: limitsFromPolicy(policy), budget, gasBalance: this.o.spawnGas, keys });
+        } catch (e) {
+          this.o.log?.(`spawn of ${agentId} failed: ${e instanceof Error ? e.message : String(e)}`);
+          // The account may exist even though a later step failed: keep its keys in the retired file.
+          try {
+            this.o.store.retire([record]);
+            this.o.store.save([...this.records.values()]);
+          } catch (storeError) {
+            this.o.log?.(`could not move the keys of ${agentId} to the retired file: ${storeError instanceof Error ? storeError.message : String(storeError)}`);
+          }
+          throw new SpawnError(502, "The chain rejected the spawn. Nothing was charged to you; try another name in a minute.");
+        }
+        record.agent_id = provisioned.id;
+        record.fc_secret = provisioned.fcSecret;
+        record.full_secret = provisioned.fullSecret;
         this.records.set(record.agent_id, record);
-        this.o.store.save([...this.records.values()]);
+        try {
+          this.o.store.save([...this.records.values()]);
+        } catch (e) {
+          // The keys from the save above are the same ones the account was created with.
+          this.o.log?.(`could not re-save the key store after spawning ${agentId}: ${e instanceof Error ? e.message : String(e)}`);
+        }
         this.o.runtime.addAgent({ id: record.agent_id, account: provisioned.account, policy, label: record.agent_id });
         const txs = provisioned.txs.map(stripEvents);
         const registration = provisioned.txs.find((t) => t.method === "register_agent");
