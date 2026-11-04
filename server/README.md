@@ -63,10 +63,8 @@ Loaded from the repo-root `.env`; with `NEAR_NETWORK=sandbox`, or when no networ
 - `make demo` uses the public near-sandbox key: worthless outside your machine.
 - Partial failure: if account creation succeeds and registration fails, the name stays taken on chain (409 afterwards); pick another name.
 
-## Free hosting (Render) - not tested from here
+## Docker image and hosting
 
-1. New Web Service from this repo, runtime Node 22, free instance.
-2. Build command: `corepack enable && pnpm install --frozen-lockfile`. Start command: `pnpm --filter @coop/server start`.
-3. Environment: `NEAR_NETWORK=testnet`, `NEAR_RPC_URL`, `COOP_CONTRACT_ID`, `CREDITS_TOKEN_ID`, `OPERATOR_ACCOUNT_ID`, `OPERATOR_PRIVATE_KEY` (as a secret), `TRUST_PROXY=1`, `CORS_ORIGIN=<your web origin>`, `PRICE_SCALE=0.05`, `SELLER_LOOP=1`, `PUBLIC_RPC_URL`. Render sets `PORT`.
-4. Free instances sleep after 15 minutes without traffic, which also stops the runtime and seller loop. Ping `https://<service>/api/health` every 10 minutes from an external scheduler (for example cron-job.org or UptimeRobot).
-5. The free disk is ephemeral: `server/.data/agents.json` is lost on redeploy, so spawned agents stop being driven by the server (their budget stays withdrawable by the operator). Mount a persistent disk and set `DATA_FILE` if that matters.
+[`Dockerfile`](Dockerfile) builds the server image from the repo root (`docker build -f server/Dockerfile -t coop-server .`). It runs as the non-root `node` user on port 8787 and keeps spawned agents' keys in `/data/agents.json` (`DATA_FILE`), which belongs on a Docker volume so it survives restarts.
+
+The hosted setup (an always-on Google Cloud free-tier VM with Caddy for HTTPS, the site on Vercel) is described step by step in [deploy/README.md](../deploy/README.md). The image was built and run against a local sandbox; the VM itself has not been tested from here.

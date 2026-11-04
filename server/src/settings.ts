@@ -10,7 +10,7 @@ export interface ServerSettings {
   port: number;
   host: string;
   corsOrigin: string;
-  /** Believe X-Forwarded-For (set only behind a reverse proxy you control, such as Render). */
+  /** Believe X-Forwarded-For (set only behind a reverse proxy you control, such as Caddy). */
   trustProxy: boolean;
   spawnMaxAgents: number;
   /** Per-agent budget cap in NEAR (display/validation). */

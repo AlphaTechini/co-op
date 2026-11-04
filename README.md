@@ -16,7 +16,7 @@ Everything in this repository was built and verified against a **local NEAR sand
 |---|---|---|
 | Testnet Co-op contract | `coop.<operator>.testnet` = `<fill after deploy>` | Pending. Run `pnpm --filter @coop/agents deploy:testnet` (writes `evidence/testnet-deploy.md`) |
 | Testnet demo token | `credits.<operator>.testnet` = `<fill after deploy>` | Pending, same command |
-| Hosted demo URL | `<fill after hosting>` | Pending. See [server/README.md](server/README.md), "Free hosting" |
+| Hosted demo URL | `<fill after hosting>` | Pending. Site on Vercel, server on a GCP free-tier VM: [deploy/README.md](deploy/README.md) |
 | Testnet run log (12+ agents, every tx hash) | `evidence/testnet-run-<timestamp>.md` | Pending. Run `pnpm --filter @coop/agents scenario --agents 12 --network testnet` |
 | Contract lock (no full-access keys) | `evidence/contract-lock.md` | Pending. Run `pnpm --filter @coop/agents lock-contract --yes` after the testnet run |
 | Demo video / X post | `<fill>` | Pending |
@@ -227,6 +227,7 @@ Hosted demo URL: `<fill>`. After hosting, the same table applies, with nearblock
 | Server | [`server/src/`](server/src) | `app.ts` routes and limits, `spawner.ts` spawn flow and caps, `activity.ts`, `store.ts` key file, `seller-loop.ts` |
 | Web | [`web/src/`](web/src) | `routes/` (home, pool, spawn, how), `lib/settlement.ts` (client-side mirror of the resolver), `lib/rpc.svelte.ts` (JSON-RPC views) |
 | Checks | [`checks/`](checks) | Capability checks 01 to 06 |
+| Deploy | [`deploy/`](deploy), [`server/Dockerfile`](server/Dockerfile) | Server image, Caddy HTTPS config, VM settings template and hosting steps |
 
 Interface names and JSON shapes are pinned in [docs/SPEC.md](docs/SPEC.md); contract details in [contracts/README.md](contracts/README.md); server details in [server/README.md](server/README.md).
 
@@ -257,7 +258,7 @@ All code in this repository is new and was written inside the hackathon window (
 | Contracts (Rust) | `near-sdk` 5.30, `near-contract-standards` 5.30, `cargo-near` 0.22.0 (build only) |
 | Agents and checks | `near-api-js` 7.4.0, `near-sandbox` 0.3.4, `zod` 4.6.7, `openai` 7.49.0 (optional LLM client), `dotenv` 17.4.2, `tsx` 4.23.15, `typescript` 6.0.3, `vitest` 5.1.0 |
 | Server | `fastify` 5.12.8, `@fastify/cors` 11.4.0, `@fastify/rate-limit` 11.2.2, `near-api-js`, `zod` |
-| Web | `svelte` 5.57.3, `@sveltejs/kit` 3.1.1 (static adapter 4.0.1), `vite` 8.3.5, `vitest`, `svelte-check` 4.7.8 |
+| Web | `svelte` 5.57.3, `@sveltejs/kit` 3.1.1 (Vercel adapter 7.0.2), `vite` 8.3.5, `vitest`, `svelte-check` 4.7.8 |
 
 ## 13. Other project by the same builder
 
@@ -301,7 +302,7 @@ pnpm --filter @coop/agents scenario --agents 12 --network testnet        # real 
 pnpm --filter @coop/agents lock-contract --yes                           # deletes full-access keys of the contract account, writes evidence/contract-lock.md
 ```
 
-`lock-contract` without `--yes` is a dry run. The lock is irreversible; run it last. The hosting steps for the spawn server are in [server/README.md](server/README.md).
+`lock-contract` without `--yes` is a dry run. The lock is irreversible; run it last. The hosting steps (server image on a GCP VM behind Caddy, site on Vercel) are in [deploy/README.md](deploy/README.md).
 
 ### Security notes
 

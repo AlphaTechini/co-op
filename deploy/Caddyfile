@@ -1,0 +1,8 @@
+# Installed as /etc/caddy/Caddyfile by the steps in README.md, with API_HOST replaced by the
+# VM's <ip-with-dashes>.sslip.io name. Caddy obtains and renews the HTTPS certificate itself.
+API_HOST {
+	reverse_proxy 127.0.0.1:8787 {
+		# /api/stream is server-sent events: forward every write immediately.
+		flush_interval -1
+	}
+}

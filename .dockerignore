@@ -1,0 +1,14 @@
+# Allowlist: the server image needs only the workspace manifests and the TypeScript sources.
+# Everything else (.env, .git, node_modules, contracts, evidence, docs, web sources) stays out.
+*
+!package.json
+!pnpm-lock.yaml
+!pnpm-workspace.yaml
+!agents/package.json
+!agents/tsconfig.json
+!agents/src
+!checks/package.json
+!server/package.json
+!server/tsconfig.json
+!server/src
+!web/package.json

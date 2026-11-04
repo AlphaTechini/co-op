@@ -129,5 +129,5 @@ None of the following exists yet. Each has the exact command that produces it.
 | Testnet deploy of `coop.<operator>.testnet` and `credits.<operator>.testnet`, with the on-chain `code_hash` matching `contracts/res/SHA256SUMS` | `pnpm --filter @coop/agents deploy:testnet` | `evidence/testnet-deploy.md` |
 | A 12+ agent run on testnet with every transaction hash | `pnpm --filter @coop/agents scenario --agents 12 --network testnet` | `evidence/testnet-run-<time>.md` and `.json` |
 | Removal of the contract account's full-access keys | `pnpm --filter @coop/agents lock-contract --yes` | `evidence/contract-lock.md` |
-| Hosted demo (spawn server and web) | see `server/README.md`, "Free hosting" | URL in the README "Live deployment" table |
+| Hosted demo (spawn server and web) | see `deploy/README.md` (server on a GCP VM, site on Vercel) | URL in the README "Live deployment" table |
 | Testnet RPC rate-limit check | `pnpm --filter @coop/checks exec tsx 05-rpc.ts` | console output (not yet run) |

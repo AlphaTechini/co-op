@@ -1,4 +1,4 @@
-// Runtime configuration. Build-time values come from PUBLIC_* env (static adapter bakes them in);
+// Runtime configuration. Build-time values come from PUBLIC_* env (the prerendered build bakes them in);
 // when the Co-op server is reachable, GET /api/config may refine them at runtime.
 import { PUBLIC_API_URL, PUBLIC_COOP_CONTRACT_ID, PUBLIC_NETWORK, PUBLIC_RPC_URL } from '$app/env/public';
 import type { ServerConfig, ServerHealth } from './models';

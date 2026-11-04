@@ -148,7 +148,7 @@ Standard NEP-141 + NEP-145 + metadata via `near-contract-standards`. `new(owner_
 | `@coop/agents` | `agents/` | Chain client, policy engine, agent archetypes, runtime, scenario runner, sandbox harness |
 | `@coop/checks` | `checks/` | Capability checks 01-06 |
 | `@coop/server` | `server/` | Fastify API: spawn agent, activity log, config; hosts the agent runtime |
-| `@coop/web` | `web/` | SvelteKit dashboard (static adapter, SPA fallback) |
+| `@coop/web` | `web/` | SvelteKit dashboard (prerendered, Vercel adapter) |
 
 Shared env vars (see `.env.example`): `NEAR_NETWORK` (`sandbox` / `testnet`), `NEAR_RPC_URL`, `COOP_CONTRACT_ID`, `CREDITS_TOKEN_ID`, `OPERATOR_ACCOUNT_ID`, `OPERATOR_PRIVATE_KEY`, `LLM_BASE_URL`, `LLM_API_KEY`, `LLM_MODEL`, `PORT`, `SPAWN_MAX_AGENTS`, `SPAWN_MAX_BUDGET_NEAR`, `PUBLIC_RPC_URL`, `PUBLIC_COOP_CONTRACT_ID`, `PUBLIC_API_URL`, `PUBLIC_NETWORK`.
 
