@@ -116,7 +116,9 @@ Paths below are relative to the repository root. `tests.rs` means `contracts/coo
 | 65 | NEAR Intents is not used | `grep -ri "intents" contracts agents server web` finds no integration code; stated in the README. Not applicable to test |
 | 66 | The demo seller and voucher token are ours, labelled as a demo | token metadata name set at `agents/src/deploy.ts:120` ("Demo API credit voucher (Co-op demo seller)"); `contracts/credits-token/src/lib.rs:4` |
 | 67 | All code was written during the hackathon window; libraries are those listed in the README | Git history of this repository; versions in `Cargo.toml`, `agents/package.json`, `server/package.json`, `web/package.json`, `checks/package.json` |
-| 68 | The "188 bids on a $5 task" figure from the marketplace review is not quoted | The source could not be re-opened to confirm it, so the README states the problem without a number |
+| 68 | dRPC sells RPC calls at $6.00 per million pay as you go and $4.20 per million on its $199 plan (30% less) | README section 3 | Vendor docs: https://github.com/drpcorg/drpc-nextra/blob/main/pages/pricing/plans.mdx#L27-L30 (checked 2026-11-04; list price, may change) |
+| 69 | Google Cloud Vision charges $1.50 per 1,000 images at the entry tier and $0.60 above 5 million a month (60% less) | README section 3 | Vendor pricing page: https://cloud.google.com/vision/pricing (checked 2026-11-04; list price, may change) |
+| 70 | dYdX's taker fee drops from 5.0 to 2.5 basis points at $200M of 30-day volume (50% less) | README section 3 | Protocol docs: https://github.com/dydxprotocol/v4-documentation/blob/main/docs/pages/concepts/trading/rewards/index.mdx#L53-L61 (checked 2026-11-04; governance can change fees) |
 
 ## 9. Pending (needs a testnet run)
 

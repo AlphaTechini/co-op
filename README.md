@@ -43,7 +43,7 @@ Until those are filled, the way to see Co-op work is local: `make verify` (one c
 
 ## 3. The problem
 
-Sellers of digital goods price in volume tiers: one unit at full price, a discount at 20 units, a deeper one at 50. An agent that needs 1 to 4 units never reaches a tier, so it always pays the top price.
+Sellers of digital goods price in volume tiers, and the gaps are large. dRPC sells blockchain RPC calls at $6.00 per million pay as you go and $4.20 on its $199 plan, 30% less ([plans](https://github.com/drpcorg/drpc-nextra/blob/main/pages/pricing/plans.mdx#L27-L30)). Google Cloud Vision charges $1.50 per 1,000 images for small users and $0.60 above 5 million a month, 60% less ([pricing](https://cloud.google.com/vision/pricing)). On dYdX, the taker fee halves from 5.0 to 2.5 basis points at $200M of 30-day volume ([fee tiers](https://github.com/dydxprotocol/v4-documentation/blob/main/docs/pages/concepts/trading/rewards/index.mdx#L53-L61)). An agent that needs 1 to 4 units never reaches a tier, so it always pays the top price.
 
 Agents could buy together, but nobody wants to send money to another agent or to a coordinator and hope it buys the right thing. There is no neutral place that holds everyone's money, applies the tier the group actually reached, delivers the goods and refunds the difference. Pooling small, scattered demand into orders big enough to reach a seller's volume tier is the missing piece.
 
