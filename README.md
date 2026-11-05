@@ -20,7 +20,7 @@ Everything in this repository was built and verified against a **local NEAR sand
 | Testnet run log (12+ agents, every tx hash) | [`evidence/testnet-run-2026-11-05T11-55-16-789Z.md`](evidence/testnet-run-2026-11-05T11-55-16-789Z.md) | Done: 12 agents, 64 transactions, settled at tier 2, all invariants hold. Produced by `pnpm --filter @coop/agents scenario --agents 12 --network testnet --prefix run2` (`--prefix` gives a re-run fresh agent names) |
 | Contract lock (no full-access keys) | `evidence/contract-lock.md` | Pending. Run `pnpm --filter @coop/agents lock-contract --yes` after the testnet run |
 | Demo video / X post | `<fill>` | Pending |
-| Other project by the same builder | Handover: `<repo link>` | Placeholder, fill before submitting |
+| Other project by the same builder | Handover: [repo](https://github.com/AlphaTechini/handover), [live](https://handover-blush.vercel.app) | Live |
 
 To see Co-op work on your own machine: `make verify` (one command, section 8) and `make demo` (full stack, section 9).
 
@@ -262,7 +262,10 @@ All code in this repository is new and was written inside the hackathon window (
 
 ## 13. Other project by the same builder
 
-Handover: `<repo link>` (placeholder, to be filled before submission).
+**Handover** (also built at NEAR HACKATHON, on testnet): an NFT that owns its own Ethereum wallet, and a sale you can verify, using NEAR Chain Signatures, a public signature log and a clean check.
+
+- Repo: https://github.com/AlphaTechini/handover
+- Live demo: https://handover-blush.vercel.app
 
 ## 14. Full setup, environment, deploy, security, roadmap
 
