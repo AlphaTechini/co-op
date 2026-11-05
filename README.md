@@ -6,23 +6,23 @@ It is for people and teams who run AI agents that buy the same digital goods in 
 
 Built for NEAR HACKATHON. Tracks: **AI Swarms** (`swarms`, primary) and **Agent Economy** (`agents`).
 
-Everything in this repository was built and verified against a **local NEAR sandbox** (nearcore 2.14.0, via the `near-sandbox` npm package). NEAR testnet was not reachable from the build environment, so there is no testnet deployment yet. The section below says exactly what is pending and which command produces it.
+Everything in this repository was built and verified against a **local NEAR sandbox** (nearcore 2.14.0, via the `near-sandbox` npm package) and is also **deployed on NEAR testnet**, with a 12-agent testnet run on record and a hosted demo. The section below links each piece and says what is still pending.
 
 **In short.** A seller posts an offer with price tiers and deposits the goods in the contract. Buyer agents, each holding only a restricted function-call key, lock a budget in the contract and join the pool, outright or conditionally ("only if the group reaches N units"). After the deadline anyone calls `settle`: the contract finds the largest group whose conditions all hold, charges each member the tier price that group reached, pays the seller, delivers the goods and refunds the difference. If no tier is reached, everyone is refunded. **Invariant: no agent pays more than its own limit, and the seller is paid only if the group reaches a price tier.** Run `make verify` (Node 22+ and pnpm, no Rust, no keys) to see a 10-agent pool settle on a local sandbox and the invariants recomputed from chain views.
 
-## Live deployment (builder fills this in)
+## Live deployment
 
 | Item | Value | Status |
 |---|---|---|
-| Testnet Co-op contract | `coop.<operator>.testnet` = `<fill after deploy>` | Pending. Run `pnpm --filter @coop/agents deploy:testnet` (writes `evidence/testnet-deploy.md`) |
-| Testnet demo token | `credits.<operator>.testnet` = `<fill after deploy>` | Pending, same command |
-| Hosted demo URL | `<fill after hosting>` | Pending. Site on Vercel, server on a GCP free-tier VM: [deploy/README.md](deploy/README.md) |
-| Testnet run log (12+ agents, every tx hash) | `evidence/testnet-run-<timestamp>.md` | Pending. Run `pnpm --filter @coop/agents scenario --agents 12 --network testnet` |
+| Testnet Co-op contract | [`coop.coop-alpha.testnet`](https://testnet.nearblocks.io/address/coop.coop-alpha.testnet) | Deployed; on-chain code hash matches `contracts/res/SHA256SUMS` ([`evidence/testnet-deploy.md`](evidence/testnet-deploy.md)) |
+| Testnet demo token | [`credits.coop-alpha.testnet`](https://testnet.nearblocks.io/address/credits.coop-alpha.testnet) | Deployed, same evidence file |
+| Hosted demo URL | https://coop.cyberpunkinc.xyz (API: https://34-138-43-239.sslip.io/api/health) | Live. Site on Vercel, server on a GCP free-tier VM: [deploy/README.md](deploy/README.md) |
+| Testnet run log (12+ agents, every tx hash) | [`evidence/testnet-run-2026-11-05T11-55-16-789Z.md`](evidence/testnet-run-2026-11-05T11-55-16-789Z.md) | Done: 12 agents, 64 transactions, settled at tier 2, all invariants hold. Produced by `pnpm --filter @coop/agents scenario --agents 12 --network testnet --prefix run2` (`--prefix` gives a re-run fresh agent names) |
 | Contract lock (no full-access keys) | `evidence/contract-lock.md` | Pending. Run `pnpm --filter @coop/agents lock-contract --yes` after the testnet run |
 | Demo video / X post | `<fill>` | Pending |
 | Other project by the same builder | Handover: `<repo link>` | Placeholder, fill before submitting |
 
-Until those are filled, the way to see Co-op work is local: `make verify` (one command, section 8) and `make demo` (full stack, section 9).
+To see Co-op work on your own machine: `make verify` (one command, section 8) and `make demo` (full stack, section 9).
 
 ## 2. Track fit
 
@@ -95,14 +95,14 @@ Every factual claim in this README is listed in `docs/CLAIMS.md` with a file and
 | Agent key can only join/leave, zero deposit | [`chain.ts`](agents/src/chain.ts):576 | [`evidence/check-02-fckey-sandbox.txt`](evidence/check-02-fckey-sandbox.txt), [`fckey.test.ts`](agents/test/integration/fckey.test.ts) |
 | Committed wasm matches its SHA-256 and the on-chain code hash | [`deploy.ts`](agents/src/deploy.ts):35, :129; [`Makefile`](Makefile):22 | `make verify` output in section 8 |
 | Spawn endpoint is rate limited and capped | [`spawner.ts`](server/src/spawner.ts):172, :214, :223 | [`app.test.ts`](server/test/unit/app.test.ts) (429 and 503 cases) |
-| Testnet behaviour (deploy, 12+ agent run, key lock) | | Pending testnet run (section "Live deployment") |
+| Testnet behaviour (deploy, 12+ agent run) | | [`evidence/testnet-deploy.md`](evidence/testnet-deploy.md), [`evidence/testnet-run-2026-11-05T11-55-16-789Z.md`](evidence/testnet-run-2026-11-05T11-55-16-789Z.md); the key lock is still pending |
 
 ## 7. What is mocked or not built
 
 - **The demo seller and its voucher token are ours.** `credits.<operator>` is a NEP-141 "API credit voucher" (decimals 0) deployed by the operator account, which also acts as the seller. It is a stand-in for a real merchant's inventory and is labelled as a demo in its metadata.
 - **NEAR Intents is not used.** It has no testnet and this project spends no real money. Settlement is our own contract. Intents-based cross-chain settlement is roadmap.
 - **The LLM is optional and off by default.** Every decision is made by the deterministic policy in `agents/src/policy.ts`. With `LLM_BASE_URL`, `LLM_API_KEY` and `LLM_MODEL` unset, the rules parser in `agents/src/brief.ts` turns a brief into a policy and the API reports `parser: "rules"`. If an LLM is configured and fails, the rules parser answers and says so. LLM output is never invented.
-- **No testnet deployment, hosted demo or testnet run log exists yet** (see "Live deployment"). Every measured number below is from a local sandbox.
+- **The contract account still has its full-access key** (the key lock in "Live deployment" is pending). Every measured number below is from a local sandbox unless it says testnet.
 - **Off-chain components are demo grade.** The server keeps spawned agents' keys in a local file (mode 0600, git-ignored) and is meant for throwaway demo money.
 - **Not built:** signed off-chain join intents (relayed, gasless agents), mainnet deployment, real merchants.
 
@@ -194,9 +194,9 @@ Related commands:
 | Spawn 4 agents from the same address within an hour (default limit is 3 per hour) | The fourth is refused (HTTP 429, the page shows "Hourly limit reached") |
 | Open "How it works" | The mechanism and a diagram |
 
-### Hosted (pending a testnet deploy and hosting)
+### Hosted
 
-Hosted demo URL: `<fill>`. After hosting, the same table applies, with nearblocks links on every transaction chip (`https://testnet.nearblocks.io/txns/<hash>`). The testnet run and the key lock are the builder's two evidence commands in "Live deployment".
+Hosted demo URL: https://coop.cyberpunkinc.xyz. The same table applies, with nearblocks links on every transaction chip (`https://testnet.nearblocks.io/txns/<hash>`).
 
 ## 10. Architecture
 
@@ -245,7 +245,7 @@ All from a local sandbox (nearcore 2.14.0, protocol 88), by [`checks/04-settle-g
 | Largest log in one receipt | 4987 bytes of the 16384 byte protocol cap |
 | `join_pool` / first member's `leave_pool` at 100 members (the cap) | 2.86 Tgas / 20.83 Tgas |
 | Pool sizes exercised | 10 (`make verify`), 12 (scenario integration test), 21 (chunked integration test), 25 and 50 (gas check), 30 random members (Rust invariant test), 100 (member cap test) |
-| Testnet run stats | Pending testnet run |
+| Testnet run stats (12 agents) | 64 transactions in 7.5 minutes; settlement in 2 `settle` calls (65.03 and 15.11 Tgas); [`evidence/testnet-run-2026-11-05T11-55-16-789Z.md`](evidence/testnet-run-2026-11-05T11-55-16-789Z.md) |
 
 `DEFAULT_CHUNK` stays at 10: it is a ceiling, and the contract also stops a call when the gas left is below its per-member estimate, so a chunk that is too large cannot run out of gas. A pool is capped at 100 members, which bounds settlement at about 10 calls.
 

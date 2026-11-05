@@ -1,0 +1,1581 @@
+{
+  "network": "testnet",
+  "rpc": "https://test.rpc.fastnear.com",
+  "coop": "coop.coop-alpha.testnet",
+  "token": "credits.coop-alpha.testnet",
+  "offer_id": 1,
+  "started_at": "2026-11-05T11:55:16.789Z",
+  "finished_at": "2026-11-05T12:02:45.935Z",
+  "ok": true,
+  "roster": [
+    {
+      "label": "run2-e1",
+      "kind": "eager",
+      "units": 4,
+      "policy": {
+        "archetype": "eager",
+        "units": 4,
+        "max_unit_price": "50000000000000000000000"
+      },
+      "budget": "230000000000000000000000"
+    },
+    {
+      "label": "run2-e2",
+      "kind": "eager",
+      "units": 4,
+      "policy": {
+        "archetype": "eager",
+        "units": 4,
+        "max_unit_price": "55000000000000000000000"
+      },
+      "budget": "230000000000000000000000"
+    },
+    {
+      "label": "run2-e3",
+      "kind": "eager",
+      "units": 3,
+      "policy": {
+        "archetype": "eager",
+        "units": 3,
+        "max_unit_price": "50000000000000000000000"
+      },
+      "budget": "180000000000000000000000"
+    },
+    {
+      "label": "run2-b501",
+      "kind": "bargain-50",
+      "units": 4,
+      "policy": {
+        "archetype": "bargain",
+        "units": 4,
+        "max_unit_price": "27500000000000000000000",
+        "target_price": "25000000000000000000000"
+      },
+      "budget": "130000000000000000000000"
+    },
+    {
+      "label": "run2-e4",
+      "kind": "eager",
+      "units": 4,
+      "policy": {
+        "archetype": "eager",
+        "units": 4,
+        "max_unit_price": "55000000000000000000000"
+      },
+      "budget": "230000000000000000000000"
+    },
+    {
+      "label": "run2-e5",
+      "kind": "eager",
+      "units": 4,
+      "policy": {
+        "archetype": "eager",
+        "units": 4,
+        "max_unit_price": "50000000000000000000000"
+      },
+      "budget": "230000000000000000000000"
+    },
+    {
+      "label": "run2-b201",
+      "kind": "bargain-20",
+      "units": 2,
+      "policy": {
+        "archetype": "bargain",
+        "units": 2,
+        "max_unit_price": "45000000000000000000000",
+        "target_price": "35000000000000000000000"
+      },
+      "budget": "100000000000000000000000"
+    },
+    {
+      "label": "run2-b202",
+      "kind": "bargain-20",
+      "units": 2,
+      "policy": {
+        "archetype": "bargain",
+        "units": 2,
+        "max_unit_price": "45000000000000000000000",
+        "target_price": "35000000000000000000000"
+      },
+      "budget": "100000000000000000000000"
+    },
+    {
+      "label": "run2-b203",
+      "kind": "bargain-20",
+      "units": 3,
+      "policy": {
+        "archetype": "bargain",
+        "units": 3,
+        "max_unit_price": "45000000000000000000000",
+        "target_price": "35000000000000000000000"
+      },
+      "budget": "135000000000000000000000"
+    },
+    {
+      "label": "run2-b204",
+      "kind": "bargain-20",
+      "units": 2,
+      "policy": {
+        "archetype": "bargain",
+        "units": 2,
+        "max_unit_price": "45000000000000000000000",
+        "target_price": "35000000000000000000000"
+      },
+      "budget": "100000000000000000000000"
+    },
+    {
+      "label": "run2-b205",
+      "kind": "bargain-20",
+      "units": 2,
+      "policy": {
+        "archetype": "bargain",
+        "units": 2,
+        "max_unit_price": "45000000000000000000000",
+        "target_price": "35000000000000000000000"
+      },
+      "budget": "100000000000000000000000"
+    },
+    {
+      "label": "run2-b502",
+      "kind": "bargain-50",
+      "units": 4,
+      "policy": {
+        "archetype": "bargain",
+        "units": 4,
+        "max_unit_price": "27500000000000000000000",
+        "target_price": "25000000000000000000000"
+      },
+      "budget": "130000000000000000000000"
+    }
+  ],
+  "checks": [
+    {
+      "name": "pool is finished",
+      "pass": true,
+      "detail": "status Settled, 12 members"
+    },
+    {
+      "name": "every member paid <= units x its own limit",
+      "pass": true,
+      "detail": "12 members checked"
+    },
+    {
+      "name": "paid + refunded + storage == locked, per member",
+      "pass": true,
+      "detail": "12 members balance to the yocto"
+    },
+    {
+      "name": "filled members paid units x tier price, the rest paid nothing",
+      "pass": true,
+      "detail": "tier price 0.035"
+    },
+    {
+      "name": "sum of member payments == seller payout",
+      "pass": true,
+      "detail": "1.050000 vs 1.050000 NEAR"
+    },
+    {
+      "name": "seller_paid event matches payout",
+      "pass": true,
+      "detail": "1.050000 NEAR in events"
+    },
+    {
+      "name": "group size matches the resolved result",
+      "pass": true,
+      "detail": "30 units from 10 members"
+    },
+    {
+      "name": "seller paid only if a tier was reached",
+      "pass": true,
+      "detail": "tier 1"
+    },
+    {
+      "name": "token balances match units delivered",
+      "pass": true,
+      "detail": "30 units delivered"
+    },
+    {
+      "name": "inventory fully accounted for (seller kept the unsold units)",
+      "pass": true,
+      "detail": "seller 1000000 -> 999970, escrow 0 -> 0"
+    },
+    {
+      "name": "no budget left locked",
+      "pass": true,
+      "detail": "budget_locked is 0 for every member"
+    },
+    {
+      "name": "membership storage cost is small and non-negative",
+      "pass": true,
+      "detail": "12 members, 0.00277 to 0.00299 NEAR each"
+    },
+    {
+      "name": "owner withdrew every leftover budget (full-access key, 1 yocto)",
+      "pass": true,
+      "detail": "0.7694 NEAR withdrawn from 12 agents"
+    }
+  ],
+  "pool": {
+    "id": 1,
+    "offer": {
+      "id": 1,
+      "seller": "coop-alpha.testnet",
+      "item_token": "credits.coop-alpha.testnet",
+      "title": "Demo API credits (volume pricing)",
+      "description": "Demo seller. Tiers: 1+ at the entry price, 20+ at 70%, 50+ at 50%.",
+      "tiers": [
+        {
+          "min_units": 1,
+          "unit_price": "50000000000000000000000"
+        },
+        {
+          "min_units": 20,
+          "unit_price": "35000000000000000000000"
+        },
+        {
+          "min_units": 50,
+          "unit_price": "25000000000000000000000"
+        }
+      ],
+      "max_units": 60,
+      "unit_amount": "1",
+      "inventory_held": "0",
+      "deadline_ns": "1793880130756684260",
+      "lock_window_ns": "60000000000",
+      "lock_at_ns": "1793880070756684260",
+      "status": "Closed",
+      "created_at_ns": "1793879834402576477"
+    },
+    "status": "Settled",
+    "member_count": 12,
+    "units_unconditional": 19,
+    "units_conditional": 19,
+    "projected": {
+      "units": 30,
+      "members_in": 10,
+      "tier_index": 1,
+      "unit_price": "35000000000000000000000"
+    },
+    "result": {
+      "units": 30,
+      "members_in": 10,
+      "tier_index": 1,
+      "unit_price": "35000000000000000000000",
+      "seller_payout": "1050000000000000000000000",
+      "resolved_at_ns": "1793880137206248752"
+    },
+    "settle_cursor": 12
+  },
+  "members": [
+    {
+      "agent_id": "run2-e1.coop-alpha.testnet",
+      "owner": "coop-alpha.testnet",
+      "units": 4,
+      "threshold_units": null,
+      "locked": "201250000000000000000000",
+      "memo": "Entry price 0.05 is within my 0.05 limit. Joining now.",
+      "joined_at_ns": "1793879846135751368",
+      "projected_in": true,
+      "outcome": "Filled",
+      "paid": "140000000000000000000000",
+      "refunded": "60000000000000000000000",
+      "delivery": "Delivered",
+      "limit": "50000000000000000000000",
+      "token_balance": "4",
+      "storage_fee": "2770000000000000000000"
+    },
+    {
+      "agent_id": "run2-e2.coop-alpha.testnet",
+      "owner": "coop-alpha.testnet",
+      "units": 4,
+      "threshold_units": null,
+      "locked": "201250000000000000000000",
+      "memo": "Entry price 0.05 is within my 0.055 limit. Joining now.",
+      "joined_at_ns": "1793879860898861723",
+      "projected_in": true,
+      "outcome": "Filled",
+      "paid": "140000000000000000000000",
+      "refunded": "60000000000000000000000",
+      "delivery": "Delivered",
+      "limit": "55000000000000000000000",
+      "token_balance": "4",
+      "storage_fee": "2780000000000000000000"
+    },
+    {
+      "agent_id": "run2-e3.coop-alpha.testnet",
+      "owner": "coop-alpha.testnet",
+      "units": 3,
+      "threshold_units": null,
+      "locked": "151250000000000000000000",
+      "memo": "Entry price 0.05 is within my 0.05 limit. Joining now.",
+      "joined_at_ns": "1793879881490805183",
+      "projected_in": true,
+      "outcome": "Filled",
+      "paid": "105000000000000000000000",
+      "refunded": "45000000000000000000000",
+      "delivery": "Delivered",
+      "limit": "50000000000000000000000",
+      "token_balance": "3",
+      "storage_fee": "2770000000000000000000"
+    },
+    {
+      "agent_id": "run2-e4.coop-alpha.testnet",
+      "owner": "coop-alpha.testnet",
+      "units": 4,
+      "threshold_units": null,
+      "locked": "201250000000000000000000",
+      "memo": "Entry price 0.05 is within my 0.055 limit. Joining now.",
+      "joined_at_ns": "1793879881490805183",
+      "projected_in": true,
+      "outcome": "Filled",
+      "paid": "140000000000000000000000",
+      "refunded": "60000000000000000000000",
+      "delivery": "Delivered",
+      "limit": "55000000000000000000000",
+      "token_balance": "4",
+      "storage_fee": "2780000000000000000000"
+    },
+    {
+      "agent_id": "run2-b501.coop-alpha.testnet",
+      "owner": "coop-alpha.testnet",
+      "units": 4,
+      "threshold_units": 50,
+      "locked": "101250000000000000000000",
+      "memo": "In if the group reaches 50. I only buy at 0.025 or less.",
+      "joined_at_ns": "1793879881490805183",
+      "projected_in": false,
+      "outcome": "Excluded",
+      "paid": "0",
+      "refunded": "101250000000000000000000",
+      "delivery": null,
+      "limit": "27500000000000000000000",
+      "token_balance": "0",
+      "storage_fee": "2990000000000000000000"
+    },
+    {
+      "agent_id": "run2-b205.coop-alpha.testnet",
+      "owner": "coop-alpha.testnet",
+      "units": 2,
+      "threshold_units": 20,
+      "locked": "71250000000000000000000",
+      "memo": "In if the group reaches 20. I only buy at 0.035 or less.",
+      "joined_at_ns": "1793879888833779055",
+      "projected_in": true,
+      "outcome": "Filled",
+      "paid": "70000000000000000000000",
+      "refunded": "0",
+      "delivery": "Delivered",
+      "limit": "45000000000000000000000",
+      "token_balance": "2",
+      "storage_fee": "2990000000000000000000"
+    },
+    {
+      "agent_id": "run2-b202.coop-alpha.testnet",
+      "owner": "coop-alpha.testnet",
+      "units": 2,
+      "threshold_units": 20,
+      "locked": "71250000000000000000000",
+      "memo": "In if the group reaches 20. I only buy at 0.035 or less.",
+      "joined_at_ns": "1793879888833779055",
+      "projected_in": true,
+      "outcome": "Filled",
+      "paid": "70000000000000000000000",
+      "refunded": "0",
+      "delivery": "Delivered",
+      "limit": "45000000000000000000000",
+      "token_balance": "2",
+      "storage_fee": "2870000000000000000000"
+    },
+    {
+      "agent_id": "run2-b201.coop-alpha.testnet",
+      "owner": "coop-alpha.testnet",
+      "units": 2,
+      "threshold_units": 20,
+      "locked": "71250000000000000000000",
+      "memo": "In if the group reaches 20. I only buy at 0.035 or less.",
+      "joined_at_ns": "1793879888833779055",
+      "projected_in": true,
+      "outcome": "Filled",
+      "paid": "70000000000000000000000",
+      "refunded": "0",
+      "delivery": "Delivered",
+      "limit": "45000000000000000000000",
+      "token_balance": "2",
+      "storage_fee": "2870000000000000000000"
+    },
+    {
+      "agent_id": "run2-b203.coop-alpha.testnet",
+      "owner": "coop-alpha.testnet",
+      "units": 3,
+      "threshold_units": 20,
+      "locked": "106250000000000000000000",
+      "memo": "In if the group reaches 20. I only buy at 0.035 or less.",
+      "joined_at_ns": "1793879888833779055",
+      "projected_in": true,
+      "outcome": "Filled",
+      "paid": "105000000000000000000000",
+      "refunded": "0",
+      "delivery": "Delivered",
+      "limit": "45000000000000000000000",
+      "token_balance": "3",
+      "storage_fee": "2870000000000000000000"
+    },
+    {
+      "agent_id": "run2-b204.coop-alpha.testnet",
+      "owner": "coop-alpha.testnet",
+      "units": 2,
+      "threshold_units": 20,
+      "locked": "71250000000000000000000",
+      "memo": "In if the group reaches 20. I only buy at 0.035 or less.",
+      "joined_at_ns": "1793879888833779055",
+      "projected_in": true,
+      "outcome": "Filled",
+      "paid": "70000000000000000000000",
+      "refunded": "0",
+      "delivery": "Delivered",
+      "limit": "45000000000000000000000",
+      "token_balance": "2",
+      "storage_fee": "2870000000000000000000"
+    },
+    {
+      "agent_id": "run2-e5.coop-alpha.testnet",
+      "owner": "coop-alpha.testnet",
+      "units": 4,
+      "threshold_units": null,
+      "locked": "201250000000000000000000",
+      "memo": "Entry price 0.05 is within my 0.05 limit. Joining now.",
+      "joined_at_ns": "1793879889356807449",
+      "projected_in": true,
+      "outcome": "Filled",
+      "paid": "140000000000000000000000",
+      "refunded": "60000000000000000000000",
+      "delivery": "Delivered",
+      "limit": "50000000000000000000000",
+      "token_balance": "4",
+      "storage_fee": "2770000000000000000000"
+    },
+    {
+      "agent_id": "run2-b502.coop-alpha.testnet",
+      "owner": "coop-alpha.testnet",
+      "units": 4,
+      "threshold_units": 50,
+      "locked": "101250000000000000000000",
+      "memo": "In if the group reaches 50. I only buy at 0.025 or less.",
+      "joined_at_ns": "1793879889356807449",
+      "projected_in": false,
+      "outcome": "Excluded",
+      "paid": "0",
+      "refunded": "101250000000000000000000",
+      "delivery": null,
+      "limit": "27500000000000000000000",
+      "token_balance": "0",
+      "storage_fee": "2870000000000000000000"
+    }
+  ],
+  "decisions_and_activity": [
+    {
+      "kind": "offer_created",
+      "message": "Offer 1: Demo API credits (volume pricing) (1+ at 0.05, 20+ at 0.035, 50+ at 0.025; up to 60 units)",
+      "pool_id": 1,
+      "id": "mw3hqmx4-1",
+      "ts": 1793879840097
+    },
+    {
+      "kind": "decision",
+      "message": "run2-e1.coop-alpha.testnet decides to join pool 1 with 4 units unconditionally",
+      "pool_id": 1,
+      "agent_id": "run2-e1.coop-alpha.testnet",
+      "reason": "Entry price 0.05 is within my 0.05 limit. Joining now.",
+      "id": "mw3hqmx4-2",
+      "ts": 1793879841514
+    },
+    {
+      "kind": "pool_joined",
+      "message": "run2-e1.coop-alpha.testnet joined pool 1: 4 units, unconditional",
+      "pool_id": 1,
+      "agent_id": "run2-e1.coop-alpha.testnet",
+      "reason": "Entry price 0.05 is within my 0.05 limit. Joining now.",
+      "tx": {
+        "hash": "2hSc1xybmEK8N8zYzNtp1gVrsNgFZkZyPiofnTTM24PQ",
+        "signer": "run2-e1.coop-alpha.testnet",
+        "receiver": "coop.coop-alpha.testnet",
+        "method": "join_pool",
+        "gas_burnt": "3006739347030",
+        "explorer_url": "https://testnet.nearblocks.io/txns/2hSc1xybmEK8N8zYzNtp1gVrsNgFZkZyPiofnTTM24PQ"
+      },
+      "id": "mw3hqmx4-3",
+      "ts": 1793879846026
+    },
+    {
+      "kind": "decision",
+      "message": "run2-e2.coop-alpha.testnet decides to join pool 1 with 4 units unconditionally",
+      "pool_id": 1,
+      "agent_id": "run2-e2.coop-alpha.testnet",
+      "reason": "Entry price 0.05 is within my 0.055 limit. Joining now.",
+      "id": "mw3hqmx4-4",
+      "ts": 1793879847711
+    },
+    {
+      "kind": "decision",
+      "message": "run2-e3.coop-alpha.testnet decides to join pool 1 with 3 units unconditionally",
+      "pool_id": 1,
+      "agent_id": "run2-e3.coop-alpha.testnet",
+      "reason": "Entry price 0.05 is within my 0.05 limit. Joining now.",
+      "id": "mw3hqmx4-5",
+      "ts": 1793879847711
+    },
+    {
+      "kind": "decision",
+      "message": "run2-b501.coop-alpha.testnet decides to join pool 1 with 4 units if the group reaches 50",
+      "pool_id": 1,
+      "agent_id": "run2-b501.coop-alpha.testnet",
+      "reason": "In if the group reaches 50. I only buy at 0.025 or less.",
+      "id": "mw3hqmx4-6",
+      "ts": 1793879847712
+    },
+    {
+      "kind": "decision",
+      "message": "run2-e4.coop-alpha.testnet decides to join pool 1 with 4 units unconditionally",
+      "pool_id": 1,
+      "agent_id": "run2-e4.coop-alpha.testnet",
+      "reason": "Entry price 0.05 is within my 0.055 limit. Joining now.",
+      "id": "mw3hqmx4-7",
+      "ts": 1793879847712
+    },
+    {
+      "kind": "pool_joined",
+      "message": "run2-e2.coop-alpha.testnet joined pool 1: 4 units, unconditional",
+      "pool_id": 1,
+      "agent_id": "run2-e2.coop-alpha.testnet",
+      "reason": "Entry price 0.05 is within my 0.055 limit. Joining now.",
+      "tx": {
+        "hash": "AnwhgfaLg17Rq1pSE7wZ6SGWmKRt79NLfDyJnCMK8Vj6",
+        "signer": "run2-e2.coop-alpha.testnet",
+        "receiver": "coop.coop-alpha.testnet",
+        "method": "join_pool",
+        "gas_burnt": "3011718508383",
+        "explorer_url": "https://testnet.nearblocks.io/txns/AnwhgfaLg17Rq1pSE7wZ6SGWmKRt79NLfDyJnCMK8Vj6"
+      },
+      "id": "mw3hqmx4-8",
+      "ts": 1793879861069
+    },
+    {
+      "kind": "pool_joined",
+      "message": "run2-b501.coop-alpha.testnet joined pool 1: 4 units, conditional on 50",
+      "pool_id": 1,
+      "agent_id": "run2-b501.coop-alpha.testnet",
+      "reason": "In if the group reaches 50. I only buy at 0.025 or less.",
+      "tx": {
+        "hash": "EMfSic7Q1PycEPQRd6NCmTR88HMDFpdEC4hRTrxJibHb",
+        "signer": "run2-b501.coop-alpha.testnet",
+        "receiver": "coop.coop-alpha.testnet",
+        "method": "join_pool",
+        "gas_burnt": "2943161979750",
+        "explorer_url": "https://testnet.nearblocks.io/txns/EMfSic7Q1PycEPQRd6NCmTR88HMDFpdEC4hRTrxJibHb"
+      },
+      "id": "mw3hqmx4-9",
+      "ts": 1793879881861
+    },
+    {
+      "kind": "pool_joined",
+      "message": "run2-e3.coop-alpha.testnet joined pool 1: 3 units, unconditional",
+      "pool_id": 1,
+      "agent_id": "run2-e3.coop-alpha.testnet",
+      "reason": "Entry price 0.05 is within my 0.05 limit. Joining now.",
+      "tx": {
+        "hash": "GMHV194j6buPon12HWFZRgdTDwhHhtcj2JuZVJCouXJH",
+        "signer": "run2-e3.coop-alpha.testnet",
+        "receiver": "coop.coop-alpha.testnet",
+        "method": "join_pool",
+        "gas_burnt": "3013579347030",
+        "explorer_url": "https://testnet.nearblocks.io/txns/GMHV194j6buPon12HWFZRgdTDwhHhtcj2JuZVJCouXJH"
+      },
+      "id": "mw3hqmx4-10",
+      "ts": 1793879881985
+    },
+    {
+      "kind": "pool_joined",
+      "message": "run2-e4.coop-alpha.testnet joined pool 1: 4 units, unconditional",
+      "pool_id": 1,
+      "agent_id": "run2-e4.coop-alpha.testnet",
+      "reason": "Entry price 0.05 is within my 0.055 limit. Joining now.",
+      "tx": {
+        "hash": "BKURxPeZzTnjXPZ58Q1DAG2hGYpUPX9Lnx51y38hcM4J",
+        "signer": "run2-e4.coop-alpha.testnet",
+        "receiver": "coop.coop-alpha.testnet",
+        "method": "join_pool",
+        "gas_burnt": "2936478508383",
+        "explorer_url": "https://testnet.nearblocks.io/txns/BKURxPeZzTnjXPZ58Q1DAG2hGYpUPX9Lnx51y38hcM4J"
+      },
+      "id": "mw3hqmx4-11",
+      "ts": 1793879882059
+    },
+    {
+      "kind": "decision",
+      "message": "run2-e5.coop-alpha.testnet decides to join pool 1 with 4 units unconditionally",
+      "pool_id": 1,
+      "agent_id": "run2-e5.coop-alpha.testnet",
+      "reason": "Entry price 0.05 is within my 0.05 limit. Joining now.",
+      "id": "mw3hqmx4-12",
+      "ts": 1793879886078
+    },
+    {
+      "kind": "decision",
+      "message": "run2-b201.coop-alpha.testnet decides to join pool 1 with 2 units if the group reaches 20",
+      "pool_id": 1,
+      "agent_id": "run2-b201.coop-alpha.testnet",
+      "reason": "In if the group reaches 20. I only buy at 0.035 or less.",
+      "id": "mw3hqmx4-13",
+      "ts": 1793879886078
+    },
+    {
+      "kind": "decision",
+      "message": "run2-b202.coop-alpha.testnet decides to join pool 1 with 2 units if the group reaches 20",
+      "pool_id": 1,
+      "agent_id": "run2-b202.coop-alpha.testnet",
+      "reason": "In if the group reaches 20. I only buy at 0.035 or less.",
+      "id": "mw3hqmx4-14",
+      "ts": 1793879886078
+    },
+    {
+      "kind": "decision",
+      "message": "run2-b203.coop-alpha.testnet decides to join pool 1 with 3 units if the group reaches 20",
+      "pool_id": 1,
+      "agent_id": "run2-b203.coop-alpha.testnet",
+      "reason": "In if the group reaches 20. I only buy at 0.035 or less.",
+      "id": "mw3hqmx4-15",
+      "ts": 1793879886078
+    },
+    {
+      "kind": "decision",
+      "message": "run2-b204.coop-alpha.testnet decides to join pool 1 with 2 units if the group reaches 20",
+      "pool_id": 1,
+      "agent_id": "run2-b204.coop-alpha.testnet",
+      "reason": "In if the group reaches 20. I only buy at 0.035 or less.",
+      "id": "mw3hqmx4-16",
+      "ts": 1793879886078
+    },
+    {
+      "kind": "decision",
+      "message": "run2-b205.coop-alpha.testnet decides to join pool 1 with 2 units if the group reaches 20",
+      "pool_id": 1,
+      "agent_id": "run2-b205.coop-alpha.testnet",
+      "reason": "In if the group reaches 20. I only buy at 0.035 or less.",
+      "id": "mw3hqmx4-17",
+      "ts": 1793879886079
+    },
+    {
+      "kind": "decision",
+      "message": "run2-b502.coop-alpha.testnet decides to join pool 1 with 4 units if the group reaches 50",
+      "pool_id": 1,
+      "agent_id": "run2-b502.coop-alpha.testnet",
+      "reason": "In if the group reaches 50. I only buy at 0.025 or less.",
+      "id": "mw3hqmx4-18",
+      "ts": 1793879886079
+    },
+    {
+      "kind": "pool_joined",
+      "message": "run2-b201.coop-alpha.testnet joined pool 1: 2 units, conditional on 20",
+      "pool_id": 1,
+      "agent_id": "run2-b201.coop-alpha.testnet",
+      "reason": "In if the group reaches 20. I only buy at 0.035 or less.",
+      "tx": {
+        "hash": "3Jy7PNr2adocASV2DsZGEHdD2R5ig662mqfNM9tjYc33",
+        "signer": "run2-b201.coop-alpha.testnet",
+        "receiver": "coop.coop-alpha.testnet",
+        "method": "join_pool",
+        "gas_burnt": "2954188995075",
+        "explorer_url": "https://testnet.nearblocks.io/txns/3Jy7PNr2adocASV2DsZGEHdD2R5ig662mqfNM9tjYc33"
+      },
+      "id": "mw3hqmx4-19",
+      "ts": 1793879889059
+    },
+    {
+      "kind": "pool_joined",
+      "message": "run2-b203.coop-alpha.testnet joined pool 1: 3 units, conditional on 20",
+      "pool_id": 1,
+      "agent_id": "run2-b203.coop-alpha.testnet",
+      "reason": "In if the group reaches 20. I only buy at 0.035 or less.",
+      "tx": {
+        "hash": "EJ73xRqPQXmJYfSq8AQiXrFmH1CKAQ4x8H4E5T5c1mtZ",
+        "signer": "run2-b203.coop-alpha.testnet",
+        "receiver": "coop.coop-alpha.testnet",
+        "method": "join_pool",
+        "gas_burnt": "2952262004502",
+        "explorer_url": "https://testnet.nearblocks.io/txns/EJ73xRqPQXmJYfSq8AQiXrFmH1CKAQ4x8H4E5T5c1mtZ"
+      },
+      "id": "mw3hqmx4-20",
+      "ts": 1793879889059
+    },
+    {
+      "kind": "pool_joined",
+      "message": "run2-b204.coop-alpha.testnet joined pool 1: 2 units, conditional on 20",
+      "pool_id": 1,
+      "agent_id": "run2-b204.coop-alpha.testnet",
+      "reason": "In if the group reaches 20. I only buy at 0.035 or less.",
+      "tx": {
+        "hash": "4LkW4kk7DohQBtHzpojXji8e5NkEM1J1K8mTF8ojcYqs",
+        "signer": "run2-b204.coop-alpha.testnet",
+        "receiver": "coop.coop-alpha.testnet",
+        "method": "join_pool",
+        "gas_burnt": "2954188995075",
+        "explorer_url": "https://testnet.nearblocks.io/txns/4LkW4kk7DohQBtHzpojXji8e5NkEM1J1K8mTF8ojcYqs"
+      },
+      "id": "mw3hqmx4-21",
+      "ts": 1793879889060
+    },
+    {
+      "kind": "pool_joined",
+      "message": "run2-b202.coop-alpha.testnet joined pool 1: 2 units, conditional on 20",
+      "pool_id": 1,
+      "agent_id": "run2-b202.coop-alpha.testnet",
+      "reason": "In if the group reaches 20. I only buy at 0.035 or less.",
+      "tx": {
+        "hash": "6kySkgivdEuu8n7b79pnVb1tDTACddqSEDMJtMyGv7M5",
+        "signer": "run2-b202.coop-alpha.testnet",
+        "receiver": "coop.coop-alpha.testnet",
+        "method": "join_pool",
+        "gas_burnt": "2954188995075",
+        "explorer_url": "https://testnet.nearblocks.io/txns/6kySkgivdEuu8n7b79pnVb1tDTACddqSEDMJtMyGv7M5"
+      },
+      "id": "mw3hqmx4-22",
+      "ts": 1793879889060
+    },
+    {
+      "kind": "pool_joined",
+      "message": "run2-b205.coop-alpha.testnet joined pool 1: 2 units, conditional on 20",
+      "pool_id": 1,
+      "agent_id": "run2-b205.coop-alpha.testnet",
+      "reason": "In if the group reaches 20. I only buy at 0.035 or less.",
+      "tx": {
+        "hash": "C5XNezD8Zh57SVf9Ps5pvJmTcgJVwD8WG3UuGXbUXUm",
+        "signer": "run2-b205.coop-alpha.testnet",
+        "receiver": "coop.coop-alpha.testnet",
+        "method": "join_pool",
+        "gas_burnt": "3030384910107",
+        "explorer_url": "https://testnet.nearblocks.io/txns/C5XNezD8Zh57SVf9Ps5pvJmTcgJVwD8WG3UuGXbUXUm"
+      },
+      "id": "mw3hqmx4-23",
+      "ts": 1793879889061
+    },
+    {
+      "kind": "pool_joined",
+      "message": "run2-b502.coop-alpha.testnet joined pool 1: 4 units, conditional on 50",
+      "pool_id": 1,
+      "agent_id": "run2-b502.coop-alpha.testnet",
+      "reason": "In if the group reaches 50. I only buy at 0.025 or less.",
+      "tx": {
+        "hash": "96aNr5463R3gPskufMM6Zv7EabMkQkaafegViiGxMYX4",
+        "signer": "run2-b502.coop-alpha.testnet",
+        "receiver": "coop.coop-alpha.testnet",
+        "method": "join_pool",
+        "gas_burnt": "2959137383010",
+        "explorer_url": "https://testnet.nearblocks.io/txns/96aNr5463R3gPskufMM6Zv7EabMkQkaafegViiGxMYX4"
+      },
+      "id": "mw3hqmx4-24",
+      "ts": 1793879889718
+    },
+    {
+      "kind": "pool_joined",
+      "message": "run2-e5.coop-alpha.testnet joined pool 1: 4 units, unconditional",
+      "pool_id": 1,
+      "agent_id": "run2-e5.coop-alpha.testnet",
+      "reason": "Entry price 0.05 is within my 0.05 limit. Joining now.",
+      "tx": {
+        "hash": "tooXoB1Jv1rw3pjiwyRZp8jXbZq5cy78s1dKkGvkFc8",
+        "signer": "run2-e5.coop-alpha.testnet",
+        "receiver": "coop.coop-alpha.testnet",
+        "method": "join_pool",
+        "gas_burnt": "3031774884750",
+        "explorer_url": "https://testnet.nearblocks.io/txns/tooXoB1Jv1rw3pjiwyRZp8jXbZq5cy78s1dKkGvkFc8"
+      },
+      "id": "mw3hqmx4-25",
+      "ts": 1793879889819
+    },
+    {
+      "kind": "settle",
+      "message": "settle(pool 1): 10 of 12 members processed, status Settling",
+      "pool_id": 1,
+      "tx": {
+        "hash": "BPCpCEZBxED6UBqP1qPRmdYztyFTsYDUkgyS3CRR7FYW",
+        "signer": "coop-alpha.testnet",
+        "receiver": "coop.coop-alpha.testnet",
+        "method": "settle",
+        "gas_burnt": "65032581897221",
+        "explorer_url": "https://testnet.nearblocks.io/txns/BPCpCEZBxED6UBqP1qPRmdYztyFTsYDUkgyS3CRR7FYW"
+      },
+      "id": "mw3hqmx4-26",
+      "ts": 1793880139177
+    },
+    {
+      "kind": "settle",
+      "message": "settle(pool 1): 12 of 12 members processed, status Settled",
+      "pool_id": 1,
+      "tx": {
+        "hash": "Hz2WxxnpvuFrtQjEZQCiXyHS9ZmSjgPiAWnACw7RekKH",
+        "signer": "coop-alpha.testnet",
+        "receiver": "coop.coop-alpha.testnet",
+        "method": "settle",
+        "gas_burnt": "15111400280774",
+        "explorer_url": "https://testnet.nearblocks.io/txns/Hz2WxxnpvuFrtQjEZQCiXyHS9ZmSjgPiAWnACw7RekKH"
+      },
+      "id": "mw3hqmx4-27",
+      "ts": 1793880142978
+    },
+    {
+      "kind": "pool_settled",
+      "message": "Pool 1 settled: 30 units from 10 agents at 0.035 each, seller paid 1.0500 NEAR",
+      "pool_id": 1,
+      "id": "mw3hqmx4-28",
+      "ts": 1793880143437
+    }
+  ],
+  "transactions": [
+    {
+      "phase": "provision agents",
+      "hash": "5zXoyCBZAF24euRBT7aZoMUczGjSeYt8t4n9b7UBEGig",
+      "signer": "coop-alpha.testnet",
+      "receiver": "run2-b501.coop-alpha.testnet",
+      "method": "create_account",
+      "gas_burnt": "8349895375000",
+      "explorer_url": "https://testnet.nearblocks.io/txns/5zXoyCBZAF24euRBT7aZoMUczGjSeYt8t4n9b7UBEGig",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "8n7ezok2qLayZvwLt1sMYaR6ditya9VmctqWMLqQQTBG",
+      "signer": "run2-b501.coop-alpha.testnet",
+      "receiver": "run2-b501.coop-alpha.testnet",
+      "method": "add_key",
+      "gas_burnt": "420635113902",
+      "explorer_url": "https://testnet.nearblocks.io/txns/8n7ezok2qLayZvwLt1sMYaR6ditya9VmctqWMLqQQTBG",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "BSMd51zzHLQbdF1qvDGdcUmB3RBYNtMXrsYr7TBXoPmz",
+      "signer": "coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "register_agent",
+      "gas_burnt": "2303475027082",
+      "explorer_url": "https://testnet.nearblocks.io/txns/BSMd51zzHLQbdF1qvDGdcUmB3RBYNtMXrsYr7TBXoPmz",
+      "events": [
+        "agent_registered"
+      ]
+    },
+    {
+      "phase": "provision agents",
+      "hash": "5Y64z5Ki6DrVhz57t4k9Vx8ewPeZDdKWnpdV6MU2vuRM",
+      "signer": "coop-alpha.testnet",
+      "receiver": "run2-e3.coop-alpha.testnet",
+      "method": "create_account",
+      "gas_burnt": "8349895375000",
+      "explorer_url": "https://testnet.nearblocks.io/txns/5Y64z5Ki6DrVhz57t4k9Vx8ewPeZDdKWnpdV6MU2vuRM",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "DvUZtAVoAy8r85wkKmPRTCDWT8MSdiQFuv8G1LKjA3Km",
+      "signer": "run2-e3.coop-alpha.testnet",
+      "receiver": "run2-e3.coop-alpha.testnet",
+      "method": "add_key",
+      "gas_burnt": "420635113902",
+      "explorer_url": "https://testnet.nearblocks.io/txns/DvUZtAVoAy8r85wkKmPRTCDWT8MSdiQFuv8G1LKjA3Km",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "Hbn1T7tAc3nqRfYyrPAXF9WDiJ8jptk9rtYn4eDzHpYf",
+      "signer": "coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "register_agent",
+      "gas_burnt": "2300124760678",
+      "explorer_url": "https://testnet.nearblocks.io/txns/Hbn1T7tAc3nqRfYyrPAXF9WDiJ8jptk9rtYn4eDzHpYf",
+      "events": [
+        "agent_registered"
+      ]
+    },
+    {
+      "phase": "provision agents",
+      "hash": "9N85QzBXNHCM26TcsQ7tK2x73FGySDHmuypL1iErZqmp",
+      "signer": "coop-alpha.testnet",
+      "receiver": "run2-e1.coop-alpha.testnet",
+      "method": "create_account",
+      "gas_burnt": "8349895375000",
+      "explorer_url": "https://testnet.nearblocks.io/txns/9N85QzBXNHCM26TcsQ7tK2x73FGySDHmuypL1iErZqmp",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "2FWvQgyEhu7gLdF8NGsK2BTMuZ34JpYQZeB4qU9ibrMA",
+      "signer": "run2-e1.coop-alpha.testnet",
+      "receiver": "run2-e1.coop-alpha.testnet",
+      "method": "add_key",
+      "gas_burnt": "420635113902",
+      "explorer_url": "https://testnet.nearblocks.io/txns/2FWvQgyEhu7gLdF8NGsK2BTMuZ34JpYQZeB4qU9ibrMA",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "4dGzfQk7KvF3GPSmG52TCSEHG74xLchM8x25xj1983DN",
+      "signer": "coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "register_agent",
+      "gas_burnt": "2302404760678",
+      "explorer_url": "https://testnet.nearblocks.io/txns/4dGzfQk7KvF3GPSmG52TCSEHG74xLchM8x25xj1983DN",
+      "events": [
+        "agent_registered"
+      ]
+    },
+    {
+      "phase": "provision agents",
+      "hash": "C5eWwm1zW7fwGV3nmMYbeVmMocfffN2Z8gKKaBCEXZM7",
+      "signer": "coop-alpha.testnet",
+      "receiver": "run2-e2.coop-alpha.testnet",
+      "method": "create_account",
+      "gas_burnt": "8349895375000",
+      "explorer_url": "https://testnet.nearblocks.io/txns/C5eWwm1zW7fwGV3nmMYbeVmMocfffN2Z8gKKaBCEXZM7",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "p9XiMdSLTS1GGtH6vzrPCubJHR4ecoosZXgjtznUfwa",
+      "signer": "run2-e2.coop-alpha.testnet",
+      "receiver": "run2-e2.coop-alpha.testnet",
+      "method": "add_key",
+      "gas_burnt": "420635113902",
+      "explorer_url": "https://testnet.nearblocks.io/txns/p9XiMdSLTS1GGtH6vzrPCubJHR4ecoosZXgjtznUfwa",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "GhVEYKkTRkfq84YUARS2hdvCh1NiMZ34j3KuF9JAgzXu",
+      "signer": "coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "register_agent",
+      "gas_burnt": "2263644760678",
+      "explorer_url": "https://testnet.nearblocks.io/txns/GhVEYKkTRkfq84YUARS2hdvCh1NiMZ34j3KuF9JAgzXu",
+      "events": [
+        "agent_registered"
+      ]
+    },
+    {
+      "phase": "provision agents",
+      "hash": "9jS8TrgBHvhvtvGMJm3U1Fn9nuMF44bAbt1xFnSNFHCk",
+      "signer": "coop-alpha.testnet",
+      "receiver": "run2-e4.coop-alpha.testnet",
+      "method": "create_account",
+      "gas_burnt": "8349895375000",
+      "explorer_url": "https://testnet.nearblocks.io/txns/9jS8TrgBHvhvtvGMJm3U1Fn9nuMF44bAbt1xFnSNFHCk",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "BiWXuknrQL7y3GT5Hmam6yp8GYpudsEBPN5Fj1y3sYvL",
+      "signer": "run2-e4.coop-alpha.testnet",
+      "receiver": "run2-e4.coop-alpha.testnet",
+      "method": "add_key",
+      "gas_burnt": "420635113902",
+      "explorer_url": "https://testnet.nearblocks.io/txns/BiWXuknrQL7y3GT5Hmam6yp8GYpudsEBPN5Fj1y3sYvL",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "FLTDGZHPp7rC4re4oepVgXBmGYsGsonykv5QeRV46Gry",
+      "signer": "coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "register_agent",
+      "gas_burnt": "2302404760678",
+      "explorer_url": "https://testnet.nearblocks.io/txns/FLTDGZHPp7rC4re4oepVgXBmGYsGsonykv5QeRV46Gry",
+      "events": [
+        "agent_registered"
+      ]
+    },
+    {
+      "phase": "provision agents",
+      "hash": "FHNSQUHgTSKZ8ntM29euGxhQHTkqnFJYmqR44dHg4WeK",
+      "signer": "coop-alpha.testnet",
+      "receiver": "run2-e5.coop-alpha.testnet",
+      "method": "create_account",
+      "gas_burnt": "8349895375000",
+      "explorer_url": "https://testnet.nearblocks.io/txns/FHNSQUHgTSKZ8ntM29euGxhQHTkqnFJYmqR44dHg4WeK",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "84Kr3psf9fJDXnfnXPRFbR3wxiKq8g5166YsVsBErNa5",
+      "signer": "run2-e5.coop-alpha.testnet",
+      "receiver": "run2-e5.coop-alpha.testnet",
+      "method": "add_key",
+      "gas_burnt": "420635113902",
+      "explorer_url": "https://testnet.nearblocks.io/txns/84Kr3psf9fJDXnfnXPRFbR3wxiKq8g5166YsVsBErNa5",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "ezcUxQJbSwcBSySQyZourSwR9a4FwdvDbDik6gZw8HS",
+      "signer": "coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "register_agent",
+      "gas_burnt": "2304684760678",
+      "explorer_url": "https://testnet.nearblocks.io/txns/ezcUxQJbSwcBSySQyZourSwR9a4FwdvDbDik6gZw8HS",
+      "events": [
+        "agent_registered"
+      ]
+    },
+    {
+      "phase": "provision agents",
+      "hash": "6ZqBHfSXQHsYUUYxvgr5bwByuT567SQ3JfzCgV243DWy",
+      "signer": "coop-alpha.testnet",
+      "receiver": "run2-b201.coop-alpha.testnet",
+      "method": "create_account",
+      "gas_burnt": "8349895375000",
+      "explorer_url": "https://testnet.nearblocks.io/txns/6ZqBHfSXQHsYUUYxvgr5bwByuT567SQ3JfzCgV243DWy",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "Fq2X7sdM5qGVK4udkgcfPL4cDdYeFpY7bNpUGcqrVC9r",
+      "signer": "run2-b201.coop-alpha.testnet",
+      "receiver": "run2-b201.coop-alpha.testnet",
+      "method": "add_key",
+      "gas_burnt": "420635113902",
+      "explorer_url": "https://testnet.nearblocks.io/txns/Fq2X7sdM5qGVK4udkgcfPL4cDdYeFpY7bNpUGcqrVC9r",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "HDCkn8PG6K7htR15crve3uizoWoHBr2VCQhvfjwZSGk1",
+      "signer": "coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "register_agent",
+      "gas_burnt": "2266642017655",
+      "explorer_url": "https://testnet.nearblocks.io/txns/HDCkn8PG6K7htR15crve3uizoWoHBr2VCQhvfjwZSGk1",
+      "events": [
+        "agent_registered"
+      ]
+    },
+    {
+      "phase": "provision agents",
+      "hash": "BGeSdfiMuWfyMD2Yyd1SYpkMDf1WtgTeGsWpC6HdgLj1",
+      "signer": "coop-alpha.testnet",
+      "receiver": "run2-b202.coop-alpha.testnet",
+      "method": "create_account",
+      "gas_burnt": "8349895375000",
+      "explorer_url": "https://testnet.nearblocks.io/txns/BGeSdfiMuWfyMD2Yyd1SYpkMDf1WtgTeGsWpC6HdgLj1",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "32CmpfgxPsmFdWiGUSPnebKDyjzRKX67s2pYvHeWXrCC",
+      "signer": "run2-b202.coop-alpha.testnet",
+      "receiver": "run2-b202.coop-alpha.testnet",
+      "method": "add_key",
+      "gas_burnt": "420635113902",
+      "explorer_url": "https://testnet.nearblocks.io/txns/32CmpfgxPsmFdWiGUSPnebKDyjzRKX67s2pYvHeWXrCC",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "EhvPYVfsKEMzbLWSmeNYV2st5DMfeNEM9GEqVEgrNrhp",
+      "signer": "coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "register_agent",
+      "gas_burnt": "2268922017655",
+      "explorer_url": "https://testnet.nearblocks.io/txns/EhvPYVfsKEMzbLWSmeNYV2st5DMfeNEM9GEqVEgrNrhp",
+      "events": [
+        "agent_registered"
+      ]
+    },
+    {
+      "phase": "provision agents",
+      "hash": "G57KR7XmLii2ha954VrBjipZsoCj1oPbyjSuo7Zzu3Le",
+      "signer": "coop-alpha.testnet",
+      "receiver": "run2-b502.coop-alpha.testnet",
+      "method": "create_account",
+      "gas_burnt": "8349895375000",
+      "explorer_url": "https://testnet.nearblocks.io/txns/G57KR7XmLii2ha954VrBjipZsoCj1oPbyjSuo7Zzu3Le",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "AmSbLRb6t1hneAwnub6NBhukiRXDz3HoWDqpRmrDuA4i",
+      "signer": "run2-b502.coop-alpha.testnet",
+      "receiver": "run2-b502.coop-alpha.testnet",
+      "method": "add_key",
+      "gas_burnt": "420635113902",
+      "explorer_url": "https://testnet.nearblocks.io/txns/AmSbLRb6t1hneAwnub6NBhukiRXDz3HoWDqpRmrDuA4i",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "3xrA1tMjLXsKj8LMCVRvCpUXeML2y1YauLxBfX71Nbgk",
+      "signer": "coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "register_agent",
+      "gas_burnt": "2305755027082",
+      "explorer_url": "https://testnet.nearblocks.io/txns/3xrA1tMjLXsKj8LMCVRvCpUXeML2y1YauLxBfX71Nbgk",
+      "events": [
+        "agent_registered"
+      ]
+    },
+    {
+      "phase": "provision agents",
+      "hash": "B9BKhfjRJwTjfjbC1RAqnR1P1NMC9W1czdAvAwo4Dr9N",
+      "signer": "coop-alpha.testnet",
+      "receiver": "run2-b205.coop-alpha.testnet",
+      "method": "create_account",
+      "gas_burnt": "8349895375000",
+      "explorer_url": "https://testnet.nearblocks.io/txns/B9BKhfjRJwTjfjbC1RAqnR1P1NMC9W1czdAvAwo4Dr9N",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "Hbzm4yR65noCHiMgkU4S76DoQW7zTZFs391FccEPUHgL",
+      "signer": "run2-b205.coop-alpha.testnet",
+      "receiver": "run2-b205.coop-alpha.testnet",
+      "method": "add_key",
+      "gas_burnt": "420635113902",
+      "explorer_url": "https://testnet.nearblocks.io/txns/Hbzm4yR65noCHiMgkU4S76DoQW7zTZFs391FccEPUHgL",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "2noVSQDPr4rWKATxk9Dvr2g7hXEf5WiQRJatq9zoUXhV",
+      "signer": "coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "register_agent",
+      "gas_burnt": "2307682017655",
+      "explorer_url": "https://testnet.nearblocks.io/txns/2noVSQDPr4rWKATxk9Dvr2g7hXEf5WiQRJatq9zoUXhV",
+      "events": [
+        "agent_registered"
+      ]
+    },
+    {
+      "phase": "provision agents",
+      "hash": "ASrRs9AuRbzJsHB8K4VACfAGB3iwAZw6LicZvHKBZpUq",
+      "signer": "coop-alpha.testnet",
+      "receiver": "run2-b204.coop-alpha.testnet",
+      "method": "create_account",
+      "gas_burnt": "8349895375000",
+      "explorer_url": "https://testnet.nearblocks.io/txns/ASrRs9AuRbzJsHB8K4VACfAGB3iwAZw6LicZvHKBZpUq",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "4Ksc83X23j7D9DePoHtTpLqMroTc88c2JdPHJV2Ben4e",
+      "signer": "run2-b204.coop-alpha.testnet",
+      "receiver": "run2-b204.coop-alpha.testnet",
+      "method": "add_key",
+      "gas_burnt": "420635113902",
+      "explorer_url": "https://testnet.nearblocks.io/txns/4Ksc83X23j7D9DePoHtTpLqMroTc88c2JdPHJV2Ben4e",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "5B9kTpcWWY1sbFv8n26qZVk8q5TZcAahNa8j1ZdaYUjv",
+      "signer": "coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "register_agent",
+      "gas_burnt": "2268922017655",
+      "explorer_url": "https://testnet.nearblocks.io/txns/5B9kTpcWWY1sbFv8n26qZVk8q5TZcAahNa8j1ZdaYUjv",
+      "events": [
+        "agent_registered"
+      ]
+    },
+    {
+      "phase": "provision agents",
+      "hash": "412erfB3CgDPt4FGmrPpou9SedKhCXyc5B8i4VUUPMkU",
+      "signer": "coop-alpha.testnet",
+      "receiver": "run2-b203.coop-alpha.testnet",
+      "method": "create_account",
+      "gas_burnt": "8349895375000",
+      "explorer_url": "https://testnet.nearblocks.io/txns/412erfB3CgDPt4FGmrPpou9SedKhCXyc5B8i4VUUPMkU",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "GusJCsziFjKgDdPQoHvVx6hFSEDpordvMxMpLBkCQ2aE",
+      "signer": "run2-b203.coop-alpha.testnet",
+      "receiver": "run2-b203.coop-alpha.testnet",
+      "method": "add_key",
+      "gas_burnt": "420635113902",
+      "explorer_url": "https://testnet.nearblocks.io/txns/GusJCsziFjKgDdPQoHvVx6hFSEDpordvMxMpLBkCQ2aE",
+      "events": []
+    },
+    {
+      "phase": "provision agents",
+      "hash": "6MeogAmoQFxqHCZCkxUojSTPF6xnD8edwrxDq7RLkPny",
+      "signer": "coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "register_agent",
+      "gas_burnt": "2303475027082",
+      "explorer_url": "https://testnet.nearblocks.io/txns/6MeogAmoQFxqHCZCkxUojSTPF6xnD8edwrxDq7RLkPny",
+      "events": [
+        "agent_registered"
+      ]
+    },
+    {
+      "phase": "offer",
+      "hash": "7m5WEdD44PhDD5wU1yaQyF2Jw2JJmjc88DkPpvzHe8vf",
+      "signer": "coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "create_offer",
+      "gas_burnt": "3020477309615",
+      "explorer_url": "https://testnet.nearblocks.io/txns/7m5WEdD44PhDD5wU1yaQyF2Jw2JJmjc88DkPpvzHe8vf",
+      "events": [
+        "offer_created"
+      ]
+    },
+    {
+      "phase": "offer",
+      "hash": "42m4A7bFf9e6Yvizw5Zx1idSwFyA2ExRiaxACMMCkr1J",
+      "signer": "coop-alpha.testnet",
+      "receiver": "credits.coop-alpha.testnet",
+      "method": "ft_transfer_call",
+      "gas_burnt": "6610719273559",
+      "explorer_url": "https://testnet.nearblocks.io/txns/42m4A7bFf9e6Yvizw5Zx1idSwFyA2ExRiaxACMMCkr1J",
+      "events": [
+        "ft_transfer",
+        "inventory_deposited",
+        "offer_opened"
+      ]
+    },
+    {
+      "phase": "agents act (function-call key)",
+      "hash": "2hSc1xybmEK8N8zYzNtp1gVrsNgFZkZyPiofnTTM24PQ",
+      "signer": "run2-e1.coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "join_pool",
+      "gas_burnt": "3006739347030",
+      "explorer_url": "https://testnet.nearblocks.io/txns/2hSc1xybmEK8N8zYzNtp1gVrsNgFZkZyPiofnTTM24PQ",
+      "events": [
+        "pool_joined"
+      ]
+    },
+    {
+      "phase": "agents act (function-call key)",
+      "hash": "AnwhgfaLg17Rq1pSE7wZ6SGWmKRt79NLfDyJnCMK8Vj6",
+      "signer": "run2-e2.coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "join_pool",
+      "gas_burnt": "3011718508383",
+      "explorer_url": "https://testnet.nearblocks.io/txns/AnwhgfaLg17Rq1pSE7wZ6SGWmKRt79NLfDyJnCMK8Vj6",
+      "events": [
+        "pool_joined"
+      ]
+    },
+    {
+      "phase": "agents act (function-call key)",
+      "hash": "EMfSic7Q1PycEPQRd6NCmTR88HMDFpdEC4hRTrxJibHb",
+      "signer": "run2-b501.coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "join_pool",
+      "gas_burnt": "2943161979750",
+      "explorer_url": "https://testnet.nearblocks.io/txns/EMfSic7Q1PycEPQRd6NCmTR88HMDFpdEC4hRTrxJibHb",
+      "events": [
+        "pool_joined"
+      ]
+    },
+    {
+      "phase": "agents act (function-call key)",
+      "hash": "GMHV194j6buPon12HWFZRgdTDwhHhtcj2JuZVJCouXJH",
+      "signer": "run2-e3.coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "join_pool",
+      "gas_burnt": "3013579347030",
+      "explorer_url": "https://testnet.nearblocks.io/txns/GMHV194j6buPon12HWFZRgdTDwhHhtcj2JuZVJCouXJH",
+      "events": [
+        "pool_joined"
+      ]
+    },
+    {
+      "phase": "agents act (function-call key)",
+      "hash": "BKURxPeZzTnjXPZ58Q1DAG2hGYpUPX9Lnx51y38hcM4J",
+      "signer": "run2-e4.coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "join_pool",
+      "gas_burnt": "2936478508383",
+      "explorer_url": "https://testnet.nearblocks.io/txns/BKURxPeZzTnjXPZ58Q1DAG2hGYpUPX9Lnx51y38hcM4J",
+      "events": [
+        "pool_joined"
+      ]
+    },
+    {
+      "phase": "agents act (function-call key)",
+      "hash": "3Jy7PNr2adocASV2DsZGEHdD2R5ig662mqfNM9tjYc33",
+      "signer": "run2-b201.coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "join_pool",
+      "gas_burnt": "2954188995075",
+      "explorer_url": "https://testnet.nearblocks.io/txns/3Jy7PNr2adocASV2DsZGEHdD2R5ig662mqfNM9tjYc33",
+      "events": [
+        "pool_joined"
+      ]
+    },
+    {
+      "phase": "agents act (function-call key)",
+      "hash": "EJ73xRqPQXmJYfSq8AQiXrFmH1CKAQ4x8H4E5T5c1mtZ",
+      "signer": "run2-b203.coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "join_pool",
+      "gas_burnt": "2952262004502",
+      "explorer_url": "https://testnet.nearblocks.io/txns/EJ73xRqPQXmJYfSq8AQiXrFmH1CKAQ4x8H4E5T5c1mtZ",
+      "events": [
+        "pool_joined"
+      ]
+    },
+    {
+      "phase": "agents act (function-call key)",
+      "hash": "4LkW4kk7DohQBtHzpojXji8e5NkEM1J1K8mTF8ojcYqs",
+      "signer": "run2-b204.coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "join_pool",
+      "gas_burnt": "2954188995075",
+      "explorer_url": "https://testnet.nearblocks.io/txns/4LkW4kk7DohQBtHzpojXji8e5NkEM1J1K8mTF8ojcYqs",
+      "events": [
+        "pool_joined"
+      ]
+    },
+    {
+      "phase": "agents act (function-call key)",
+      "hash": "6kySkgivdEuu8n7b79pnVb1tDTACddqSEDMJtMyGv7M5",
+      "signer": "run2-b202.coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "join_pool",
+      "gas_burnt": "2954188995075",
+      "explorer_url": "https://testnet.nearblocks.io/txns/6kySkgivdEuu8n7b79pnVb1tDTACddqSEDMJtMyGv7M5",
+      "events": [
+        "pool_joined"
+      ]
+    },
+    {
+      "phase": "agents act (function-call key)",
+      "hash": "C5XNezD8Zh57SVf9Ps5pvJmTcgJVwD8WG3UuGXbUXUm",
+      "signer": "run2-b205.coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "join_pool",
+      "gas_burnt": "3030384910107",
+      "explorer_url": "https://testnet.nearblocks.io/txns/C5XNezD8Zh57SVf9Ps5pvJmTcgJVwD8WG3UuGXbUXUm",
+      "events": [
+        "pool_joined"
+      ]
+    },
+    {
+      "phase": "agents act (function-call key)",
+      "hash": "96aNr5463R3gPskufMM6Zv7EabMkQkaafegViiGxMYX4",
+      "signer": "run2-b502.coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "join_pool",
+      "gas_burnt": "2959137383010",
+      "explorer_url": "https://testnet.nearblocks.io/txns/96aNr5463R3gPskufMM6Zv7EabMkQkaafegViiGxMYX4",
+      "events": [
+        "pool_joined"
+      ]
+    },
+    {
+      "phase": "agents act (function-call key)",
+      "hash": "tooXoB1Jv1rw3pjiwyRZp8jXbZq5cy78s1dKkGvkFc8",
+      "signer": "run2-e5.coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "join_pool",
+      "gas_burnt": "3031774884750",
+      "explorer_url": "https://testnet.nearblocks.io/txns/tooXoB1Jv1rw3pjiwyRZp8jXbZq5cy78s1dKkGvkFc8",
+      "events": [
+        "pool_joined"
+      ]
+    },
+    {
+      "phase": "settle",
+      "hash": "BPCpCEZBxED6UBqP1qPRmdYztyFTsYDUkgyS3CRR7FYW",
+      "signer": "coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "settle",
+      "gas_burnt": "65032581897221",
+      "explorer_url": "https://testnet.nearblocks.io/txns/BPCpCEZBxED6UBqP1qPRmdYztyFTsYDUkgyS3CRR7FYW",
+      "events": [
+        "pool_resolved",
+        "member_filled",
+        "member_filled",
+        "member_filled",
+        "member_filled",
+        "member_excluded",
+        "member_filled",
+        "member_filled",
+        "member_filled",
+        "member_filled",
+        "member_filled",
+        "ft_transfer",
+        "ft_transfer",
+        "ft_transfer",
+        "ft_transfer",
+        "ft_transfer",
+        "ft_transfer",
+        "ft_transfer",
+        "ft_transfer",
+        "ft_transfer"
+      ]
+    },
+    {
+      "phase": "settle",
+      "hash": "Hz2WxxnpvuFrtQjEZQCiXyHS9ZmSjgPiAWnACw7RekKH",
+      "signer": "coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "settle",
+      "gas_burnt": "15111400280774",
+      "explorer_url": "https://testnet.nearblocks.io/txns/Hz2WxxnpvuFrtQjEZQCiXyHS9ZmSjgPiAWnACw7RekKH",
+      "events": [
+        "member_filled",
+        "member_excluded",
+        "seller_paid",
+        "pool_settled",
+        "ft_transfer",
+        "ft_transfer"
+      ]
+    },
+    {
+      "phase": "owner withdraws leftovers",
+      "hash": "J43gTCRod46KyVHbvzv7poDqZ2cWLy3je5kJ4muY4Dcj",
+      "signer": "coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "withdraw",
+      "gas_burnt": "2765724509254",
+      "explorer_url": "https://testnet.nearblocks.io/txns/J43gTCRod46KyVHbvzv7poDqZ2cWLy3je5kJ4muY4Dcj",
+      "events": [
+        "agent_withdrew"
+      ]
+    },
+    {
+      "phase": "owner withdraws leftovers",
+      "hash": "9DDpxPdhj3pyrYsLknvnqsecJ2wcJPtRVw8aJPjLg3jf",
+      "signer": "coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "withdraw",
+      "gas_burnt": "2763444509254",
+      "explorer_url": "https://testnet.nearblocks.io/txns/9DDpxPdhj3pyrYsLknvnqsecJ2wcJPtRVw8aJPjLg3jf",
+      "events": [
+        "agent_withdrew"
+      ]
+    },
+    {
+      "phase": "owner withdraws leftovers",
+      "hash": "ARjxnaMbQmEgPKTytF4EBh314UQTeorMHkSCyy5r3959",
+      "signer": "coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "withdraw",
+      "gas_burnt": "2727834317710",
+      "explorer_url": "https://testnet.nearblocks.io/txns/ARjxnaMbQmEgPKTytF4EBh314UQTeorMHkSCyy5r3959",
+      "events": [
+        "agent_withdrew"
+      ]
+    },
+    {
+      "phase": "owner withdraws leftovers",
+      "hash": "4S3yAPsFjQqVEEnZv5zXmZB43twMvZxbTnSRuLXRfus3",
+      "signer": "coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "withdraw",
+      "gas_burnt": "2728187327137",
+      "explorer_url": "https://testnet.nearblocks.io/txns/4S3yAPsFjQqVEEnZv5zXmZB43twMvZxbTnSRuLXRfus3",
+      "events": [
+        "agent_withdrew"
+      ]
+    },
+    {
+      "phase": "owner withdraws leftovers",
+      "hash": "EEs9K9KjkmxL77QWbajAyMnvsLyuQb2cvSzWZa3HY8wg",
+      "signer": "coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "withdraw",
+      "gas_burnt": "2727834317710",
+      "explorer_url": "https://testnet.nearblocks.io/txns/EEs9K9KjkmxL77QWbajAyMnvsLyuQb2cvSzWZa3HY8wg",
+      "events": [
+        "agent_withdrew"
+      ]
+    },
+    {
+      "phase": "owner withdraws leftovers",
+      "hash": "7Kk7S96roLtvsRdSsV9KD5QF72WJYERYFiXgnN7EdcFP",
+      "signer": "coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "withdraw",
+      "gas_burnt": "2766594317710",
+      "explorer_url": "https://testnet.nearblocks.io/txns/7Kk7S96roLtvsRdSsV9KD5QF72WJYERYFiXgnN7EdcFP",
+      "events": [
+        "agent_withdrew"
+      ]
+    },
+    {
+      "phase": "owner withdraws leftovers",
+      "hash": "GgD97sZMMv6BNDweACzxtNDcJb84m1aUtLuwyVkyVfNy",
+      "signer": "coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "withdraw",
+      "gas_burnt": "2763444509254",
+      "explorer_url": "https://testnet.nearblocks.io/txns/GgD97sZMMv6BNDweACzxtNDcJb84m1aUtLuwyVkyVfNy",
+      "events": [
+        "agent_withdrew"
+      ]
+    },
+    {
+      "phase": "owner withdraws leftovers",
+      "hash": "DBy6DQd2uqYd4uDfFkuVfDr4ue6jJdQHZtTWSXbnvTyr",
+      "signer": "coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "withdraw",
+      "gas_burnt": "2765724509254",
+      "explorer_url": "https://testnet.nearblocks.io/txns/DBy6DQd2uqYd4uDfFkuVfDr4ue6jJdQHZtTWSXbnvTyr",
+      "events": [
+        "agent_withdrew"
+      ]
+    },
+    {
+      "phase": "owner withdraws leftovers",
+      "hash": "8DXsehhhFS5SdSQqUvAmKTdXmd2kb1UZmyggK6M4inB3",
+      "signer": "coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "withdraw",
+      "gas_burnt": "2728187327137",
+      "explorer_url": "https://testnet.nearblocks.io/txns/8DXsehhhFS5SdSQqUvAmKTdXmd2kb1UZmyggK6M4inB3",
+      "events": [
+        "agent_withdrew"
+      ]
+    },
+    {
+      "phase": "owner withdraws leftovers",
+      "hash": "65mNtTjJoLAExSwXUF611CMjm5fmNQLvK4NRhPFVZjrA",
+      "signer": "coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "withdraw",
+      "gas_burnt": "2764314317710",
+      "explorer_url": "https://testnet.nearblocks.io/txns/65mNtTjJoLAExSwXUF611CMjm5fmNQLvK4NRhPFVZjrA",
+      "events": [
+        "agent_withdrew"
+      ]
+    },
+    {
+      "phase": "owner withdraws leftovers",
+      "hash": "AHtuGLoYND5CfKyXa4z5Fb5N2GMkwRZVQELMEvJvUgCY",
+      "signer": "coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "withdraw",
+      "gas_burnt": "2727834317710",
+      "explorer_url": "https://testnet.nearblocks.io/txns/AHtuGLoYND5CfKyXa4z5Fb5N2GMkwRZVQELMEvJvUgCY",
+      "events": [
+        "agent_withdrew"
+      ]
+    },
+    {
+      "phase": "owner withdraws leftovers",
+      "hash": "3eSSuL4Lzsg7VFKp81BzB98bNfWErJLZwvhT9N6MtjDx",
+      "signer": "coop-alpha.testnet",
+      "receiver": "coop.coop-alpha.testnet",
+      "method": "withdraw",
+      "gas_burnt": "2726964509254",
+      "explorer_url": "https://testnet.nearblocks.io/txns/3eSSuL4Lzsg7VFKp81BzB98bNfWErJLZwvhT9N6MtjDx",
+      "events": [
+        "agent_withdrew"
+      ]
+    }
+  ]
+}

@@ -5,7 +5,7 @@ Every factual claim made in `README.md`, with where it is implemented (`file:lin
 - **unit test**: a Rust test in `contracts/coop/src/tests.rs` (native, no chain) or a vitest unit test;
 - **integration test**: a vitest test that runs against a real local near-sandbox (nearcore 2.14.0), run with `make test-integration`;
 - **evidence**: a committed output file in `evidence/`;
-- **pending testnet run**: needs the testnet deploy that has not been done (NEAR testnet was not reachable from the build environment);
+- **pending testnet run**: needs a testnet step that has not been done yet (only the contract key lock remains);
 - **not proven by an automated test**: stated as such; the claim rests on reading the code.
 
 Paths below are relative to the repository root. `tests.rs` means `contracts/coop/src/tests.rs`.
@@ -120,14 +120,19 @@ Paths below are relative to the repository root. `tests.rs` means `contracts/coo
 | 69 | Google Cloud Vision charges $1.50 per 1,000 images at the entry tier and $0.60 above 5 million a month (60% less) | README section 3 | Vendor pricing page: https://cloud.google.com/vision/pricing (checked 2026-11-04; list price, may change) |
 | 70 | dYdX's taker fee drops from 5.0 to 2.5 basis points at $200M of 30-day volume (50% less) | README section 3 | Protocol docs: https://github.com/dydxprotocol/v4-documentation/blob/main/docs/pages/concepts/trading/rewards/index.mdx#L53-L61 (checked 2026-11-04; governance can change fees) |
 
-## 9. Pending (needs a testnet run)
+## 9. Testnet (done and pending)
 
-None of the following exists yet. Each has the exact command that produces it.
+Done:
 
 | Item | Command | Output file |
 |---|---|---|
-| Testnet deploy of `coop.<operator>.testnet` and `credits.<operator>.testnet`, with the on-chain `code_hash` matching `contracts/res/SHA256SUMS` | `pnpm --filter @coop/agents deploy:testnet` | `evidence/testnet-deploy.md` |
-| A 12+ agent run on testnet with every transaction hash | `pnpm --filter @coop/agents scenario --agents 12 --network testnet` | `evidence/testnet-run-<time>.md` and `.json` |
+| Testnet deploy of `coop.coop-alpha.testnet` and `credits.coop-alpha.testnet`, with the on-chain `code_hash` matching `contracts/res/SHA256SUMS` | `pnpm --filter @coop/agents deploy:testnet` | `evidence/testnet-deploy.md` |
+| A 12-agent run on testnet with every transaction hash (settled at tier 2, all invariants hold) | `pnpm --filter @coop/agents scenario --agents 12 --network testnet --prefix run2` | `evidence/testnet-run-2026-11-05T11-55-16-789Z.md` and `.json` |
+| Hosted demo (spawn server and web) | see `deploy/README.md` (server on a GCP VM, site on Vercel) | https://coop.cyberpunkinc.xyz |
+
+Pending. Each has the exact command that produces it.
+
+| Item | Command | Output file |
+|---|---|---|
 | Removal of the contract account's full-access keys | `pnpm --filter @coop/agents lock-contract --yes` | `evidence/contract-lock.md` |
-| Hosted demo (spawn server and web) | see `deploy/README.md` (server on a GCP VM, site on Vercel) | URL in the README "Live deployment" table |
 | Testnet RPC rate-limit check | `pnpm --filter @coop/checks exec tsx 05-rpc.ts` | console output (not yet run) |
