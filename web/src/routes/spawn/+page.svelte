@@ -1,7 +1,11 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { apiEnabled, spawnAgent, type SpawnResult } from '#lib/api.ts';
+  import { goto } from '$app/navigation';
+  import { page } from '$app/state';
+  import { apiEnabled, fetchRoom, fetchRooms, spawnAgent, type SpawnResult } from '#lib/api.ts';
   import Banner from '#lib/components/Banner.svelte';
+  import WalletSpawn from '#lib/components/WalletSpawn.svelte';
+  import type { Room } from '#lib/models.ts';
   import Icon from '#lib/components/Icon.svelte';
   import TxChip from '#lib/components/TxChip.svelte';
   import { describePolicy, parseBrief } from '#lib/brief.ts';
@@ -11,6 +15,31 @@
   import type { PoolView, SpawnResponse } from '#lib/models.ts';
   import { Poller } from '#lib/stores/poller.svelte.ts';
   import { toasts } from '#lib/stores/toasts.svelte.ts';
+
+  // Room context: /spawn?code=ABC234. Wallet spawning needs a room; the server-paid demo works without one.
+  const codeParam = $derived(page.url.searchParams.get('code')?.trim().toUpperCase() ?? null);
+  let room = $state<Room | null>(null);
+  let roomState = $state<'none' | 'loading' | 'ok' | 'missing'>('none');
+  let publicRooms = $state<Room[]>([]);
+  let codeInput = $state('');
+  let mode = $state<'wallet' | 'demo'>('wallet');
+  $effect(() => {
+    const code = codeParam;
+    room = null;
+    if (!code) {
+      roomState = 'none';
+      return;
+    }
+    roomState = 'loading';
+    fetchRoom(code)
+      .then((r) => {
+        room = r ? { ...r, code } : null;
+        roomState = r ? 'ok' : 'missing';
+      })
+      .catch(() => (roomState = 'missing'));
+  });
+  const walletRoom = $derived(room && room.code ? (room as Room & { code: string }) : null);
+  const walletMode = $derived(mode === 'wallet' && !!walletRoom && config.maxBatch !== null);
 
   const MIN_BUDGET = 0.1;
   const EXAMPLES = ['buy 2 now if under 1.00', 'buy 5 only at the 50-unit price', 'buy 3 if it drops below 0.6'];
@@ -90,6 +119,7 @@
 
   const pools = new Poller<PoolView[]>(() => listPools(0, 20), { interval: 10000 });
   onMount(() => {
+    if (apiEnabled()) fetchRooms().then((rs) => (publicRooms = rs.filter((r) => r.visibility === 'public' && r.code))).catch(() => undefined);
     pools.start();
     const tick = setInterval(() => (now = Date.now()), 1000);
     return () => {
@@ -134,7 +164,7 @@
     if (!canSubmit) return;
     busy = true;
     result = null;
-    const body = { name, brief: brief.trim(), budget_near: Math.round(budget * 100) / 100 };
+    const body = { name, brief: brief.trim(), budget_near: Math.round(budget * 100) / 100, ...(room?.code ? { room_code: room.code } : {}) };
     successBudget = body.budget_near;
     const res = await spawnAgent(body);
     busy = false;
@@ -162,14 +192,14 @@
   const tagText = $derived(config.llm === 'on' ? 'LLM on' : config.llm === 'off' ? 'LLM off · rules parser' : 'Rules parser preview');
 </script>
 
-<svelte:head><title>Spawn an agent · Co-op</title></svelte:head>
+<svelte:head><title>Spawn agents · Co-op</title></svelte:head>
 
 <main id="main" tabindex="-1" class="page">
   <div class="container">
     <header class="page-head">
       <div class="page-head__row">
         <div style="display:grid;gap:var(--space-4);max-inline-size:40rem">
-          <h1 class="t-display-l">Spawn an agent</h1>
+          <h1 class="t-display-l">Spawn agents</h1>
           <p class="t-body-l text-secondary">Give it a name, a one-line brief and a budget. It gets its own {config.network} account and a key that can only join or leave pools.</p>
         </div>
         <div class="page-head__meta">
@@ -179,6 +209,44 @@
       </div>
     </header>
 
+    {#if !codeParam || roomState === 'missing'}
+      <section class="card" style="margin-block-end:var(--space-6)" aria-labelledby="pick-title">
+        <div class="card__head"><h2 id="pick-title" class="card__title"><Icon name="users" />Pick a room</h2></div>
+        <div class="card__body" style="display:grid;gap:var(--space-4)">
+          {#if roomState === 'missing'}<Banner kind="warning" icon="alert" title="No room has code {codeParam}">Check the code with whoever sent it.</Banner>{/if}
+          <form style="display:flex;gap:var(--space-3);flex-wrap:wrap;align-items:center" onsubmit={(e) => { e.preventDefault(); if (codeInput.trim().length === 6) void goto(`/spawn?code=${codeInput.trim().toUpperCase()}`); }}>
+            <div class="input input--mono" style="max-inline-size:12rem"><input aria-label="Room code" maxlength="6" placeholder="CODE42" bind:value={codeInput} autocapitalize="characters" autocomplete="off" /></div>
+            <button class="btn btn--primary" type="submit" disabled={codeInput.trim().length !== 6}>Use code</button>
+            <a class="btn btn--ghost" href="/create">Open a new room</a>
+          </form>
+          {#if publicRooms.length}
+            <div class="chips" aria-label="Public rooms">
+              {#each publicRooms.slice(0, 6) as r (r.code)}<a class="chip" href="/spawn?code={r.code}"><Icon name="users" />{r.title} · {r.code}</a>{/each}
+            </div>
+          {/if}
+          <p class="t-body-s text-tertiary">Without a room, the demo spawn below still works: the server pays and the agent joins any open pool.</p>
+        </div>
+      </section>
+    {:else if room}
+      <section class="card" style="margin-block-end:var(--space-6)" aria-labelledby="room-title">
+        <div class="card__head">
+          <h2 id="room-title" class="card__title"><Icon name="users" />{room.title}</h2>
+          <span class="tag">Room <span class="mono">{room.code}</span></span>
+        </div>
+        <div class="card__body" style="display:grid;gap:var(--space-4)">
+          <p class="t-body-s text-secondary">{room.purpose}</p>
+          <div class="seg" role="group" aria-label="Who pays" style="justify-self:start">
+            <button class="seg__btn" type="button" aria-pressed={mode === 'wallet'} onclick={() => (mode = 'wallet')}>My wallet</button>
+            <button class="seg__btn" type="button" aria-pressed={mode === 'demo'} onclick={() => (mode = 'demo')}>Demo, server pays</button>
+          </div>
+          <a class="link" href="/pool?id={room.pool_id}&code={room.code}">Watch this room live</a>
+        </div>
+      </section>
+    {/if}
+
+    {#if walletMode && walletRoom}
+      <div style="max-inline-size:44rem"><WalletSpawn room={walletRoom} /></div>
+    {:else}
     <form class="spawn-layout" {onsubmit} novalidate>
       <div class="spawn-form">
         {#if success}
@@ -280,7 +348,7 @@
             {#if budgetError}
               <p class="field__msg field__msg--error" id="budget-hint"><Icon name="alert" />{budgetError}</p>
             {:else}
-              <p class="field__hint" id="budget-hint">Paid from our operator account and capped at {maxBudget.toFixed(2)}. The contract never lets the agent spend more than this.</p>
+              <p class="field__hint" id="budget-hint">Demo mode: paid from the operator account and capped at {maxBudget.toFixed(2)}. The contract never lets the agent spend more than this.</p>
             {/if}
           </div>
         {/if}
@@ -339,5 +407,6 @@
         </div>
       {/if}
     </form>
+    {/if}
   </div>
 </main>

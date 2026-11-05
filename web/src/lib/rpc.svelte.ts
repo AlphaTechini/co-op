@@ -133,6 +133,31 @@ export async function view<T>(method: string, args: Record<string, unknown> = {}
   throw new RpcUnavailableError(lastErr instanceof Error ? lastErr.message : 'RPC unreachable');
 }
 
+/** Balance and storage of an account; null when it does not exist. */
+export async function viewAccount(accountId: string): Promise<{ amount: bigint; storageUsage: number } | null> {
+  const urls = config.rpcUrls;
+  let lastErr: unknown = null;
+  for (let attempt = 0; attempt < urls.length; attempt++) {
+    const url = urls[(rpcState.preferred + attempt) % urls.length];
+    try {
+      const json = (await post(
+        url,
+        { jsonrpc: '2.0', id: String(++reqId), method: 'query', params: { request_type: 'view_account', finality: 'optimistic', account_id: accountId } },
+        8000
+      )) as { result?: { amount: string; storage_usage: number }; error?: { cause?: { name?: string }; name?: string; message?: string } };
+      if (json.error) {
+        if ((json.error.cause?.name ?? json.error.name) === 'UNKNOWN_ACCOUNT') return null;
+        throw new Error(json.error.message ?? 'RPC error');
+      }
+      if (!json.result) throw new Error('Empty RPC answer');
+      return { amount: BigInt(json.result.amount), storageUsage: json.result.storage_usage };
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+  throw new RpcUnavailableError(lastErr instanceof Error ? lastErr.message : 'RPC unreachable');
+}
+
 function markOk(idx: number, url: string, ms: number) {
   rpcState.preferred = idx;
   rpcState.host = hostOf(url);

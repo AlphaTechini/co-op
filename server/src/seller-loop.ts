@@ -1,6 +1,7 @@
 /**
  * Keeps one offer open: when no pool is joinable (Open or awaiting inventory), the operator posts a new
  * offer with the standard ladder [1 unit: 100%, 20 units: 70%, 50 units: 50%] of the entry price.
+ * With `isMine`, only matching pools count, so one loop per catalog item can run side by side.
  */
 import type { Account } from "near-api-js";
 import type { CoopClient } from "@coop/agents/chain";
@@ -27,6 +28,10 @@ export interface SellerLoopOptions {
   beforePost?: () => Promise<void>;
   /** Runs once the new offer is open. */
   afterPost?: (offerId: number) => void;
+  /** Which pools this loop keeps open (default: every pool). */
+  isMine?: (pool: PoolView) => boolean;
+  title?: string;
+  description?: string;
 }
 
 const OPEN_STATES = new Set<PoolView["status"]>(["Open", "AwaitingInventory"]);
@@ -61,8 +66,9 @@ export class SellerLoop {
     if (this.busy || this.stopped || Date.now() < this.backoffUntil) return null;
     this.busy = true;
     try {
-      const pools = await this.o.client.listPools(0, 10);
-      if (pools.some((p) => OPEN_STATES.has(p.status))) return null;
+      const pools = await this.o.client.listPools(0, 30);
+      const mine = this.o.isMine ?? (() => true);
+      if (pools.some((p) => OPEN_STATES.has(p.status) && mine(p))) return null;
       const balance = await this.o.client.accountBalance(this.o.seller.accountId);
       if (balance < this.o.balanceFloor + CREATE_OFFER_DEPOSIT) {
         this.fail("The seller account is too low on NEAR to post another offer.");
@@ -75,8 +81,8 @@ export class SellerLoop {
       }
       await this.o.beforePost?.();
       const posted = await postOffer(this.o.client, this.o.seller, this.o.tokenId, {
-        title: "Demo API credits (volume pricing)",
-        description: "Demo voucher units. The more agents join, the lower the price for everyone.",
+        title: this.o.title ?? "Demo API credits (volume pricing)",
+        description: this.o.description ?? "Demo voucher units. The more agents join, the lower the price for everyone.",
         tiers: storyTiers(this.o.entryPrice),
         maxUnits,
         durationMs: this.o.durationMs,

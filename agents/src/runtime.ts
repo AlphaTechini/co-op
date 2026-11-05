@@ -18,6 +18,8 @@ export interface RuntimeAgent {
   policy: Policy;
   /** Free-form label for the UI. */
   label?: string;
+  /** When set, the agent only ever considers this pool (an agent spawned into a room). */
+  poolId?: number;
 }
 
 export interface RuntimeOptions {
@@ -216,9 +218,10 @@ export class AgentRuntime {
       for (const agent of this.agentMap.values()) {
         const view = views.get(agent.id);
         if (!view) continue;
-        for (const pool of pools) {
+        const scope = agent.poolId === undefined ? pools : pools.filter((p) => p.id === agent.poolId);
+        for (const pool of scope) {
           if (pool.status !== "Open") continue;
-          const action = this.plan(agent, view, pool, pools);
+          const action = this.plan(agent, view, pool, scope);
           if (action) actions.push(action);
         }
       }

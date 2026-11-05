@@ -75,6 +75,8 @@ export interface SpawnInput {
   brief: string;
   budgetNear: number;
   ip: string;
+  /** Room pool the agent is limited to; without one it considers every open pool. */
+  poolId?: number;
 }
 
 export interface SpawnOutput {
@@ -91,7 +93,13 @@ export interface SpawnedAgentView {
   policy: Policy;
   created_at: number;
   status: "running";
+  /** Present for wallet-owned agents. */
+  owner?: string;
+  /** Present for agents spawned into a room. */
+  pool_id?: number;
 }
+
+const PENDING_TTL_MS = 3_600_000;
 
 const HOUR_MS = 3_600_000;
 
@@ -124,17 +132,18 @@ export class Spawner {
     const retired: AgentRecord[] = [];
     for (const record of loaded) {
       const registered = await this.o.chain.isRegistered(record.agent_id);
+      if (record.status === "pending") {
+        // The owner may still send the wallet transactions; give up on it after an hour.
+        if (registered === false && this.now() - record.created_at > PENDING_TTL_MS) retired.push(record);
+        else this.records.set(record.agent_id, record);
+        continue;
+      }
       if (registered === false) {
         retired.push(record);
         continue;
       }
       this.records.set(record.agent_id, record);
-      this.o.runtime.addAgent({
-        id: record.agent_id,
-        account: this.o.chain.signer(record.agent_id, record.fc_secret),
-        policy: record.policy,
-        label: record.agent_id,
-      });
+      this.run(record);
     }
     if (retired.length > 0) {
       this.o.store.retire(retired);
@@ -159,14 +168,58 @@ export class Spawner {
   }
 
   list(): SpawnedAgentView[] {
-    return [...this.records.values()].map((r) => ({
-      agent_id: r.agent_id,
-      archetype: r.archetype,
-      brief: r.brief,
-      policy: r.policy,
-      created_at: r.created_at,
-      status: "running",
-    }));
+    return [...this.records.values()]
+      .filter((r) => r.status !== "pending")
+      .map((r) => ({
+        agent_id: r.agent_id,
+        archetype: r.archetype,
+        brief: r.brief,
+        policy: r.policy,
+        created_at: r.created_at,
+        status: "running" as const,
+        ...(r.owner !== undefined ? { owner: r.owner } : {}),
+        ...(r.pool_id !== undefined ? { pool_id: r.pool_id } : {}),
+      }));
+  }
+
+  // ---- shared with the wallet spawn flow (wallet-spawn.ts) -------------------------------------
+
+  record(agentId: string): AgentRecord | undefined {
+    return this.records.get(agentId);
+  }
+
+  pendingRecords(): AgentRecord[] {
+    return [...this.records.values()].filter((r) => r.status === "pending");
+  }
+
+  isTaken(agentId: string): boolean {
+    return this.records.has(agentId) || this.pending.has(agentId);
+  }
+
+  /** Stores new or changed records. Throws when the key file cannot be written. */
+  put(records: AgentRecord[]): void {
+    const next = new Map(this.records);
+    for (const r of records) next.set(r.agent_id, r);
+    this.o.store.save([...next.values()]);
+    for (const r of records) this.records.set(r.agent_id, r);
+  }
+
+  /** Drops records (keys go to the retired file). */
+  drop(records: AgentRecord[]): void {
+    for (const r of records) this.records.delete(r.agent_id);
+    this.o.store.retire(records);
+    this.o.store.save([...this.records.values()]);
+  }
+
+  /** Hands an agent to the runtime, limited to its room pool when it has one. */
+  run(record: AgentRecord): void {
+    this.o.runtime.addAgent({
+      id: record.agent_id,
+      account: this.o.chain.signer(record.agent_id, record.fc_secret),
+      policy: record.policy,
+      label: record.agent_id,
+      ...(record.pool_id !== undefined ? { poolId: record.pool_id } : {}),
+    });
   }
 
   private checkIpLimit(ip: string): void {
@@ -234,6 +287,7 @@ export class Spawner {
           created_at: this.now(),
           fc_secret: keys.fcSecret,
           full_secret: keys.fullSecret,
+          ...(input.poolId !== undefined ? { pool_id: input.poolId } : {}),
         };
         try {
           this.o.store.save([...this.records.values(), record]);
@@ -267,7 +321,13 @@ export class Spawner {
           // The keys from the save above are the same ones the account was created with.
           this.o.log?.(`could not re-save the key store after spawning ${agentId}: ${e instanceof Error ? e.message : String(e)}`);
         }
-        this.o.runtime.addAgent({ id: record.agent_id, account: provisioned.account, policy, label: record.agent_id });
+        this.o.runtime.addAgent({
+          id: record.agent_id,
+          account: provisioned.account,
+          policy,
+          label: record.agent_id,
+          ...(input.poolId !== undefined ? { poolId: input.poolId } : {}),
+        });
         const txs = provisioned.txs.map(stripEvents);
         const registration = provisioned.txs.find((t) => t.method === "register_agent");
         const entry: NewEntry = {

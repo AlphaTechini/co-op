@@ -27,6 +27,7 @@
     "scenario": "tsx src/scenario.ts",
     "demo": "tsx src/demo.ts",
     "deploy:testnet": "tsx src/deploy-testnet.ts",
+    "deploy:items": "tsx src/deploy-items.ts",
     "lock-contract": "tsx src/lock-contract.ts"
   },
   "dependencies": {

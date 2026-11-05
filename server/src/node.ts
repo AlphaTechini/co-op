@@ -6,12 +6,16 @@ import { CoopClient, agentSigner, createProvider, isAccountMissing } from "@coop
 import { explorerTxUrl, networkConfig, parseNetwork, requireEnv, type NetworkConfig, type NetworkName } from "@coop/agents/config";
 import { AgentRuntime } from "@coop/agents/runtime";
 import { provisionAgent, worldFromEnv, type World } from "@coop/agents/world";
+import { dirname, join } from "node:path";
 import { ActivityHub } from "./activity.js";
 import { buildServer, type ServerInfo } from "./app.js";
+import { catalogFromEnv } from "./catalog.js";
+import { FileRoomStore, RoomService, type RoomStore } from "./rooms.js";
 import { SellerLoop, type SellerLoopOptions } from "./seller-loop.js";
 import type { ServerSettings } from "./settings.js";
 import { Spawner, type SpawnChainPort } from "./spawner.js";
 import { FileAgentStore, type AgentStore } from "./store.js";
+import { WalletSpawner, type WalletChainPort } from "./wallet-spawn.js";
 import type { Provider } from "near-api-js";
 
 /** What the server needs from the chain. `operator` is null when no operator key is configured (read-only mode). */
@@ -87,11 +91,42 @@ export function spawnPort(chain: Chain): SpawnChainPort {
   };
 }
 
+export function walletPort(chain: Chain): WalletChainPort {
+  const { provider, client, coopId } = chain;
+  return {
+    accountExists: (id) => spawnPort(chain).accountExists(id),
+    async agentOwner(agentId) {
+      try {
+        return (await client.getAgent(agentId))?.owner ?? null;
+      } catch {
+        return undefined;
+      }
+    },
+    async hasAgentKey(agentId, publicKey) {
+      try {
+        const key = await provider.viewAccessKey({ accountId: agentId, publicKey, finalityQuery: { finality: "optimistic" } });
+        const permission = key.permission as unknown;
+        if (typeof permission !== "object" || permission === null || !("FunctionCall" in permission)) return false;
+        const fc = (permission as { FunctionCall: { receiver_id?: string; receiverId?: string } }).FunctionCall;
+        return (fc.receiver_id ?? fc.receiverId) === coopId;
+      } catch {
+        return false;
+      }
+    },
+    getPool: (poolId) => client.getPool(poolId),
+  };
+}
+
 export interface Coop {
   app: FastifyInstance;
   hub: ActivityHub;
   runtime: AgentRuntime;
   spawner: Spawner;
+  rooms: RoomService;
+  walletSpawner: WalletSpawner;
+  /** One loop per catalog item, each keeping that item's public room open. */
+  sellerLoops: SellerLoop[];
+  /** First seller loop, kept for callers that only care whether one runs. */
   sellerLoop: SellerLoop | null;
   /** Starts the runtime (and the seller loop, if enabled). The HTTP listener is the caller's. */
   start(): void;
@@ -104,6 +139,7 @@ export interface CreateCoopOptions {
   settings: ServerSettings;
   chain: Chain;
   store?: AgentStore;
+  roomStore?: RoomStore;
   logger?: boolean;
   log?: (line: string) => void;
   /** Extra hooks around the seller loop's offers (the demo's scripted agents). */
@@ -146,40 +182,91 @@ export async function createCoop(o: CreateCoopOptions): Promise<Coop> {
     explorerAccountBase: chain.netConfig.explorerAccountBase ?? "",
     llm: llmConfigFromEnv(env) !== null,
   };
-  const app = await buildServer({ settings, info, hub, spawner, logger: o.logger ?? false });
+  const catalog = catalogFromEnv(env, chain.tokenId);
+  const rooms = new RoomService({
+    client: chain.client,
+    seller: chain.operator,
+    catalog,
+    store: o.roomStore ?? new FileRoomStore(join(dirname(settings.dataFile), "rooms.json"), chain.coopId),
+    emit: (entry) => void hub.emit(entry),
+    entryPrice: settings.priceScale,
+    lockWindowMs: settings.offerLockMs,
+    balanceFloor: settings.operatorFloor,
+    maxOpenPerHost: 2,
+    maxOpenTotal: 12,
+    perIpPerHour: 4,
+  });
+  const walletSpawner = new WalletSpawner({
+    chain: walletPort(chain),
+    spawner,
+    rooms,
+    emit: (entry) => void hub.emit(entry),
+    parseBrief: (brief) => parseBrief(brief, { env }),
+    contractId: chain.coopId,
+    gasPerAgent: settings.spawnGas,
+    maxAgents: settings.spawnMaxAgents,
+    perIpPerHour: 12,
+    log,
+  });
+  const app = await buildServer({ settings, info, hub, spawner, rooms, walletSpawner, agentGas: settings.spawnGas, logger: o.logger ?? false });
 
-  const sellerLoop =
-    settings.sellerLoop && chain.operator
-      ? new SellerLoop({
-          client: chain.client,
-          seller: chain.operator,
-          tokenId: chain.tokenId,
-          entryPrice: settings.priceScale,
-          durationMs: settings.offerDurationMs,
-          lockWindowMs: settings.offerLockMs,
-          intervalMs: Math.max(1000, settings.runtimePollMs * 2),
-          balanceFloor: settings.operatorFloor,
-          emit: (entry) => void hub.emit(entry),
-          ...o.sellerHooks,
-        })
-      : null;
+  const operator = chain.operator;
+  const sellerLoops =
+    settings.sellerLoop && operator
+      ? catalog.map(
+          (item, i) =>
+            new SellerLoop({
+              client: chain.client,
+              seller: operator,
+              tokenId: item.tokenId,
+              entryPrice: settings.priceScale,
+              durationMs: settings.offerDurationMs,
+              lockWindowMs: settings.offerLockMs,
+              // Staggered so the loops do not all sign with the seller key in the same instant.
+              intervalMs: Math.max(1000, settings.runtimePollMs * 2) + i * 700,
+              balanceFloor: settings.operatorFloor,
+              emit: (entry) => void hub.emit(entry),
+              title: item.title,
+              description: item.purpose,
+              isMine: (pool) => pool.offer.item_token === item.tokenId && rooms.isPublicRoom(pool.id, item.key),
+              ...o.sellerHooks,
+              afterPost: (offerId) => {
+                rooms.registerPublic(offerId, item.key);
+                o.sellerHooks?.afterPost?.(offerId);
+              },
+            }),
+        )
+      : [];
 
   let started = false;
+  let sweepTimer: NodeJS.Timeout | null = null;
   return {
     app,
     hub,
     runtime,
     spawner,
-    sellerLoop,
+    rooms,
+    walletSpawner,
+    sellerLoops,
+    sellerLoop: sellerLoops[0] ?? null,
     start() {
       if (started) return;
       started = true;
+      walletSpawner.track(spawner.pendingRecords());
       runtime.start();
-      sellerLoop?.start();
+      for (const loop of sellerLoops) loop.start();
+      const sweep = () => {
+        void walletSpawner.sweep().finally(() => {
+          if (started) sweepTimer = setTimeout(sweep, 15_000);
+        });
+      };
+      sweepTimer = setTimeout(sweep, 15_000);
     },
     async stop() {
+      started = false;
+      if (sweepTimer) clearTimeout(sweepTimer);
       await app.close();
-      await sellerLoop?.stop();
+      for (const loop of sellerLoops) await loop.stop();
       await runtime.stop();
     },
   };

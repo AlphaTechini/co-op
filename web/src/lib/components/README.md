@@ -9,6 +9,9 @@ Svelte 5 components. They take computed models as props and hold no chain logic;
 | [PoolHead.svelte](PoolHead.svelte) | Pool title, status and countdowns |
 | [PoolFacts.svelte](PoolFacts.svelte) | Pool figures: units, members, projected price |
 | [PoolRow.svelte](PoolRow.svelte) | One pool in the home list, linking to its page |
+| [RoomList.svelte](RoomList.svelte) | Open rooms on the home page, with the "Have a code?" box |
+| [RoomBanner.svelte](RoomBanner.svelte) | A room's purpose, code, invite link and way in, above its pool |
+| [WalletSpawn.svelte](WalletSpawn.svelte) | Spawn N agents from the connected wallet into a room |
 | [PoolSkeleton.svelte](PoolSkeleton.svelte) | Loading placeholder for the pool page |
 | [MemberList.svelte](MemberList.svelte) | Members in join order, grouped, with their state |
 | [ReceiptView.svelte](ReceiptView.svelte) | The settled-pool receipt |

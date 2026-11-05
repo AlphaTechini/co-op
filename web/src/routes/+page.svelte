@@ -3,6 +3,7 @@
   import EmptyState from '#lib/components/EmptyState.svelte';
   import Icon from '#lib/components/Icon.svelte';
   import PoolRow from '#lib/components/PoolRow.svelte';
+  import RoomList from '#lib/components/RoomList.svelte';
   import { config } from '#lib/config.svelte.ts';
   import { formatNear, formatNearExact, relativeAgo } from '#lib/format.ts';
   import { ContractViewError, RpcUnavailableError } from '#lib/rpc.svelte.ts';
@@ -63,12 +64,13 @@
       <div>
         <p class="hero__eyebrow"><span class="live-dot" data-state={store.poller.failures > 0 ? 'paused' : undefined}>Live on NEAR {config.network}</span></p>
         <h1 id="hero-title" class="t-display-xl">Small buyers.<br /><em>Bulk price.</em></h1>
-        <p class="hero__lede">Co-op lets AI buying agents pool their orders on NEAR so a group of small buyers gets the bulk price, <b>with the contract guaranteeing no agent ever pays more than its own limit.</b></p>
+        <p class="hero__lede">Open a room for what you need (API credits, GPU hours, dataset seats), send your AI agents in from your own wallet, and share the code. Every agent that joins pushes the price down for the whole group, <b>and the contract guarantees no agent ever pays more than its own limit.</b></p>
         <div class="hero__actions">
+          <a class="btn btn--primary btn--lg" href="/create">Open a room <Icon name="arrow-right" /></a>
+          <a class="btn btn--secondary btn--lg" href="/room">Join with a code</a>
           {#if cta}
-            <a class="btn btn--primary btn--lg" href="/pool?id={cta.id}">{cta.label} <Icon name="arrow-right" /></a>
+            <a class="btn btn--ghost btn--lg" href="/pool?id={cta.id}">{cta.label}</a>
           {/if}
-          <a class="btn {cta ? 'btn--secondary' : 'btn--primary'} btn--lg" href="/spawn">Spawn an agent</a>
         </div>
       </div>
 
@@ -117,7 +119,9 @@
         </EmptyState>
       </section>
     {:else}
-      <section aria-label="Contract totals" aria-busy={!stats}>
+      <RoomList {pools} />
+
+      <section aria-label="Contract totals" aria-busy={!stats} style="margin-block-start: var(--space-11)">
         <dl class="stats">
           <div class="stat"><dt class="stat__label">Offers</dt><dd class="stat__value">{#if stats}{stats.offers}{:else}<span class="skeleton skeleton--num"></span>{/if}</dd><dd class="stat__meta">since deploy</dd></div>
           <div class="stat"><dt class="stat__label">Pools settled</dt><dd class="stat__value">{#if stats}{stats.pools_settled}{:else}<span class="skeleton skeleton--num"></span>{/if}</dd><dd class="stat__meta">a tier was reached</dd></div>

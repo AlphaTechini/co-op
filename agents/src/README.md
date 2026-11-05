@@ -18,13 +18,14 @@ TypeScript sources of `@coop/agents`. Amounts are BigInt yoctoNEAR everywhere; s
 | [demo.ts](demo.ts) | `make demo-chain`: a long-lived sandbox with a new 12-agent offer roughly every round |
 | [deploy.ts](deploy.ts) | SHA-256-checked deploy of the committed wasm |
 | [deploy-testnet.ts](deploy-testnet.ts) | Testnet deploy under the operator account; writes `evidence/testnet-deploy.md` |
+| [deploy-items.ts](deploy-items.ts) | `deploy:items`: the GPU-hours and dataset-seats demo tokens rooms can buy (same token wasm); writes `evidence/testnet-items.md` |
 | [lock.ts](lock.ts) | Deleting an account's full-access keys (makes the contract un-upgradable) |
 | [lock-contract.ts](lock-contract.ts) | CLI around `lock.ts`; dry run unless `--yes` |
 | [money.ts](money.ts) | yoctoNEAR parsing, formatting and gas constants |
 | [policy.ts](policy.ts) | Deterministic buying policy: eager, bargain and switcher archetypes |
 | [receipt.ts](receipt.ts) | Text settlement receipt printed after a scenario |
 | [roster.ts](roster.ts) | The demo cast of buyers and their limits |
-| [runtime.ts](runtime.ts) | `AgentRuntime`: polls pools, plans and sends joins and leaves, runs the settler |
+| [runtime.ts](runtime.ts) | `AgentRuntime`: polls pools, plans and sends joins and leaves, runs the settler; an agent with `poolId` only considers that room's pool |
 | [sandbox.ts](sandbox.ts) | near-sandbox harness: start, fast-forward, bounded shutdown |
 | [scenario.ts](scenario.ts) | N buyers against one tiered offer, run to settlement; `make verify` |
 | [seller.ts](seller.ts) | Posting offers with inventory and proposing better tiers for a stalled pool |

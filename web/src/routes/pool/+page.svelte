@@ -10,6 +10,9 @@
   import PoolHead from '#lib/components/PoolHead.svelte';
   import PoolSkeleton from '#lib/components/PoolSkeleton.svelte';
   import ReceiptView from '#lib/components/ReceiptView.svelte';
+  import RoomBanner from '#lib/components/RoomBanner.svelte';
+  import { apiEnabled, fetchRoom, fetchRooms } from '#lib/api.ts';
+  import type { Room } from '#lib/models.ts';
   import TierLadder from '#lib/components/TierLadder.svelte';
   import { config } from '#lib/config.svelte.ts';
   import { fmtClock, nsToMs } from '#lib/format.ts';
@@ -31,6 +34,25 @@
     store = s;
     s.start();
     return () => s.stop();
+  });
+
+  // The room this pool belongs to, if any: by the code in the link, else from the room list.
+  const codeParam = $derived(page.url.searchParams.get('code')?.toUpperCase() ?? null);
+  let room = $state<Room | null>(null);
+  $effect(() => {
+    const want = id;
+    const code = codeParam;
+    room = null;
+    if (want === null || !apiEnabled()) return;
+    let live = true;
+    (code ? fetchRoom(code).then((r) => (r && r.pool_id === want ? r : null)) : fetchRooms().then((rs) => rs.find((r) => r.pool_id === want) ?? null))
+      .then((r) => {
+        if (live) room = r;
+      })
+      .catch(() => undefined);
+    return () => {
+      live = false;
+    };
   });
 
   const pool = $derived(store?.pool ?? null);
@@ -92,6 +114,7 @@
       </div>
     {:else if store && pool && status && model}
       <PoolHead {pool} {status} />
+      {#if room}<RoomBanner {room} code={codeParam} open={status === 'Open'} />{/if}
 
       {#if final}
         <div class="tabs" role="tablist" aria-label="Pool views" style="margin-block-end: var(--space-8)" tabindex="-1" onkeydown={onTabKey}>

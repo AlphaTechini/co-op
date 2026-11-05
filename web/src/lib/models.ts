@@ -136,7 +136,44 @@ export interface ServerConfig {
   explorerTxBase: string;
   explorerAccountBase: string;
   spawn: { enabled: boolean; maxBudgetNear: number | string; remaining: number };
+  rooms?: { canCreate: boolean; durationsMin: number[]; catalog: CatalogItem[] };
+  walletSpawn?: { maxBatch: number; agentGasYocto: string };
 }
+
+export interface CatalogItem {
+  key: string;
+  title: string;
+  unit: string;
+  tokenId: string;
+}
+
+/** GET /api/rooms. `code` is null for invite rooms (only their creator and the people they share it with know it). */
+export interface Room {
+  code: string | null;
+  pool_id: number;
+  item: string;
+  title: string;
+  unit: string;
+  purpose: string;
+  host: string | null;
+  visibility: 'public' | 'invite';
+  created_at: number;
+}
+
+export interface PrepareResponse {
+  contract_id: string;
+  pool_id: number;
+  policy: { archetype: string; units: number; max_unit_price: string };
+  parser: 'llm' | 'rules';
+  limits: Record<string, unknown>;
+  methods: string[];
+  budget_yocto: string;
+  gas_yocto: string;
+  register_gas: string;
+  agents: Array<{ agent_id: string; fc_public_key: string }>;
+}
+
+export type ActivationState = 'running' | 'waiting' | 'rejected';
 
 export interface ServerHealth {
   ok: boolean;

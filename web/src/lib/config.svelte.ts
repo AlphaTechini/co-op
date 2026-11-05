@@ -1,7 +1,7 @@
 // Runtime configuration. Build-time values come from PUBLIC_* env (the prerendered build bakes them in);
 // when the Co-op server is reachable, GET /api/config may refine them at runtime.
 import { PUBLIC_API_URL, PUBLIC_COOP_CONTRACT_ID, PUBLIC_NETWORK, PUBLIC_RPC_URL } from '$app/env/public';
-import type { ServerConfig, ServerHealth } from './models';
+import type { CatalogItem, ServerConfig, ServerHealth } from './models';
 
 const trimSlash = (s: string) => s.replace(/\/+$/, '');
 
@@ -28,6 +28,10 @@ class AppConfig {
   explorerAccountBase = $state('https://testnet.nearblocks.io/address/');
   spawn = $state<{ enabled: boolean; maxBudgetNear: number; remaining: number } | null>(null);
   llm = $state<'on' | 'off' | null>(null);
+  rooms = $state<{ canCreate: boolean; durationsMin: number[]; catalog: CatalogItem[] } | null>(null);
+  maxBatch = $state<number | null>(null);
+  /** NEAR the server asks each wallet-spawned agent account to hold for gas (yocto). */
+  agentGas = $state<bigint | null>(null);
   server = $state<ServerState>(BUILD.apiUrl ? 'unknown' : 'none');
   loaded = $state(false);
 
@@ -71,6 +75,11 @@ class AppConfig {
           remaining: Number(cfg.spawn.remaining)
         };
       }
+    }
+    if (cfg?.rooms) this.rooms = cfg.rooms;
+    if (cfg?.walletSpawn) {
+      this.maxBatch = cfg.walletSpawn.maxBatch;
+      if (/^\d+$/.test(cfg.walletSpawn.agentGasYocto ?? '')) this.agentGas = BigInt(cfg.walletSpawn.agentGasYocto);
     }
     if (health) this.llm = health.llm;
     this.loaded = true;

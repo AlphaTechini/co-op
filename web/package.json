@@ -23,5 +23,8 @@
   },
   "imports": {
     "#lib/*": "./src/lib/*"
+  },
+  "dependencies": {
+    "@hot-labs/near-connect": "0.12.0"
   }
 }

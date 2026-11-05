@@ -70,6 +70,72 @@ export interface Deployment {
 
 const STORAGE_PER_BYTE = 10n ** 19n;
 
+type DeployCore = Pick<DeployOptions, "client" | "operator" | "operatorPublicKey" | "extraFunding"> & { operatorSecretKey: string };
+
+/** Creates `<label>.<operator>` and deploys + inits the wasm in one transaction. */
+async function deployInit(
+  o: DeployCore,
+  txs: TxRef[],
+  label: string,
+  wasm: WasmInfo,
+  initMethod: string,
+  initArgs: Record<string, unknown>,
+): Promise<string> {
+  const { client, operator } = o;
+  const funding = BigInt(wasm.bytes.length) * STORAGE_PER_BYTE + (o.extraFunding ?? parseNear("1"));
+  const created = await createSubAccount(client, operator, label, funding, o.operatorPublicKey);
+  txs.push(created.tx);
+  const contract = new Account(created.accountId, client.provider, o.operatorSecretKey as KeyPairString);
+  let outcome: TxOutcome;
+  try {
+    outcome = await contract.signAndSendTransaction({
+      receiverId: created.accountId,
+      actions: [
+        actions.deployContract(wasm.bytes),
+        actions.functionCall(initMethod, initArgs, teraToGas(30), 0n),
+      ],
+    });
+  } catch (e) {
+    throw new CoopTxError(
+      `deploy ${basename(wasm.file)} to ${created.accountId} failed: ${e instanceof Error ? e.message : String(e)}`,
+      "deploy",
+      undefined,
+      e,
+    );
+  }
+  txs.push(client.refFor(outcome, created.accountId, created.accountId, `deploy+${initMethod}`));
+  return created.accountId;
+}
+
+export interface ItemTokenDeployment {
+  tokenId: string;
+  token: WasmInfo;
+  txs: TxRef[];
+}
+
+/**
+ * Another demo item token from the same committed wasm (only name and symbol differ), owned by the
+ * operator, with the Co-op contract registered on it so it can hold room inventory.
+ */
+export async function deployItemToken(
+  o: DeployCore & { coopId: string; label: string; name: string; symbol: string; supply?: bigint },
+): Promise<ItemTokenDeployment> {
+  const token = loadWasm(TOKEN_WASM);
+  const txs: TxRef[] = [];
+  const tokenId = await deployInit(o, txs, o.label, token, "new", {
+    owner_id: o.operator.accountId,
+    total_supply: (o.supply ?? 1_000_000n).toString(),
+    name: o.name,
+    symbol: o.symbol,
+  });
+  const reg = await new CoopClient(o.client.provider, o.coopId, { tokenId }).ensureRegisteredOnToken(o.operator, o.coopId);
+  if (reg) txs.push(reg);
+  if ((await o.client.provider.viewAccount({ accountId: tokenId })).code_hash !== token.codeHash) {
+    throw new Error(`On-chain code_hash of ${tokenId} does not match the local wasm after deploy`);
+  }
+  return { tokenId, token, txs };
+}
+
 /** Creates `<coop>.<operator>` and `<credits>.<operator>`, deploys + inits both in one tx each. */
 export async function deployStack(o: DeployOptions & { operatorSecretKey: string }): Promise<Deployment> {
   const log = o.log ?? (() => undefined);
@@ -82,39 +148,8 @@ export async function deployStack(o: DeployOptions & { operatorSecretKey: string
   log(`coop.wasm          sha256 ${coop.sha256} (matches SHA256SUMS)`);
   log(`credits_token.wasm sha256 ${token.sha256} (matches SHA256SUMS)`);
 
-  const deployInit = async (
-    label: string,
-    wasm: WasmInfo,
-    initMethod: string,
-    initArgs: Record<string, unknown>,
-  ): Promise<string> => {
-    const funding = BigInt(wasm.bytes.length) * STORAGE_PER_BYTE + (o.extraFunding ?? parseNear("1"));
-    const created = await createSubAccount(client, operator, label, funding, o.operatorPublicKey);
-    txs.push(created.tx);
-    const contract = new Account(created.accountId, client.provider, o.operatorSecretKey as KeyPairString);
-    let outcome: TxOutcome;
-    try {
-      outcome = await contract.signAndSendTransaction({
-        receiverId: created.accountId,
-        actions: [
-          actions.deployContract(wasm.bytes),
-          actions.functionCall(initMethod, initArgs, teraToGas(30), 0n),
-        ],
-      });
-    } catch (e) {
-      throw new CoopTxError(
-        `deploy ${basename(wasm.file)} to ${created.accountId} failed: ${e instanceof Error ? e.message : String(e)}`,
-        "deploy",
-        undefined,
-        e,
-      );
-    }
-    txs.push(client.refFor(outcome, created.accountId, created.accountId, `deploy+${initMethod}`));
-    return created.accountId;
-  };
-
-  const coopId = await deployInit(coopLabel, coop, "new", {});
-  const tokenId = await deployInit(tokenLabel, token, "new", {
+  const coopId = await deployInit(o, txs, coopLabel, coop, "new", {});
+  const tokenId = await deployInit(o, txs, tokenLabel, token, "new", {
     owner_id: operator.accountId,
     total_supply: (o.tokenSupply ?? 1_000_000n).toString(),
     name: o.tokenName ?? "Demo API credit voucher (Co-op demo seller)",

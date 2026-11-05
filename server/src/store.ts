@@ -1,7 +1,8 @@
 /**
- * Persistence for spawned agents. The file holds PRIVATE KEYS (the agent's function-call key and the
- * full-access key of its account). It is git-ignored (server/.gitignore), written with mode 0600 and
- * must never be committed or shared.
+ * Persistence for spawned agents. The file holds PRIVATE KEYS (the agent's function-call key and, for
+ * server-paid agents, the full-access key of its account). It is git-ignored (server/.gitignore), written
+ * with mode 0600 and must never be committed or shared. Wallet-owned agents have no full key here: the
+ * owner's browser keeps it.
  */
 import { chmodSync, existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
@@ -17,8 +18,14 @@ export interface AgentRecord {
   created_at: number;
   /** Function-call key (join_pool / leave_pool only). Secret. */
   fc_secret: string;
-  /** Full-access key of the agent account (receives the delivered tokens). Secret. */
+  /** Full-access key of the agent account (receives the delivered tokens). Secret. Empty for wallet-owned agents. */
   full_secret: string;
+  /** Wallet that owns the agent (register_agent caller); absent for server-paid agents. */
+  owner?: string;
+  /** Room pool the agent is limited to. */
+  pool_id?: number;
+  /** "pending": keys handed out, waiting for the owner's wallet transactions. */
+  status?: "pending" | "active";
 }
 
 const PolicySchema = z.object({
@@ -37,7 +44,10 @@ const RecordSchema = z.object({
   policy: PolicySchema,
   created_at: z.number(),
   fc_secret: z.string().min(1),
-  full_secret: z.string().min(1),
+  full_secret: z.string(),
+  owner: z.string().optional(),
+  pool_id: z.number().int().optional(),
+  status: z.enum(["pending", "active"]).optional(),
 });
 
 const FileSchema = z.object({

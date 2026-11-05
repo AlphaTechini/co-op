@@ -2,6 +2,8 @@
 
 **Co-op lets AI buying agents pool their orders on NEAR so a group of small buyers gets the bulk price, with the contract guaranteeing that no agent ever pays more than its own limit.**
 
+**The product: rooms.** Open a room for what you need (LLM API credits, GPU hours, dataset seats), send your agents in from your own NEAR wallet, and share the 6-character code. Every agent that joins pushes the price down for the whole group; at the deadline the contract settles everyone at the tier the group reached.
+
 It is for people and teams who run AI agents that buy the same digital goods in small quantities (API credits, compute hours, data access, licences, tickets), and for sellers who offer volume pricing but never meet a buyer big enough to reach it.
 
 Built for NEAR HACKATHON. Tracks: **AI Swarms** (`swarms`, primary) and **Agent Economy** (`agents`).
@@ -16,6 +18,7 @@ Everything in this repository was built and verified against a **local NEAR sand
 |---|---|---|
 | Testnet Co-op contract | [`coop.coop-alpha.testnet`](https://testnet.nearblocks.io/address/coop.coop-alpha.testnet) | Deployed; on-chain code hash matches `contracts/res/SHA256SUMS` ([`evidence/testnet-deploy.md`](evidence/testnet-deploy.md)) |
 | Testnet demo token | [`credits.coop-alpha.testnet`](https://testnet.nearblocks.io/address/credits.coop-alpha.testnet) | Deployed, same evidence file |
+| Extra room items | [`gpu-hours.coop-alpha.testnet`](https://testnet.nearblocks.io/address/gpu-hours.coop-alpha.testnet), [`dataset-seats.coop-alpha.testnet`](https://testnet.nearblocks.io/address/dataset-seats.coop-alpha.testnet) | Deployed from the same token wasm ([`evidence/testnet-items.md`](evidence/testnet-items.md)) |
 | Hosted demo URL | https://coop.cyberpunkinc.xyz (API: https://34-138-43-239.sslip.io/api/health) | Live. Site on Vercel, server on a GCP free-tier VM: [deploy/README.md](deploy/README.md) |
 | Testnet run log (12+ agents, every tx hash) | [`evidence/testnet-run-2026-11-05T11-55-16-789Z.md`](evidence/testnet-run-2026-11-05T11-55-16-789Z.md) | Done: 12 agents, 64 transactions, settled at tier 2, all invariants hold. Produced by `pnpm --filter @coop/agents scenario --agents 12 --network testnet --prefix run2` (`--prefix` gives a re-run fresh agent names) |
 | Contract lock (no full-access keys) | `evidence/contract-lock.md` | Pending. Run `pnpm --filter @coop/agents lock-contract --yes` after the testnet run |
@@ -50,7 +53,7 @@ Agents could buy together, but nobody wants to send money to another agent or to
 ## 4. How it works
 
 1. **Seller posts an offer.** The seller calls `create_offer` with price tiers, for example 1+ units at 1.00 NEAR, 20+ at 0.70, 50+ at 0.50, plus a maximum, a deadline and a lock window. The seller then sends the inventory (a NEP-141 token) to the Co-op contract with `ft_transfer_call`. The offer opens only once the contract holds the full inventory, so delivery cannot fail later for lack of stock.
-2. **Owner funds an agent.** The owner creates a sub-account for the agent, adds a function-call key limited to `join_pool` / `leave_pool`, and calls `register_agent` with the agent's limits (`max_unit_price`, `max_units_per_pool`, optional `allowed_sellers`, `expires_at`) and a deposit that becomes the agent's budget. The agent runtime receives only the function-call key.
+2. **Owner funds an agent.** The owner creates a sub-account for the agent, adds a function-call key limited to `join_pool` / `leave_pool`, and calls `register_agent` with the agent's limits (`max_unit_price`, `max_units_per_pool`, optional `allowed_sellers`, `expires_at`) and a deposit that becomes the agent's budget. The agent runtime receives only the function-call key. In the web app this is one wallet approval: the visitor picks a room, how many agents and a total budget, and their own wallet signs the account creation and `register_agent` for each agent, so the visitor is the owner on chain and refunds go back to them ([`server/src/wallet-spawn.ts`](server/src/wallet-spawn.ts), [`web/src/lib/agent-txs.ts`](web/src/lib/agent-txs.ts)).
 3. **Agents join.** An agent calls `join_pool(pool_id, units, threshold_units?)` with no deposit. Joining is either unconditional ("I will take 2 units") or conditional ("2 units, but only if the group reaches 50"). The contract locks `units x price` from the agent's budget, where the price is the entry tier for an unconditional join, or the tier at the agent's threshold for a conditional one. If that price is above the agent's `max_unit_price` the join is rejected. The locked amount is the most the agent can ever pay. Before the lock time an agent can `leave_pool` and get its lock back.
 4. **Anyone settles after the deadline** by calling `settle(pool_id)`:
    - The contract finds the **largest group whose conditions all hold**, finds the best tier that group reaches, and charges every member in the group that tier's price.
@@ -103,7 +106,8 @@ Every factual claim in this README is listed in `docs/CLAIMS.md` with a file and
 - **NEAR Intents is not used.** It has no testnet and this project spends no real money. Settlement is our own contract. Intents-based cross-chain settlement is roadmap.
 - **The LLM is optional and off by default.** Every decision is made by the deterministic policy in `agents/src/policy.ts`. With `LLM_BASE_URL`, `LLM_API_KEY` and `LLM_MODEL` unset, the rules parser in `agents/src/brief.ts` turns a brief into a policy and the API reports `parser: "rules"`. If an LLM is configured and fails, the rules parser answers and says so. LLM output is never invented.
 - **The contract account still has its full-access key** (the key lock in "Live deployment" is pending). Every measured number below is from a local sandbox unless it says testnet.
-- **Off-chain components are demo grade.** The server keeps spawned agents' keys in a local file (mode 0600, git-ignored) and is meant for throwaway demo money.
+- **Off-chain components are demo grade.** The server keeps spawned agents' keys in a local file (mode 0600, git-ignored) and is meant for throwaway demo money. Wallet-spawned agents are owned by the visitor's wallet, but the server still holds their join/leave key.
+- **Room codes are enforced by the server, not the contract.** Any registered agent can join any open pool on chain; the code decides which pool this server's agents are allowed into. Rooms are opened by the demo seller (the operator), not by real merchants.
 - **Not built:** signed off-chain join intents (relayed, gasless agents), mainnet deployment, real merchants.
 
 ## 8. Try it in 30 seconds: `make verify`
@@ -196,7 +200,17 @@ Related commands:
 
 ### Hosted
 
-Hosted demo URL: https://coop.cyberpunkinc.xyz. The same table applies, with nearblocks links on every transaction chip (`https://testnet.nearblocks.io/txns/<hash>`).
+Hosted demo URL: https://coop.cyberpunkinc.xyz, on testnet, with nearblocks links on every transaction chip.
+
+| Do | See |
+|---|---|
+| Open the home page | Open rooms (API credits, GPU hours, dataset seats), each with its purpose, group size, current price, next tier and countdown |
+| **Connect wallet** (Meteor, Intear and other testnet wallets through NEAR Connect) | Your account and spendable balance in the header |
+| **Open a room**: pick an item, write the purpose, pick 10/20/30 minutes | The demo seller opens the pool on chain; you get a 6-character code and an invite link (shown only to you) |
+| Open the room, **Spawn agents into this room**: name, how many (1 to 5), one brief, a total NEAR amount (capped at your spendable balance), approve once in the wallet | Your wallet creates `<name>-1.<you>` ... and registers each with its share of the budget; the agents appear in the room's feed and join within seconds |
+| Send the code to someone else; they connect their own wallet and spawn into the same room | Their agents join the same pool; the projected price drops as the group crosses 20 units |
+| Wait for the deadline | The receipt: everyone paid the same tier price, refunds back to each owner's wallet, the seller paid only because a tier was reached |
+| No wallet? **Demo, server pays** on the spawn page | One agent funded by the operator (capped, 3 per hour per network), same room |
 
 ## 10. Architecture
 
@@ -291,6 +305,7 @@ Copy `.env.example` to `.env` (git-ignored). Sandbox runs need none of them.
 | `NEAR_NETWORK`, `NEAR_RPC_URL` | `sandbox` or `testnet`; testnet RPC (default `https://test.rpc.fastnear.com`, fallbacks `https://near-testnet.drpc.org`, `https://testnet-rpc.intea.rs`) |
 | `OPERATOR_ACCOUNT_ID`, `OPERATOR_PRIVATE_KEY` | Operator account: deploys, sells, owns spawned agents. Create with `near create-account <id> --useFaucet --networkId testnet` |
 | `COOP_CONTRACT_ID`, `CREDITS_TOKEN_ID` | Written by the deploy script |
+| `GPU_HOURS_TOKEN_ID`, `DATASET_SEATS_TOKEN_ID` | Optional extra room items, from `pnpm --filter @coop/agents deploy:items` |
 | `PORT`, `CORS_ORIGIN`, `SPAWN_MAX_AGENTS` (40), `SPAWN_MAX_BUDGET_NEAR` (2), `SPAWN_PER_IP_PER_HOUR` (3), `RATE_LIMIT_PER_MIN` (60), `SPAWN_MIN_OPERATOR_NEAR` (1) | Server and spawn caps (full list in [server/README.md](server/README.md)) |
 | `LLM_BASE_URL`, `LLM_API_KEY`, `LLM_MODEL` | Optional OpenAI-compatible endpoint; unset means rules parser |
 | `PUBLIC_NETWORK`, `PUBLIC_RPC_URL`, `PUBLIC_COOP_CONTRACT_ID`, `PUBLIC_API_URL` | Web build-time settings |

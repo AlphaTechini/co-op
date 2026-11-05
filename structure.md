@@ -9,11 +9,11 @@ co-op/
 ├── agents/                   TypeScript swarm: client, policy, runtime, seller, sandbox, scenario
 │   ├── src/
 │   └── test/{unit,integration}/
-├── server/                   Fastify API: spawn, activity feed (SSE), seller loop; Dockerfile
+├── server/                   Fastify API: rooms, wallet and demo spawn, activity feed (SSE), seller loops; Dockerfile
 │   ├── src/
 │   └── test/{unit,integration}/
 ├── web/                      SvelteKit dashboard (prerendered, Vercel)
-│   ├── src/routes/{how,pool,spawn}/
+│   ├── src/routes/{create,how,pool,room,spawn}/
 │   ├── src/lib/{components,stores,styles,assets}/
 │   └── static/
 ├── checks/                   Capability checks 01 to 06
@@ -41,6 +41,8 @@ co-op/
 | Local sandbox start and bounded shutdown | [agents/src/sandbox.ts](agents/src/sandbox.ts) |
 | Testnet deploy and contract lock | [agents/src/deploy-testnet.ts](agents/src/deploy-testnet.ts), [agents/src/lock-contract.ts](agents/src/lock-contract.ts) |
 | Spawn-your-agent API and its key store | [server/src/spawner.ts](server/src/spawner.ts), [server/src/store.ts](server/src/store.ts) |
+| Wallet spawn (visitor's wallet creates and funds the agents) | [server/src/wallet-spawn.ts](server/src/wallet-spawn.ts), [web/src/lib/agent-txs.ts](web/src/lib/agent-txs.ts), [web/src/lib/wallet.svelte.ts](web/src/lib/wallet.svelte.ts) |
+| Rooms, codes and the item catalog | [server/src/rooms.ts](server/src/rooms.ts), [server/src/catalog.ts](server/src/catalog.ts), [agents/src/deploy-items.ts](agents/src/deploy-items.ts) |
 | HTTP routes, limits, live feed | [server/src/app.ts](server/src/app.ts), [server/src/activity.ts](server/src/activity.ts) |
 | Dashboard data from RPC | [web/src/lib/rpc.svelte.ts](web/src/lib/rpc.svelte.ts), [web/src/lib/stores/pool.svelte.ts](web/src/lib/stores/pool.svelte.ts) |
 | Receipt figures in the browser | [web/src/lib/proof.ts](web/src/lib/proof.ts) |
@@ -52,7 +54,7 @@ co-op/
 - contracts: [contracts/](contracts/README.md), [coop/](contracts/coop/README.md), [coop/src/](contracts/coop/src/README.md), [credits-token/](contracts/credits-token/README.md), [credits-token/src/](contracts/credits-token/src/README.md), [res/](contracts/res/README.md)
 - agents: [agents/](agents/README.md), [src/](agents/src/README.md), [test/](agents/test/README.md), [test/unit/](agents/test/unit/README.md), [test/integration/](agents/test/integration/README.md)
 - server: [server/](server/README.md), [src/](server/src/README.md), [test/](server/test/README.md), [test/unit/](server/test/unit/README.md), [test/integration/](server/test/integration/README.md)
-- web: [web/](web/README.md), [src/](web/src/README.md), [src/lib/](web/src/lib/README.md), [src/lib/components/](web/src/lib/components/README.md), [src/lib/stores/](web/src/lib/stores/README.md), [src/lib/styles/](web/src/lib/styles/README.md), [src/lib/assets/](web/src/lib/assets/README.md), [src/routes/](web/src/routes/README.md), [src/routes/pool/](web/src/routes/pool/README.md), [src/routes/spawn/](web/src/routes/spawn/README.md), [src/routes/how/](web/src/routes/how/README.md), [static/](web/static/README.md)
+- web: [web/](web/README.md), [src/](web/src/README.md), [src/lib/](web/src/lib/README.md), [src/lib/components/](web/src/lib/components/README.md), [src/lib/stores/](web/src/lib/stores/README.md), [src/lib/styles/](web/src/lib/styles/README.md), [src/lib/assets/](web/src/lib/assets/README.md), [src/routes/](web/src/routes/README.md), [src/routes/pool/](web/src/routes/pool/README.md), [src/routes/room/](web/src/routes/room/README.md), [src/routes/create/](web/src/routes/create/README.md), [src/routes/spawn/](web/src/routes/spawn/README.md), [src/routes/how/](web/src/routes/how/README.md), [static/](web/static/README.md)
 - [checks/](checks/README.md)
 - [deploy/](deploy/README.md)
 - design: [design/](design/README.md), [mockups/](design/mockups/README.md), [screens/](design/screens/README.md)
