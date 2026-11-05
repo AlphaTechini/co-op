@@ -1,0 +1,8 @@
+01 testnet funding (operator account)
+run at 2026-11-04T14:30:24.507Z
+
+PASS  testnet protocol version >= 88 (https://test.rpc.fastnear.com)  | protocol 88, neard 2.14.0-rc.5, chain testnet. near-sdk 5.30 wasm will link.
+PASS  operator account coop-alpha.testnet exists  | balance 10.0000 NEAR
+PASS  operator balance covers contract deploys and a 12-agent testnet run  | 10.0000 NEAR, need about 10 (contracts ~5 NEAR, agents ~3 NEAR)
+PASS  OPERATOR_PRIVATE_KEY is an access key of the operator  | ed25519:ATMtiCLU6rcysukVQbDKsr5JivdicsHJUeoTt6Mb1GYN
+PASS  01 testnet funding (operator account)

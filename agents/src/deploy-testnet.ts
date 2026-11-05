@@ -11,7 +11,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { EVIDENCE_DIR, REPO_ROOT, loadEnv, networkConfig, explorerTxUrl, requireEnv } from "./config.js";
-import { CoopClient, accountFromKey, createProvider } from "./chain.js";
+import { CoopClient, accountFromKey, createProvider, isAccountMissing } from "./chain.js";
 import { deployStack, publicKeyOf } from "./deploy.js";
 import { formatNear, parseNear } from "./money.js";
 
@@ -20,7 +20,7 @@ async function accountExists(client: CoopClient, accountId: string): Promise<boo
     await client.provider.viewAccount({ accountId });
     return true;
   } catch (e) {
-    if (/does not exist|UNKNOWN_ACCOUNT|AccountDoesNotExist/i.test(e instanceof Error ? `${e.name} ${e.message}` : String(e))) return false;
+    if (isAccountMissing(e)) return false;
     throw e;
   }
 }

@@ -301,6 +301,7 @@ async function main(): Promise<void> {
       duration: { type: "string" },
       "lock-window": { type: "string" },
       price: { type: "string" },
+      prefix: { type: "string" },
       "no-withdraw": { type: "boolean" },
     },
   });
@@ -311,6 +312,11 @@ async function main(): Promise<void> {
   if (values.duration) options.durationMs = Number(values.duration) * 1000;
   if (values["lock-window"]) options.lockWindowMs = Number(values["lock-window"]) * 1000;
   if (values.price) options.topPrice = parseNear(values.price);
+  // Agent accounts are <prefix>-...; a fresh prefix avoids names left on testnet by an earlier run.
+  if (values.prefix) {
+    if (!/^[a-z0-9]+$/.test(values.prefix)) throw new Error("--prefix must be lowercase letters and digits");
+    options.prefix = values.prefix;
+  }
   if (!Number.isInteger(options.agents ?? base.agents)) throw new Error("--agents must be an integer");
 
   const world =

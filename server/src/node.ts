@@ -2,7 +2,7 @@
 import type { FastifyInstance } from "fastify";
 import type { Account } from "near-api-js";
 import { parseBrief, llmConfigFromEnv } from "@coop/agents/brief";
-import { CoopClient, agentSigner, createProvider } from "@coop/agents/chain";
+import { CoopClient, agentSigner, createProvider, isAccountMissing } from "@coop/agents/chain";
 import { explorerTxUrl, networkConfig, parseNetwork, requireEnv, type NetworkConfig, type NetworkName } from "@coop/agents/config";
 import { AgentRuntime } from "@coop/agents/runtime";
 import { provisionAgent, worldFromEnv, type World } from "@coop/agents/world";
@@ -55,8 +55,6 @@ export function chainFromEnv(env: NodeJS.ProcessEnv): Chain {
   return { network, netConfig, provider, client, coopId, tokenId, operatorId, operator: null, world: null };
 }
 
-const MISSING = /does not exist|UnknownAccount|AccountDoesNotExist|doesn't exist/i;
-
 export function spawnPort(chain: Chain): SpawnChainPort {
   const { world, provider, client } = chain;
   const need = (): World => {
@@ -69,8 +67,7 @@ export function spawnPort(chain: Chain): SpawnChainPort {
         await provider.viewAccount({ accountId, blockQuery: { finality: "optimistic" } });
         return true;
       } catch (e) {
-        const text = `${e instanceof Error ? `${e.name} ${e.message}` : String(e)}`;
-        if (MISSING.test(text)) return false;
+        if (isAccountMissing(e)) return false;
         throw e;
       }
     },

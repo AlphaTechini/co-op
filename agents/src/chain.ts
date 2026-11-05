@@ -12,6 +12,7 @@ import {
   type KeyPairString,
   type Provider,
 } from "near-api-js";
+import { InternalRpcError, RpcError } from "near-api-js/rpc-errors";
 import { STORAGE_RESERVE, parseNear, teraGas } from "./money.js";
 import type {
   AgentLimits,
@@ -69,12 +70,28 @@ export class CoopTxError extends Error {
   }
 }
 
+/**
+ * The stock FailoverRpcProvider throws one "Exceeded N providers" wrapper holding every attempt's error
+ * in `.errors` (createProvider below limits that to network failures). Read the last, real error.
+ */
+function unwrapFailover(e: unknown): unknown {
+  const wrapper = e as { name?: unknown; type?: unknown; errors?: unknown } | undefined;
+  const isWrapper = wrapper?.name === "FailoverRpcError" || wrapper?.type === "RetriesExceeded";
+  return isWrapper && Array.isArray(wrapper.errors) && wrapper.errors.length > 0 ? wrapper.errors[wrapper.errors.length - 1] : e;
+}
+
 function errorText(e: unknown): string {
-  return e instanceof Error ? `${e.name}: ${e.message}` : String(e);
+  const inner = unwrapFailover(e);
+  return inner instanceof Error ? `${inner.name}: ${inner.message}` : String(inner);
+}
+
+/** True when the RPC said the account does not exist (also through the failover wrapper). */
+export function isAccountMissing(e: unknown): boolean {
+  return /does not exist|doesn't exist|UNKNOWN_ACCOUNT|UnknownAccount|AccountDoesNotExist/i.test(errorText(e));
 }
 
 function txHashOf(e: unknown): string | undefined {
-  const result = (e as { transactionResult?: { transaction?: { hash?: unknown } } } | undefined)?.transactionResult;
+  const result = (unwrapFailover(e) as { transactionResult?: { transaction?: { hash?: unknown } } } | undefined)?.transactionResult;
   const hash = result?.transaction?.hash;
   return typeof hash === "string" && hash !== "" ? hash : undefined;
 }
@@ -83,12 +100,44 @@ function txHashOf(e: unknown): string | undefined {
 // Providers, keys, accounts
 // ------------------------------------------------------------------------------------------------
 
+interface FailoverInternals {
+  withBackoff: <T>(run: (provider: Provider) => Promise<T>) => Promise<T>;
+  readonly currentProvider: Provider;
+  switchToNextProvider(): void;
+}
+
+/** A node that answered (invalid nonce, missing account, contract error) gave the real result. */
+function answeredByNode(e: unknown): boolean {
+  return e instanceof RpcError && !(e instanceof InternalRpcError);
+}
+
 export function createProvider(rpcUrls: readonly string[]): Provider {
   if (rpcUrls.length === 0) throw new Error("No RPC URL configured");
   const providers = rpcUrls.map((url) => new JsonRpcProvider({ url }));
   const first = providers[0];
   if (providers.length === 1 && first) return first;
-  return new FailoverRpcProvider(providers);
+  const failover = new FailoverRpcProvider(providers);
+  // Stock FailoverRpcProvider sends every failure to the next URL and then throws one wrapper. That
+  // hid InvalidNonceError from Account.signAndSendTransaction, whose own nonce retry never ran, so
+  // concurrent operator transactions failed on testnet. Only network failures move to the next URL
+  // here. `withBackoff` is private in the types; near-api-js is pinned to 7.4.0 (agents/package.json).
+  const internals = failover as unknown as FailoverInternals;
+  if (typeof internals.withBackoff === "function") {
+    internals.withBackoff = async <T>(run: (provider: Provider) => Promise<T>): Promise<T> => {
+      let last: unknown;
+      for (let i = 0; i < providers.length; i++) {
+        try {
+          return await run(internals.currentProvider);
+        } catch (e) {
+          if (answeredByNode(e)) throw e;
+          last = e;
+          internals.switchToNextProvider();
+        }
+      }
+      throw last;
+    };
+  }
+  return failover;
 }
 
 export function accountFromKey(accountId: string, provider: Provider, secretKey: string): Account {
