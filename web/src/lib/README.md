@@ -8,7 +8,7 @@ Pure modules are kept free of Svelte so they can be unit tested; components only
 | [chain.ts](chain.ts) | Typed contract views on top of the RPC client |
 | [api.ts](api.ts) | Optional Co-op server client (rooms, spawn, feed); every call degrades to null or an error result |
 | [wallet.svelte.ts](wallet.svelte.ts) | Browser wallet through NEAR Connect: connect, spendable balance, one-approval batch signing |
-| [agent-txs.ts](agent-txs.ts) | The wallet transactions that create and register a visitor's agents; full-access keys made with WebCrypto |
+| [agent-txs.ts](agent-txs.ts) | The wallet transactions that create and register a visitor's agents (no full-access key, which wallets refuse) |
 | [config.svelte.ts](config.svelte.ts) | Build-time config refined at runtime by `GET /api/config` |
 | [models.ts](models.ts) | Wire shapes of the contract views and the server API |
 | [settlement.ts](settlement.ts) | Client-side mirror of the contract's resolver and pricing |

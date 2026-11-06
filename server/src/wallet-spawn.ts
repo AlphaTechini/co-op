@@ -4,7 +4,7 @@
  * 1. prepare: the server parses the brief, generates one function-call key per agent, stores it (key
  *    first, as in spawner.ts) and returns the public keys plus the exact deposits.
  * 2. The browser asks the wallet to sign, per agent, a sub-account of the visitor (CreateAccount,
- *    Transfer for gas, AddKey for that function-call key, AddKey for a full key the browser keeps) and
+ *    Transfer for gas, AddKey for that function-call key; no full-access key, which wallets refuse) and
  *    register_agent on the Co-op contract with the budget. The visitor is the agent's owner on chain, so
  *    refunds and withdrawals go to their wallet.
  * 3. activate (and a periodic sweep, in case the tab closed): once the chain shows the agent registered

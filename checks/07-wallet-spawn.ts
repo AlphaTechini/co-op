@@ -12,7 +12,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
-import { KeyPair, PublicKey, actions, type Account } from "near-api-js";
+import { PublicKey, actions, type Account } from "near-api-js";
 import { accountFromKey, createProvider } from "@coop/agents/chain";
 import { explorerTxUrl, loadEnv, networkConfig } from "@coop/agents/config";
 import { formatNear, parseNear } from "@coop/agents/money";
@@ -98,12 +98,10 @@ async function main(): Promise<void> {
 
   // 4. the wallet transactions the web app builds
   for (const a of agents) {
-    const full = KeyPair.fromRandom("ed25519");
     const created = await send(wallet, a.agent_id, [
       actions.createAccount(),
       actions.transfer(BigInt(prep.json.gas_yocto)),
       actions.addFunctionCallAccessKey(PublicKey.fromString(a.fc_public_key), prep.json.contract_id, prep.json.methods, undefined),
-      actions.addFullAccessKey(full.getPublicKey()),
     ]);
     const registered = await send(wallet, prep.json.contract_id, [
       actions.functionCall("register_agent", { agent_id: a.agent_id, limits: prep.json.limits }, BigInt(prep.json.register_gas), BigInt(prep.json.budget_yocto)),

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { activateWalletAgents, prepareWalletAgents } from '#lib/api.ts';
-  import { buildAgentBatch, downloadKeys, saveKeys, type AgentKey } from '#lib/agent-txs.ts';
+  import { buildAgentBatch } from '#lib/agent-txs.ts';
   import { parseBrief } from '#lib/brief.ts';
   import { config } from '#lib/config.svelte.ts';
   import { STORAGE_RESERVE, formatNear } from '#lib/format.ts';
@@ -26,7 +26,7 @@
   let totalText = $state('0.5');
   let busy = $state<null | 'prepare' | 'sign' | 'activate'>(null);
   let error = $state<string | null>(null);
-  let done = $state<{ agents: Array<{ id: string; state: string }>; hashes: string[]; keys: AgentKey[]; ownerKeys: boolean } | null>(null);
+  let done = $state<{ agents: Array<{ id: string; state: string }>; hashes: string[] } | null>(null);
 
   const parsed = $derived(parseBrief(brief));
   const total = $derived(Number.parseFloat(totalText.replace(',', '.')));
@@ -58,7 +58,7 @@
       error = prep.error;
       return;
     }
-    const batch = await buildAgentBatch(prep.data);
+    const batch = buildAgentBatch(prep.data);
     busy = 'sign';
     let hashes: string[];
     try {
@@ -68,7 +68,6 @@
       error = err instanceof Error && err.message ? `The wallet did not send the transactions: ${err.message}` : 'The wallet did not send the transactions.';
       return;
     }
-    saveKeys(owner, batch.keys);
     busy = 'activate';
     const ids = prep.data.agents.map((a) => a.agent_id);
     let states: Array<{ agent_id: string; state: string }> = ids.map((id) => ({ agent_id: id, state: 'waiting' }));
@@ -78,7 +77,7 @@
       if (states.some((s) => s.state === 'waiting')) await new Promise((r) => setTimeout(r, 3000));
     }
     busy = null;
-    done = { agents: states.map((s) => ({ id: s.agent_id, state: s.state })), hashes, keys: batch.keys, ownerKeys: batch.ownerKeys };
+    done = { agents: states.map((s) => ({ id: s.agent_id, state: s.state })), hashes };
     toasts.push('positive', `${states.filter((s) => s.state === 'running').length} of ${ids.length} agents are live`);
   }
 </script>
@@ -105,10 +104,6 @@
       </dl>
       {#if done.hashes.some(Boolean)}
         <div class="chips">{#each done.hashes.filter(Boolean) as h (h)}<TxChip hash={h} />{/each}</div>
-      {/if}
-      {#if done.ownerKeys}
-        <button class="btn btn--secondary btn--block" type="button" onclick={() => downloadKeys(wallet.accountId ?? 'agents', done?.keys ?? [])}><Icon name="arrow-down" />Download agent keys</button>
-        <p class="t-body-s text-tertiary">Each agent account holds the units it buys. These full-access keys were made in this browser and never sent anywhere; keep the file to move the units later.</p>
       {/if}
       <a class="btn btn--primary btn--block" href="/pool?id={room.pool_id}&code={room.code}">Watch the room live</a>
       <p class="t-body-s text-tertiary">After the room settles, unspent budget stays in the contract until you withdraw it from <a class="link" href="/agents">My agents</a>.</p>
