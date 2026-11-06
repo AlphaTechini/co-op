@@ -6,6 +6,7 @@
 | `/pool?id=N[&code=C]` | [pool/](pool/README.md) | One pool (and its room, if any): ladder, members, live feed; becomes the receipt once settled |
 | `/room?code=C` | [room/](room/README.md) | Resolves a room code (invite links land here) and opens the room |
 | `/create` | [create/](create/README.md) | Open a room |
+| `/agents` | [agents/](agents/README.md) | My agents: budgets and withdraw |
 | `/spawn[?code=C]` | [spawn/](spawn/README.md) | Spawn agents into a room from your wallet, or the server-paid demo |
 | `/how` | [how/](how/README.md) | How it works, with a worked example |
 | all | [+layout.svelte](+layout.svelte), [+layout.ts](+layout.ts) | Shared chrome; `ssr = false`, `prerender = true`, no trailing slash |

@@ -209,7 +209,9 @@ Hosted demo URL: https://coop.cyberpunkinc.xyz, on testnet, with nearblocks link
 | **Open a room**: pick an item, write the purpose, pick 10/20/30 minutes | The demo seller opens the pool on chain; you get a 6-character code and an invite link (shown only to you) |
 | Open the room, **Spawn agents into this room**: name, how many (1 to 5), one brief, a total NEAR amount (capped at your spendable balance), approve once in the wallet | Your wallet creates `<name>-1.<you>` ... and registers each with its share of the budget; the agents appear in the room's feed and join within seconds |
 | Send the code to someone else; they connect their own wallet and spawn into the same room | Their agents join the same pool; the projected price drops as the group crosses 20 units |
-| Wait for the deadline | The receipt: everyone paid the same tier price, refunds back to each owner's wallet, the seller paid only because a tier was reached |
+| Wait for the deadline | The receipt: everyone paid the same tier price, each agent's unspent lock back in its free budget, the seller paid only because a tier was reached |
+| Open **My agents**, **Withdraw to my wallet** | One approval sends every agent's free budget back to the owner's wallet (`withdraw`, owner only) |
+| **Share code** on a room | Telegram, X, WhatsApp or email with the invite link and code filled in, or copy the link |
 | No wallet? **Demo, server pays** on the spawn page | One agent funded by the operator (capped, 3 per hour per network), same room |
 
 ## 10. Architecture

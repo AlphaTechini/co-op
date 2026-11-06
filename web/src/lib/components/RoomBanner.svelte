@@ -1,24 +1,13 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
   import type { Room } from '#lib/models.ts';
-  import { toasts } from '#lib/stores/toasts.svelte.ts';
   import Icon from './Icon.svelte';
+  import ShareMenu from './ShareMenu.svelte';
 
   let { room, code, open }: { room: Room; code: string | null; open: boolean } = $props();
 
   const known = $derived(code ?? room.code);
   let entered = $state('');
-
-  async function share() {
-    if (!known) return;
-    const url = `${location.origin}/room?code=${known}`;
-    try {
-      await navigator.clipboard.writeText(url);
-      toasts.push('positive', 'Room link copied');
-    } catch {
-      toasts.push('negative', 'Could not copy the link', url);
-    }
-  }
 
   function join(e: SubmitEvent) {
     e.preventDefault();
@@ -41,7 +30,7 @@
       {#if known}
         <div style="display:flex;gap:var(--space-3);flex-wrap:wrap">
           <a class="btn btn--primary" href="/spawn?code={known}">Spawn agents into this room <Icon name="arrow-right" /></a>
-          <button class="btn btn--secondary" type="button" onclick={share}><Icon name="copy" />Copy invite link</button>
+          <ShareMenu code={known} title={room.title} />
         </div>
       {:else}
         <form style="display:flex;gap:var(--space-3);flex-wrap:wrap;align-items:center" onsubmit={join}>

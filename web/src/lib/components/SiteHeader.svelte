@@ -14,6 +14,7 @@
     { href: '/', label: 'Rooms', match: (p: string) => p === '/' || p.startsWith('/pool') || p.startsWith('/room') },
     { href: '/create', label: 'Open a room', match: (p: string) => p.startsWith('/create') },
     { href: '/spawn', label: 'Spawn agents', match: (p: string) => p.startsWith('/spawn') },
+    { href: '/agents', label: 'My agents', match: (p: string) => p.startsWith('/agents') },
     { href: '/how', label: 'How it works', match: (p: string) => p.startsWith('/how') }
   ];
 

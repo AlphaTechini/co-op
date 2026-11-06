@@ -21,6 +21,16 @@ export async function getPoolMembers(id: number): Promise<MemberView[]> {
   }
 }
 
+/** Every registered agent whose owner is `owner` (the contract has no owner index, so this pages through all). */
+export async function listAgentsOwnedBy(owner: string): Promise<AgentView[]> {
+  const out: AgentView[] = [];
+  for (let from = 0; ; from += 100) {
+    const page = await view<AgentView[]>('list_agents', { from_index: from, limit: 100 });
+    out.push(...page.filter((a) => a.owner === owner));
+    if (page.length < 100) return out;
+  }
+}
+
 /** Pages of up to 50 pools, newest first. */
 export async function listPoolsUpTo(count: number): Promise<PoolView[]> {
   const out: PoolView[] = [];

@@ -111,6 +111,7 @@
         <p class="t-body-s text-tertiary">Each agent account holds the units it buys. These full-access keys were made in this browser and never sent anywhere; keep the file to move the units later.</p>
       {/if}
       <a class="btn btn--primary btn--block" href="/pool?id={room.pool_id}&code={room.code}">Watch the room live</a>
+      <p class="t-body-s text-tertiary">After the room settles, unspent budget stays in the contract until you withdraw it from <a class="link" href="/agents">My agents</a>.</p>
     </div>
   </div>
 {:else}

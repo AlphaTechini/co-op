@@ -13,7 +13,7 @@ co-op/
 │   ├── src/
 │   └── test/{unit,integration}/
 ├── web/                      SvelteKit dashboard (prerendered, Vercel)
-│   ├── src/routes/{create,how,pool,room,spawn}/
+│   ├── src/routes/{agents,create,how,pool,room,spawn}/
 │   ├── src/lib/{components,stores,styles,assets}/
 │   └── static/
 ├── checks/                   Capability checks 01 to 06
@@ -54,7 +54,7 @@ co-op/
 - contracts: [contracts/](contracts/README.md), [coop/](contracts/coop/README.md), [coop/src/](contracts/coop/src/README.md), [credits-token/](contracts/credits-token/README.md), [credits-token/src/](contracts/credits-token/src/README.md), [res/](contracts/res/README.md)
 - agents: [agents/](agents/README.md), [src/](agents/src/README.md), [test/](agents/test/README.md), [test/unit/](agents/test/unit/README.md), [test/integration/](agents/test/integration/README.md)
 - server: [server/](server/README.md), [src/](server/src/README.md), [test/](server/test/README.md), [test/unit/](server/test/unit/README.md), [test/integration/](server/test/integration/README.md)
-- web: [web/](web/README.md), [src/](web/src/README.md), [src/lib/](web/src/lib/README.md), [src/lib/components/](web/src/lib/components/README.md), [src/lib/stores/](web/src/lib/stores/README.md), [src/lib/styles/](web/src/lib/styles/README.md), [src/lib/assets/](web/src/lib/assets/README.md), [src/routes/](web/src/routes/README.md), [src/routes/pool/](web/src/routes/pool/README.md), [src/routes/room/](web/src/routes/room/README.md), [src/routes/create/](web/src/routes/create/README.md), [src/routes/spawn/](web/src/routes/spawn/README.md), [src/routes/how/](web/src/routes/how/README.md), [static/](web/static/README.md)
+- web: [web/](web/README.md), [src/](web/src/README.md), [src/lib/](web/src/lib/README.md), [src/lib/components/](web/src/lib/components/README.md), [src/lib/stores/](web/src/lib/stores/README.md), [src/lib/styles/](web/src/lib/styles/README.md), [src/lib/assets/](web/src/lib/assets/README.md), [src/routes/](web/src/routes/README.md), [src/routes/pool/](web/src/routes/pool/README.md), [src/routes/room/](web/src/routes/room/README.md), [src/routes/agents/](web/src/routes/agents/README.md), [src/routes/create/](web/src/routes/create/README.md), [src/routes/spawn/](web/src/routes/spawn/README.md), [src/routes/how/](web/src/routes/how/README.md), [static/](web/static/README.md)
 - [checks/](checks/README.md)
 - [deploy/](deploy/README.md)
 - design: [design/](design/README.md), [mockups/](design/mockups/README.md), [screens/](design/screens/README.md)

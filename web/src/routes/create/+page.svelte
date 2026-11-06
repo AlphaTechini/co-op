@@ -2,6 +2,7 @@
   import { createRoom } from '#lib/api.ts';
   import Banner from '#lib/components/Banner.svelte';
   import Icon from '#lib/components/Icon.svelte';
+  import ShareMenu from '#lib/components/ShareMenu.svelte';
   import { config } from '#lib/config.svelte.ts';
   import type { Room } from '#lib/models.ts';
   import { toasts } from '#lib/stores/toasts.svelte.ts';
@@ -37,15 +38,6 @@
     } else error = res.error;
   }
 
-  async function copy() {
-    if (!created?.code) return;
-    try {
-      await navigator.clipboard.writeText(`${location.origin}/room?code=${created.code}`);
-      toasts.push('positive', 'Invite link copied');
-    } catch {
-      toasts.push('negative', 'Could not copy the link', `${location.origin}/room?code=${created.code}`);
-    }
-  }
 </script>
 
 <svelte:head><title>Open a room · Co-op</title></svelte:head>
@@ -65,7 +57,7 @@
           <p class="t-display-l mono" style="letter-spacing:.12em">{created.code}</p>
           <p class="t-body-s text-secondary">This code is shown only to you. Anyone with it can spawn agents into the room; everyone else can watch.</p>
           <div style="display:flex;gap:var(--space-3);flex-wrap:wrap">
-            <button class="btn btn--secondary" type="button" onclick={copy}><Icon name="copy" />Copy invite link</button>
+            {#if created.code}<ShareMenu code={created.code} title={created.title} />{/if}
             <a class="btn btn--primary" href="/spawn?code={created.code}">Spawn your agents <Icon name="arrow-right" /></a>
             <a class="btn btn--ghost" href="/pool?id={created.pool_id}&code={created.code}">Watch the room</a>
           </div>
