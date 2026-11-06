@@ -10,6 +10,7 @@ Capability checks from PRD section 11. Each script prints `PASS` / `FAIL` / `SKI
 | 04 settlement gas for 10, 25 and 50 members | [04-settle-gas.ts](04-settle-gas.ts) | sandbox | `make checks` |
 | 05 testnet RPC holds up at the dashboard's polling rate | [05-rpc.ts](05-rpc.ts) | testnet | `make checks-testnet` |
 | 06 optional LLM brief parsing | [06-llm.ts](06-llm.ts) | `LLM_*` in `.env`, else SKIP | `make checks` |
+| 07 rooms, wallet spawn and withdraw: opens an invite room, signs what the web app asks a wallet to sign, waits for settlement, withdraws | [07-wallet-spawn.ts](07-wallet-spawn.ts) | a running server on testnet, a funded testnet account (key from `CHECK_WALLET_PRIVATE_KEY` or the NEAR CLI keychain), about 12 minutes | `pnpm --filter @coop/checks exec tsx 07-wallet-spawn.ts --api <server> --account <you.testnet>` |
 
 ## Decisions and tradeoffs
 
@@ -20,4 +21,5 @@ Capability checks from PRD section 11. Each script prints `PASS` / `FAIL` / `SKI
 
 - To find the shared PASS / FAIL / SKIP output visit [lib.ts](lib.ts).
 - To find the gas measurement and the chunk-size reasoning visit [04-settle-gas.ts](04-settle-gas.ts).
+- To find the end-to-end proof of rooms, wallet spawn and withdraw visit [07-wallet-spawn.ts](07-wallet-spawn.ts). It signs with the account's own key in place of a browser wallet, using the same actions as [../web/src/lib/agent-txs.ts](../web/src/lib/agent-txs.ts).
 - The sandbox and chain helpers the checks use can be found in [../agents/src/world.ts](../agents/src/world.ts).

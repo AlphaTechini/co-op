@@ -18,7 +18,7 @@ make demo                          # sandbox + this server + scripted agents + w
 |---|---|
 | `GET /api/health` | `{ ok, network, contractId, llm }` |
 | `GET /api/config` | network, rpcUrl, contractId, tokenId, explorer bases, `spawn { enabled, maxBudgetNear, remaining }`, `rooms { canCreate, durationsMin, catalog }`, `walletSpawn { maxBatch, agentGasYocto }` |
-| `GET /api/rooms` | every room, newest first; `code` is null for invite rooms |
+| `GET /api/rooms` | the 60 newest rooms; `code` is null for invite rooms (older rooms still open by code) |
 | `GET /api/rooms/:code` | one room, by code |
 | `POST /api/rooms` | `{ item, purpose, duration_min, host }` -> the room with its code; the demo seller opens its pool |
 | `POST /api/wallet-agents/prepare` | `{ owner, room_code, name, count, brief, total_near }` -> per-agent public join/leave keys, limits, budget and gas amounts for the wallet transactions |
@@ -53,7 +53,7 @@ Loaded from the repo-root `.env`; with `NEAR_NETWORK=sandbox`, or when no networ
 | `SETTLER` | `1` | the operator settles expired pools |
 | `SELLER_LOOP` | `1` on sandbox, `0` on testnet | opens a new offer whenever no pool is Open |
 | `PRICE_SCALE` | `1` sandbox, `0.05` testnet | entry price in NEAR; tiers are `[1: 100%, 20: 70%, 50: 50%]` |
-| `OFFER_DURATION_SEC`, `OFFER_LOCK_SEC` | `100`/`20` sandbox, `600`/`60` testnet | |
+| `OFFER_DURATION_SEC`, `OFFER_LOCK_SEC` | `100`/`20` sandbox, `600`/`60` testnet | length of the seller loop's public rooms; the hosted server uses `10800` (3 h) because every empty pool still costs the seller storage |
 | `LLM_BASE_URL`, `LLM_API_KEY`, `LLM_MODEL` | | optional; otherwise the rules parser answers and `parser` says `"rules"` |
 | `DATA_FILE` | `server/.data/agents.json` | rooms are kept in `rooms.json` next to it |
 

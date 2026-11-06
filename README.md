@@ -10,6 +10,11 @@ Built for NEAR HACKATHON. Tracks: **AI Swarms** (`swarms`, primary) and **Agent 
 
 Everything in this repository was built and verified against a **local NEAR sandbox** (nearcore 2.14.0, via the `near-sandbox` npm package) and is also **deployed on NEAR testnet**, with a 12-agent testnet run on record and a hosted demo. The section below links each piece and says what is still pending.
 
+**Try it.**
+- Hosted, testnet: https://coop.cyberpunkinc.xyz. Open a room, connect a testnet wallet, spawn agents, share the code; no wallet needed for the server-paid demo spawn.
+- Local, no keys: `make verify` (Linux or Apple Silicon, Node 22+, pnpm; about 1 minute, plus install and a first-time download of the nearcore binary). It deploys the committed wasm to a local sandbox, runs 10 agents to settlement and recomputes the invariants.
+- Proof in the repo: [`evidence/`](evidence/README.md) (testnet deploy, the 12-agent testnet run with 64 tx hashes, the rooms and wallet-spawn check) and [`docs/CLAIMS.md`](docs/CLAIMS.md) (every claim with `file:line` and its proof).
+
 **In short.** A seller posts an offer with price tiers and deposits the goods in the contract. Buyer agents, each holding only a restricted function-call key, lock a budget in the contract and join the pool, outright or conditionally ("only if the group reaches N units"). After the deadline anyone calls `settle`: the contract finds the largest group whose conditions all hold, charges each member the tier price that group reached, pays the seller, delivers the goods and refunds the difference. If no tier is reached, everyone is refunded. **Invariant: no agent pays more than its own limit, and the seller is paid only if the group reaches a price tier.** Run `make verify` (Node 22+ and pnpm, no Rust, no keys) to see a 10-agent pool settle on a local sandbox and the invariants recomputed from chain views.
 
 ## Live deployment
@@ -18,6 +23,7 @@ Everything in this repository was built and verified against a **local NEAR sand
 |---|---|---|
 | Testnet Co-op contract | [`coop.coop-alpha.testnet`](https://testnet.nearblocks.io/address/coop.coop-alpha.testnet) | Deployed; on-chain code hash matches `contracts/res/SHA256SUMS` ([`evidence/testnet-deploy.md`](evidence/testnet-deploy.md)) |
 | Testnet demo token | [`credits.coop-alpha.testnet`](https://testnet.nearblocks.io/address/credits.coop-alpha.testnet) | Deployed, same evidence file |
+| Rooms, wallet spawn, withdraw | [`evidence/check-07-wallet-spawn.txt`](evidence/check-07-wallet-spawn.txt) | Checked on testnet against the hosted server by [`checks/07-wallet-spawn.ts`](checks/07-wallet-spawn.ts) |
 | Extra room items | [`gpu-hours.coop-alpha.testnet`](https://testnet.nearblocks.io/address/gpu-hours.coop-alpha.testnet), [`dataset-seats.coop-alpha.testnet`](https://testnet.nearblocks.io/address/dataset-seats.coop-alpha.testnet) | Deployed from the same token wasm ([`evidence/testnet-items.md`](evidence/testnet-items.md)) |
 | Hosted demo URL | https://coop.cyberpunkinc.xyz (API: https://34-138-43-239.sslip.io/api/health) | Live. Site on Vercel, server on a GCP free-tier VM: [deploy/README.md](deploy/README.md) |
 | Testnet run log (12+ agents, every tx hash) | [`evidence/testnet-run-2026-11-05T11-55-16-789Z.md`](evidence/testnet-run-2026-11-05T11-55-16-789Z.md) | Done: 12 agents, 64 transactions, settled at tier 2, all invariants hold. Produced by `pnpm --filter @coop/agents scenario --agents 12 --network testnet --prefix run2` (`--prefix` gives a re-run fresh agent names) |
@@ -32,7 +38,7 @@ To see Co-op work on your own machine: `make verify` (one command, section 8) an
 | Track brief item | Where Co-op does it | File |
 |---|---|---|
 | Collective purchasing | Pools aggregate many agents' small orders into one tiered purchase | [`contracts/coop/src/pool.rs`](contracts/coop/src/pool.rs) (`join_pool` line 200, `leave_pool` line 291) |
-| Coordination markets | Agents read open pools, compare the projected price with their limit, join now, join conditionally, or skip | [`agents/src/policy.ts`](agents/src/policy.ts) (`decide` line 204), [`agents/src/runtime.ts`](agents/src/runtime.ts) (`AgentRuntime` line 72) |
+| Coordination markets | Agents read open pools, compare the projected price with their limit, join now, join conditionally, or skip | [`agents/src/policy.ts`](agents/src/policy.ts) (`decide` line 204), [`agents/src/runtime.ts`](agents/src/runtime.ts) (`AgentRuntime` line 74) |
 | Intent-based settlement | A conditional join ("in if the group reaches N") is an intent; the contract resolves all of them together at settlement | [`contracts/coop/src/settle.rs`](contracts/coop/src/settle.rs) (`resolve` line 66, `settle` line 232) |
 | Emergent economies between agents | The group's size and price come from the agents' thresholds, with no coordinator | [`contracts/coop/src/settle.rs`](contracts/coop/src/settle.rs), [`agents/src/scenario.ts`](agents/src/scenario.ts) (`runScenario` line 111) |
 | Bidding | The seller agent adds a better tier when a pool stalls; the contract accepts only changes that are no worse for any buyer | [`contracts/coop/src/offer.rs`](contracts/coop/src/offer.rs) (`improve_offer` line 228, `is_improvement` line 98), [`agents/src/seller.ts`](agents/src/seller.ts) (`proposeImprovement` line 93, `SellerAgent` line 128) |
@@ -53,7 +59,7 @@ Agents could buy together, but nobody wants to send money to another agent or to
 ## 4. How it works
 
 1. **Seller posts an offer.** The seller calls `create_offer` with price tiers, for example 1+ units at 1.00 NEAR, 20+ at 0.70, 50+ at 0.50, plus a maximum, a deadline and a lock window. The seller then sends the inventory (a NEP-141 token) to the Co-op contract with `ft_transfer_call`. The offer opens only once the contract holds the full inventory, so delivery cannot fail later for lack of stock.
-2. **Owner funds an agent.** The owner creates a sub-account for the agent, adds a function-call key limited to `join_pool` / `leave_pool`, and calls `register_agent` with the agent's limits (`max_unit_price`, `max_units_per_pool`, optional `allowed_sellers`, `expires_at`) and a deposit that becomes the agent's budget. The agent runtime receives only the function-call key. In the web app this is one wallet approval: the visitor picks a room, how many agents and a total budget, and their own wallet signs the account creation and `register_agent` for each agent, so the visitor is the owner on chain and refunds go back to them ([`server/src/wallet-spawn.ts`](server/src/wallet-spawn.ts), [`web/src/lib/agent-txs.ts`](web/src/lib/agent-txs.ts)).
+2. **Owner funds an agent.** The owner creates a sub-account for the agent, adds a function-call key limited to `join_pool` / `leave_pool`, and calls `register_agent` with the agent's limits (`max_unit_price`, `max_units_per_pool`, optional `allowed_sellers`, `expires_at`) and a deposit that becomes the agent's budget. The agent runtime receives only the function-call key. In the web app this is one wallet approval: the visitor picks a room, how many agents and a total budget, and their own wallet signs the account creation and `register_agent` for each agent, so the visitor is the owner on chain: after settlement the unspent part of each lock is back in the agent's free budget, and the owner pulls it to their wallet with `withdraw` from the **My agents** page ([`server/src/wallet-spawn.ts`](server/src/wallet-spawn.ts), [`web/src/lib/agent-txs.ts`](web/src/lib/agent-txs.ts)).
 3. **Agents join.** An agent calls `join_pool(pool_id, units, threshold_units?)` with no deposit. Joining is either unconditional ("I will take 2 units") or conditional ("2 units, but only if the group reaches 50"). The contract locks `units x price` from the agent's budget, where the price is the entry tier for an unconditional join, or the tier at the agent's threshold for a conditional one. If that price is above the agent's `max_unit_price` the join is rejected. The locked amount is the most the agent can ever pay. Before the lock time an agent can `leave_pool` and get its lock back.
 4. **Anyone settles after the deadline** by calling `settle(pool_id)`:
    - The contract finds the **largest group whose conditions all hold**, finds the best tier that group reaches, and charges every member in the group that tier's price.
@@ -95,9 +101,9 @@ Every factual claim in this README is listed in `docs/CLAIMS.md` with a file and
 | Largest consistent group | [`settle.rs`](contracts/coop/src/settle.rs):66 | `resolve_equals_largest_consistent_subset_property`, `two_conditional_25_unit_members_with_threshold_50_both_get_in` |
 | Settlement is chunked and idempotent | [`settle.rs`](contracts/coop/src/settle.rs):232 | `chunked_settlement_matches_single_call`, `settle_twice_is_idempotent`, [`chunked.test.ts`](agents/test/integration/chunked.test.ts) (21 members); [`evidence/gas.md`](evidence/gas.md) |
 | Failed delivery becomes a claimable balance | [`settle.rs`](contracts/coop/src/settle.rs):283, [`agent.rs`](contracts/coop/src/agent.rs):196 | `failed_delivery_becomes_claimable_and_can_be_claimed`, [`claim.test.ts`](agents/test/integration/claim.test.ts) |
-| Agent key can only join/leave, zero deposit | [`chain.ts`](agents/src/chain.ts):576 | [`evidence/check-02-fckey-sandbox.txt`](evidence/check-02-fckey-sandbox.txt), [`fckey.test.ts`](agents/test/integration/fckey.test.ts) |
-| Committed wasm matches its SHA-256 and the on-chain code hash | [`deploy.ts`](agents/src/deploy.ts):35, :129; [`Makefile`](Makefile):22 | `make verify` output in section 8 |
-| Spawn endpoint is rate limited and capped | [`spawner.ts`](server/src/spawner.ts):172, :214, :223 | [`app.test.ts`](server/test/unit/app.test.ts) (429 and 503 cases) |
+| Agent key can only join/leave, zero deposit | [`chain.ts`](agents/src/chain.ts):625 | [`evidence/check-02-fckey-sandbox.txt`](evidence/check-02-fckey-sandbox.txt), [`fckey.test.ts`](agents/test/integration/fckey.test.ts) |
+| Committed wasm matches its SHA-256 and the on-chain code hash | [`deploy.ts`](agents/src/deploy.ts):35, :164; [`Makefile`](Makefile):22 | `make verify` output in section 8 |
+| Spawn endpoint is rate limited and capped | [`spawner.ts`](server/src/spawner.ts):225, :267, :276 | [`app.test.ts`](server/test/unit/app.test.ts) (429 and 503 cases) |
 | Testnet behaviour (deploy, 12+ agent run) | | [`evidence/testnet-deploy.md`](evidence/testnet-deploy.md), [`evidence/testnet-run-2026-11-05T11-55-16-789Z.md`](evidence/testnet-run-2026-11-05T11-55-16-789Z.md); the key lock is still pending |
 
 ## 7. What is mocked or not built
@@ -274,7 +280,7 @@ All code in this repository is new and was written inside the hackathon window (
 | Contracts (Rust) | `near-sdk` 5.30, `near-contract-standards` 5.30, `cargo-near` 0.22.0 (build only) |
 | Agents and checks | `near-api-js` 7.4.0, `near-sandbox` 0.3.4, `zod` 4.6.7, `openai` 7.49.0 (optional LLM client), `dotenv` 17.4.2, `tsx` 4.23.15, `typescript` 6.0.3, `vitest` 5.1.0 |
 | Server | `fastify` 5.12.8, `@fastify/cors` 11.4.0, `@fastify/rate-limit` 11.2.2, `near-api-js`, `zod` |
-| Web | `svelte` 5.57.3, `@sveltejs/kit` 3.1.1 (Vercel adapter 7.0.2), `vite` 8.3.5, `vitest`, `svelte-check` 4.7.8 |
+| Web | `svelte` 5.57.3, `@sveltejs/kit` 3.1.1 (Vercel adapter 7.0.2), `vite` 8.3.5, `vitest`, `svelte-check` 4.7.8, `@hot-labs/near-connect` 0.12.0 (wallet connection) |
 
 ## 13. Other project by the same builder
 

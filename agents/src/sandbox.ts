@@ -69,6 +69,8 @@ const FD_HINT =
 export async function startSandbox(options: { version?: string; rpcPort?: number } = {}): Promise<SandboxHandle> {
   const version = options.version ?? SANDBOX_VERSION;
   installSignalHandlers();
+  // near-sandbox gives neard 10 s to answer /status by default; a first run on a fresh machine needs longer.
+  process.env.NEAR_RPC_TIMEOUT_SECS ??= "60";
   let sandbox: Sandbox;
   try {
     sandbox = await Sandbox.start({

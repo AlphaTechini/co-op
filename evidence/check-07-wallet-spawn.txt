@@ -1,0 +1,18 @@
+07 rooms, wallet spawn and withdraw (testnet)
+run at 2026-11-06T18:18:46.154Z
+
+PASS  server offers rooms and wallet spawn  | contract coop.coop-alpha.testnet, items: api-credits, gpu-hours, dataset-seats
+PASS  open an invite room  | room SAR6XE, pool 394 (LLM API credits)
+PASS  the room list shows the invite room without its code  | visibility invite, code null
+PASS  the code finds the room  | pool 394
+PASS  server prepares two agents  | c75ag3z0-1.coop-tester1.testnet, c75ag3z0-2.coop-tester1.testnet; budget 0.2500 and gas 0.1200 NEAR each
+PASS  wallet creates and registers c75ag3z0-1.coop-tester1.testnet  | create https://testnet.nearblocks.io/txns/Bh7Qs6uYk5bPPcfLTELYfEyYQcyPsmgkVLN5uBFcpCCL ; register https://testnet.nearblocks.io/txns/Hiq3Er1iZrjNw86uamYLPikPPXazEqdV7TKA18whEiwj
+PASS  wallet creates and registers c75ag3z0-2.coop-tester1.testnet  | create https://testnet.nearblocks.io/txns/78QnTFHf6X7YFrDfUHfmKuK6DjFLWan91pR3k3ftPqj3 ; register https://testnet.nearblocks.io/txns/3zsaKD4mQAGk9vijhPeVJi8v6ztPjmkBd8kNjSqfHVm5
+PASS  server starts both agents once the chain shows them  | c75ag3z0-1.coop-tester1.testnet=running, c75ag3z0-2.coop-tester1.testnet=running
+PASS  the contract records the wallet as owner  | c75ag3z0-1.coop-tester1.testnet owner coop-tester1.testnet, c75ag3z0-2.coop-tester1.testnet owner coop-tester1.testnet
+PASS  both agents join the room's pool 394  | c75ag3z0-2.coop-tester1.testnet https://testnet.nearblocks.io/txns/GJyxyehSd5v3e4N9ho8VDvaXnzwwRWpV6yuRwvkFAhAV ; c75ag3z0-1.coop-tester1.testnet https://testnet.nearblocks.io/txns/vNub6nWX6Tym83SvK9z3gquE6mQcp6JCBTebBgK95Fy
+PASS  and no other pool  | c75ag3z0-1.coop-tester1.testnet active_pools [394], c75ag3z0-2.coop-tester1.testnet active_pools [394]
+PASS  withdraw from someone else's agent is refused  | buyer-e1.coop-alpha.testnet (owner coop-alpha.testnet): Smart contract panicked: Only the agent's owner can do this
+PASS  pool 394 settles after its deadline  | Settled: 8 units from 2 agents at 0.0500 NEAR each
+PASS  owner withdraws the free budget to the wallet  | free 0.0868 NEAR; wallet 6.6250 -> 6.7113 NEAR (after gas); https://testnet.nearblocks.io/txns/rebBYiUYPACU1F9hUVNQCRqB2tK8pZSLxp7wFKqpDpC ; https://testnet.nearblocks.io/txns/45j6nGwJxFr6Eyw7DmUJHHuKUM6hLu3jJaCnxjCrFXXe
+PASS  07 rooms, wallet spawn and withdraw (testnet)

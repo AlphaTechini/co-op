@@ -12,7 +12,8 @@
     "03": "tsx 03-sandbox.ts",
     "04": "tsx 04-settle-gas.ts",
     "05": "tsx 05-rpc.ts",
-    "06": "tsx 06-llm.ts"
+    "06": "tsx 06-llm.ts",
+    "07": "tsx 07-wallet-spawn.ts"
   },
   "dependencies": {
     "@coop/agents": "workspace:*",

@@ -164,9 +164,12 @@ export class RoomService {
     return undefined;
   }
 
-  /** Newest first. */
-  list(): RoomView[] {
-    return [...this.rooms.values()].sort((a, b) => b.pool_id - a.pool_id).map((r) => this.view(r, r.visibility === "public"));
+  /** Newest first, capped: old rooms stay reachable by code but drop off the list. */
+  list(limit = 60): RoomView[] {
+    return [...this.rooms.values()]
+      .sort((a, b) => b.pool_id - a.pool_id)
+      .slice(0, limit)
+      .map((r) => this.view(r, r.visibility === "public"));
   }
 
   view(room: RoomRecord, withCode: boolean): RoomView {

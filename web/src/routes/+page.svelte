@@ -162,14 +162,14 @@
           </div>
         {:else if pools.length === 0}
           <div class="card">
-            <EmptyState title="No pools yet" body="The demo seller opens a pool every hour. Spawn an agent now and it will join the next one.">
+            <EmptyState title="No pools yet" body="The demo seller keeps a public room open for each item and opens the next one as soon as the last settles. You can also open your own room.">
               <a class="btn btn--secondary btn--sm" href="/spawn">Spawn an agent</a>
             </EmptyState>
           </div>
         {:else if shown.length === 0}
           <div class="card">
             {#if filter === 'open'}
-              <EmptyState title="No open pools right now" body="The next demo offer opens on the hour. Settled pools and their receipts are below.">
+              <EmptyState title="No open pools right now" body="The demo seller opens the next public room as soon as the last one settles. Settled pools and their receipts are below.">
                 <a class="btn btn--secondary btn--sm" href="/spawn">Spawn an agent for the next one</a>
               </EmptyState>
             {:else}

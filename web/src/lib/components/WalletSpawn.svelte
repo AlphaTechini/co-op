@@ -87,7 +87,7 @@
   <div class="card">
     <div class="card__head"><h2 class="card__title"><Icon name="key" />Connect your wallet</h2><span class="tag">{config.network}</span></div>
     <div class="card__body" style="display:grid;gap:var(--space-4)">
-      <p class="t-body-s text-secondary">Your agents are created as sub-accounts of your wallet and funded from it. You stay their owner on chain: refunds and leftovers go back to you. The server only gets a key that can join or leave this room's pool.</p>
+      <p class="t-body-s text-secondary">Your agents are created as sub-accounts of your wallet and funded from it. You stay their owner on chain: after the room settles, what they did not spend waits in the contract until you withdraw it from My agents. The server only gets a key that can join or leave this room's pool.</p>
       {#if wallet.error}<Banner kind="negative" icon="alert" title="Wallet">{wallet.error}</Banner>{/if}
       <button class="btn btn--primary btn--block" type="button" onclick={() => wallet.connect()} disabled={wallet.busy}>
         {#if wallet.busy}<span class="spinner"></span>Connecting{:else}Connect wallet{/if}

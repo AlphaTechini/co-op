@@ -11,6 +11,7 @@ Captured output that the README and [../docs/CLAIMS.md](../docs/CLAIMS.md) cite 
 | [gas.md](gas.md) | `checks/04-settle-gas.ts` | Settlement gas per member and calls per pool size |
 | [check-01-faucet.txt](check-01-faucet.txt) | `checks/01-faucet.ts` | The testnet operator account is funded and the protocol version is 88 |
 | [testnet-deploy.md](testnet-deploy.md) | `pnpm --filter @coop/agents deploy:testnet` | Both contracts deployed on testnet with code hashes matching `contracts/res/SHA256SUMS` |
+| [check-07-wallet-spawn.txt](check-07-wallet-spawn.txt) | `checks/07-wallet-spawn.ts` against the hosted server | An invite room, two agents created and funded by a test wallet (owner on chain), joining only that room, a refused withdraw on another owner's agent, settlement, and the owner's withdraw, each with a nearblocks link |
 | [testnet-items.md](testnet-items.md) | `pnpm --filter @coop/agents deploy:items` | The GPU-hours and dataset-seats item tokens, same wasm and code hash as the credits token |
 | [testnet-run-2026-11-05T11-55-16-789Z.md](testnet-run-2026-11-05T11-55-16-789Z.md) | `pnpm --filter @coop/agents scenario --agents 12 --network testnet --prefix run2` | The 12-agent testnet run: receipt, invariants, every transaction with a nearblocks link |
 | [testnet-run-2026-11-05T11-55-16-789Z.json](testnet-run-2026-11-05T11-55-16-789Z.json) | same run | Machine-readable log of that run |
