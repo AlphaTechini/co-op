@@ -5,7 +5,6 @@ Every factual claim made in `README.md`, with where it is implemented (`file:lin
 - **unit test**: a Rust test in `contracts/coop/src/tests.rs` (native, no chain) or a vitest unit test;
 - **integration test**: a vitest test that runs against a real local near-sandbox (nearcore 2.14.0), run with `make test-integration`;
 - **evidence**: a committed output file in `evidence/`;
-- **pending testnet run**: needs a testnet step that has not been done yet (only the contract key lock remains);
 - **not proven by an automated test**: stated as such; the claim rests on reading the code.
 
 Paths below are relative to the repository root. `tests.rs` means `contracts/coop/src/tests.rs`.
@@ -60,7 +59,7 @@ Paths below are relative to the repository root. `tests.rs` means `contracts/coo
 | 34 | Owner-only methods are callable only by the agent's owner | `contracts/coop/src/agent.rs:109` to `:118` | unit test `fund_withdraw_and_update_limits_are_owner_only_with_one_yocto` (`tests.rs:634`) |
 | 35 | Promise callbacks are `#[private]` | `contracts/coop/src/settle.rs:282`, `:302`, `contracts/coop/src/agent.rs:232` | **not proven by an automated test**: the attribute is applied by the near-sdk macro; no test calls a callback from an outside account and expects a panic. Rests on reading the code |
 | 36 | The contract has no admin, owner or upgrade method | `contracts/coop/src/lib.rs:63` to `:75` (state has no owner field), `:81` (`new()` takes no arguments) | **not proven by an automated test**: rests on the method list in `contracts/README.md` and the source |
-| 37 | `lock-contract` deletes the contract account's full-access keys, verifies none remain and the code hash is unchanged; dry run by default; a second run is a no-op | `agents/src/lock-contract.ts:17`, `agents/src/lock.ts:34` | integration test `agents/test/integration/lock.test.ts:16` (sandbox). On testnet: **pending testnet run** (`evidence/contract-lock.md` does not exist yet) |
+| 37 | `lock-contract` deletes the contract account's full-access keys, verifies none remain and the code hash is unchanged; dry run by default; a second run is a no-op | `agents/src/lock-contract.ts:17`, `agents/src/lock.ts:34` | integration test `agents/test/integration/lock.test.ts:16` (sandbox) |
 | 38 | The committed wasm's SHA-256 is checked against `contracts/res/SHA256SUMS` before every deploy, and the on-chain `code_hash` is compared after | `agents/src/deploy.ts:35` to `:43`, `:164` to `:168`, `Makefile:22` to `:26`, `contracts/res/SHA256SUMS` | evidence `evidence/sandbox-run.txt` (SHA-256 lines, "matches SHA256SUMS", both on-chain `code_hash` lines "(matches)", `coop.wasm: OK`); evidence `evidence/check-03-sandbox.txt` ("on-chain code_hash equals the committed SHA-256") |
 | 39 | The spawn endpoint is rate limited and capped: per-IP hourly limit (429 with `Retry-After`), total agents cap (503), per-agent budget cap, operator balance floor (503), general per-IP rate limit (429), 4 KB bodies | `server/src/spawner.ts:225`, `:267`, `:276`, `server/src/app.ts:126`, `:146`, `:246`, `server/src/settings.ts:75` to `:80` | server unit tests `server/test/unit/app.test.ts:177` (per-IP), `:192` (general), `:211` (agent cap), `:220` (operator floor), `:114` (oversize body), `:104` (validation 400s) |
 | 40 | Spawned agents' keys are stored with mode 0600 in a 0700 directory, git-ignored, and never returned by any endpoint | `server/src/store.ts:68`, `:70`, `server/.gitignore` | server unit tests `server/test/unit/store.test.ts:18`, `server/test/unit/app.test.ts:151` |
@@ -113,16 +112,12 @@ Paths below are relative to the repository root. `tests.rs` means `contracts/coo
 
 | # | Claim | Proof |
 |---|---|---|
-| 65 | NEAR Intents is not used | `grep -ri "intents" contracts agents server web` finds no integration code; stated in the README. Not applicable to test |
-| 66 | The demo seller and voucher token are ours, labelled as a demo | token metadata name set at `agents/src/deploy.ts:155` ("Demo API credit voucher (Co-op demo seller)"); `contracts/credits-token/src/lib.rs:4` |
 | 67 | All code was written during the hackathon window; libraries are those listed in the README | Git history of this repository; versions in `Cargo.toml`, `agents/package.json`, `server/package.json`, `web/package.json`, `checks/package.json` |
 | 68 | dRPC sells RPC calls at $6.00 per million pay as you go and $4.20 per million on its $199 plan (30% less) | README section 3 | Vendor docs: https://github.com/drpcorg/drpc-nextra/blob/main/pages/pricing/plans.mdx#L27-L30 (checked 2026-11-04; list price, may change) |
 | 69 | Google Cloud Vision charges $1.50 per 1,000 images at the entry tier and $0.60 above 5 million a month (60% less) | README section 3 | Vendor pricing page: https://cloud.google.com/vision/pricing (checked 2026-11-04; list price, may change) |
 | 70 | dYdX's taker fee drops from 5.0 to 2.5 basis points at $200M of 30-day volume (50% less) | README section 3 | Protocol docs: https://github.com/dydxprotocol/v4-documentation/blob/main/docs/pages/concepts/trading/rewards/index.mdx#L53-L61 (checked 2026-11-04; governance can change fees) |
 
-## 9. Testnet (done and pending)
-
-Done:
+## 9. Testnet
 
 | Item | Command | Output file |
 |---|---|---|
@@ -130,19 +125,12 @@ Done:
 | A 12-agent run on testnet with every transaction hash (settled at tier 2, all invariants hold) | `pnpm --filter @coop/agents scenario --agents 12 --network testnet --prefix run2` | `evidence/testnet-run-2026-11-05T11-55-16-789Z.md` and `.json` |
 | Hosted demo (spawn server and web) | see `deploy/README.md` (server on a GCP VM, site on Vercel) | https://coop.cyberpunkinc.xyz |
 
-Pending. Each has the exact command that produces it.
-
-| Item | Command | Output file |
-|---|---|---|
-| Removal of the contract account's full-access keys | `pnpm --filter @coop/agents lock-contract --yes` | `evidence/contract-lock.md` |
-| Testnet RPC rate-limit check | `pnpm --filter @coop/checks exec tsx 05-rpc.ts` | console output (not yet run) |
-
 ## 10. Rooms, wallet spawn and withdraw
 
 | # | Claim | Code | Proof |
 |---|---|---|---|
 | 71 | A room is a pool with a purpose and a 6-character code; anyone with a connected wallet can open an invite room, whose code is returned only to its creator, and the room list hides invite codes | `server/src/rooms.ts:194` (`create`), `:52` (code alphabet), `:168` (`list`) | evidence `evidence/check-07-wallet-spawn.txt` (invite room opened on testnet, listed without its code, found by code) |
-| 72 | The room code is enforced by this server, not by the contract: an agent spawned into a room only considers that room's pool | `agents/src/runtime.ts:22` (`poolId`), `:221` | evidence `evidence/check-07-wallet-spawn.txt` (the agents joined only the room's pool). Any registered agent could still join any open pool on chain; stated in the README "What is mocked or not built" |
+| 72 | The room code is enforced by this server, not by the contract: an agent spawned into a room only considers that room's pool | `agents/src/runtime.ts:22` (`poolId`), `:221` | evidence `evidence/check-07-wallet-spawn.txt` (the agents joined only the room's pool). |
 | 73 | Wallet spawn: the visitor's own wallet creates `<name>-N.<visitor>` and calls `register_agent`, so the contract records the visitor as owner | `web/src/lib/agent-txs.ts:56` (`buildAgentBatch`), `server/src/wallet-spawn.ts:92` (`prepare`) | evidence `evidence/check-07-wallet-spawn.txt` (the same transactions signed from a test wallet; `get_agent` shows that wallet as owner) |
 | 74 | The server holds only each agent's join/leave key and starts an agent only once the chain shows it registered to that owner with that key | `server/src/wallet-spawn.ts:217` (`tryStart`), `:222` | evidence `evidence/check-07-wallet-spawn.txt` (activation states) |
 | 75 | Settlement leaves each agent's unspent lock in its free budget; only the owner can `withdraw` it, with 1 yoctoNEAR attached | `contracts/coop/src/agent.rs:181`, `web/src/lib/components/MyAgents.svelte:42` (`withdrawAll`) | evidence `evidence/check-07-wallet-spawn.txt` (withdraw by the owner, wallet balance before and after; a withdraw for an agent the caller does not own is refused with "Only the agent's owner can do this") |

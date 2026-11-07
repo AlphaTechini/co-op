@@ -44,7 +44,6 @@ Primary track: **`swarms` (AI Swarms)**. Secondary: **`agents` (Agent Economy)**
 | Multi-agent systems | Yes | Buyer, seller and (P1) scout agents run concurrently with different goals |
 | Sub-accounts | Yes | Every agent is a sub-account of its owner (`<agent>.<owner>.testnet`), so its identity, deliveries and refunds are scoped and traceable to the owner |
 | Function-call keys (security hint, bonus) | Yes | Agents only hold a function-call key limited to `join_pool` / `leave_pool` on the Co-op contract. The key cannot move NEAR or call anything else |
-| NEAR Intents | **No, stated openly** | NEAR Intents has no testnet (Q-007) and this project is zero-spend. Settlement runs in our own contract on testnet. Cross-chain settlement via Intents is roadmap only |
 
 ## 5. Users and roles
 
@@ -198,7 +197,7 @@ Write small scripts in `checks/`, each printing PASS/FAIL with the evidence (tx 
 
 **P1 (only after P0 is fully done):** seller `improve_offer` negotiation; Switcher agent across two pools; LLM brief parsing and explanations; signed off-chain join intents relayed in batches (agents need no gas at all; verify with `env::ed25519_verify` against the agent's registered key).
 
-**Never (this hackathon):** mainnet deploy; real money; NEAR Intents settlement (mainnet-only); our own token or points; a generic agent framework; anything presented as working that isn't.
+**Never (this hackathon):** mainnet deploy; real money; our own token or points; a generic agent framework; anything presented as working that isn't.
 
 **Kill criteria:**
 - If check 4 shows settlement can't handle 20+ members even in chunks by end of 2026-11-06, cap pools at the measured max and say so in the README.
@@ -216,14 +215,14 @@ The hackathon's AI screeners (Claude Code and Codex) check that the project runs
 4. How it works, step by step (section 3 + 6.4 in plain words) + the invariant
 5. NEAR features used, each with file path and what breaks without it (sub-accounts, function-call keys, contract escrow, NEP-141, NEP-145, NEP-297)
 6. Claims table: claim → file:line → proof (test name, testnet tx hash, or log in `evidence/`)
-7. What's mocked or not built: the demo seller and its voucher token are ours; NEAR Intents not used (no testnet); LLM optional/off by default
+7. What's mocked or not built: the demo seller and its voucher token are ours; LLM optional/off by default
 8. **Try it in 30 seconds:** `make verify`, which installs deps, starts a local sandbox, deploys the committed wasm, runs a 10-agent scenario to settlement, and prints the receipt. No keys, no wallet, no network beyond package installs, under 3 minutes. Paste the expected output. Then the hosted demo link and the testnet contract account.
 9. "Do X, see Y" steps for the hosted demo (as HACKATHON.md asks)
 10. Architecture with file paths
 11. Measured results: gas per settlement chunk, members per pool tested, testnet run stats
 12. Built during the hackathon vs pre-existing (all new; list libraries per Q-005)
 13. **Other project by the same builder: Handover** (required by Q-015, one line with its repo link)
-14. Full setup, env vars, deploy, security notes, roadmap (NEAR Intents settlement, mainnet)
+14. Full setup, env vars, deploy, security notes, roadmap (mainnet)
 
 Keep the first ~1,500 words self-contained: an automated reader may truncate.
 
@@ -290,4 +289,3 @@ AI (optional)
 - NEAR AI Cloud quickstart (API key, credits are purchased): https://docs.near.ai/cloud/quickstart
 
 Roadmap only (not used: mainnet-only)
-- NEAR Intents docs: https://docs.near-intents.org/

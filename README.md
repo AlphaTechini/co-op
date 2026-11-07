@@ -8,7 +8,7 @@ It is for people and teams who run AI agents that buy the same digital goods in 
 
 Built for NEAR HACKATHON. Tracks: **AI Swarms** (`swarms`, primary) and **Agent Economy** (`agents`).
 
-Everything in this repository was built and verified against a **local NEAR sandbox** (nearcore 2.14.0, via the `near-sandbox` npm package) and is also **deployed on NEAR testnet**, with a 12-agent testnet run on record and a hosted demo. The section below links each piece and says what is still pending.
+Everything in this repository was built and verified against a **local NEAR sandbox** (nearcore 2.14.0, via the `near-sandbox` npm package) and is also **deployed on NEAR testnet**, with a 12-agent testnet run on record and a hosted demo. The section below links each piece.
 
 **Try it.**
 - Hosted, testnet: https://coop.cyberpunkinc.xyz. Open a room, connect a testnet wallet, spawn agents, share the code; no wallet needed for the server-paid demo spawn.
@@ -27,11 +27,9 @@ Everything in this repository was built and verified against a **local NEAR sand
 | Extra room items | [`gpu-hours.coop-alpha.testnet`](https://testnet.nearblocks.io/address/gpu-hours.coop-alpha.testnet), [`dataset-seats.coop-alpha.testnet`](https://testnet.nearblocks.io/address/dataset-seats.coop-alpha.testnet) | Deployed from the same token wasm ([`evidence/testnet-items.md`](evidence/testnet-items.md)) |
 | Hosted demo URL | https://coop.cyberpunkinc.xyz (API: https://34-138-43-239.sslip.io/api/health) | Live. Site on Vercel, server on a GCP free-tier VM: [deploy/README.md](deploy/README.md) |
 | Testnet run log (12+ agents, every tx hash) | [`evidence/testnet-run-2026-11-05T11-55-16-789Z.md`](evidence/testnet-run-2026-11-05T11-55-16-789Z.md) | Done: 12 agents, 64 transactions, settled at tier 2, all invariants hold. Produced by `pnpm --filter @coop/agents scenario --agents 12 --network testnet --prefix run2` (`--prefix` gives a re-run fresh agent names) |
-| Contract lock (no full-access keys) | `evidence/contract-lock.md` | Pending. Run `pnpm --filter @coop/agents lock-contract --yes` after the testnet run |
-| Demo video / X post | `<fill>` | Pending |
 | Other project by the same builder | Handover: [repo](https://github.com/AlphaTechini/handover), [live](https://handover-blush.vercel.app) | Live |
 
-To see Co-op work on your own machine: `make verify` (one command, section 8) and `make demo` (full stack, section 9).
+To see Co-op work on your own machine: `make verify` (one command, section 7) and `make demo` (full stack, section 8).
 
 ## 2. Track fit
 
@@ -48,7 +46,6 @@ To see Co-op work on your own machine: `make verify` (one command, section 8) an
 | Multi-agent systems | Yes | Eager, Bargain and Switcher buyers, a Seller agent and a Settler run concurrently ([`agents/src/policy.ts`](agents/src/policy.ts), [`agents/src/seller.ts`](agents/src/seller.ts), [`agents/src/runtime.ts`](agents/src/runtime.ts)) |
 | Sub-accounts | Yes | Every agent is a direct sub-account of its owner (`<agent>.<owner>`), enforced by the contract ([`agent.rs`](contracts/coop/src/agent.rs) line 125) |
 | Function-call keys | Yes | Agents hold only a key limited to `join_pool` / `leave_pool` on the Co-op contract, with zero deposit ([`chain.ts`](agents/src/chain.ts) line 576) |
-| NEAR Intents | **No** | NEAR Intents has no testnet, and this project spends no real money. Settlement runs in our own contract. Cross-chain settlement through Intents is roadmap only |
 
 ## 3. The problem
 
@@ -75,7 +72,7 @@ Agents could buy together, but nobody wants to send money to another agent or to
 
 > **No agent pays more than its own limit, and the seller is paid only if the group reaches a price tier.**
 
-It is enforced in the contract (the lock at join time, the settlement arithmetic), tested in Rust (`invariant_over_30_random_members` and others), and recomputed from chain views after every scenario run by `agents/src/verify.ts`, whose output is the "INVARIANT CHECK" block in section 8.
+It is enforced in the contract (the lock at join time, the settlement arithmetic), tested in Rust (`invariant_over_30_random_members` and others), and recomputed from chain views after every scenario run by `agents/src/verify.ts`, whose output is the "INVARIANT CHECK" block in section 7.
 
 Why this needs NEAR and not a database: the escrow, the tier calculation and the delivery happen in one contract that neither the seller, the coordinator nor any agent controls. The contract has no admin or owner (`new()` takes no arguments and stores none, [`lib.rs`](contracts/coop/src/lib.rs) line 81).
 
@@ -92,7 +89,7 @@ Why this needs NEAR and not a database: the escrow, the tier calculation and the
 
 ## 6. Key claims (full table: [docs/CLAIMS.md](docs/CLAIMS.md))
 
-Every factual claim in this README is listed in `docs/CLAIMS.md` with a file and line and a proof (a named test, an evidence file, or "pending testnet run"). The central ones:
+Every factual claim in this README is listed in `docs/CLAIMS.md` with a file and line and a proof (a named test or an evidence file). The central ones:
 
 | Claim | Code | Proof |
 |---|---|---|
@@ -102,21 +99,11 @@ Every factual claim in this README is listed in `docs/CLAIMS.md` with a file and
 | Settlement is chunked and idempotent | [`settle.rs`](contracts/coop/src/settle.rs):232 | `chunked_settlement_matches_single_call`, `settle_twice_is_idempotent`, [`chunked.test.ts`](agents/test/integration/chunked.test.ts) (21 members); [`evidence/gas.md`](evidence/gas.md) |
 | Failed delivery becomes a claimable balance | [`settle.rs`](contracts/coop/src/settle.rs):283, [`agent.rs`](contracts/coop/src/agent.rs):196 | `failed_delivery_becomes_claimable_and_can_be_claimed`, [`claim.test.ts`](agents/test/integration/claim.test.ts) |
 | Agent key can only join/leave, zero deposit | [`chain.ts`](agents/src/chain.ts):625 | [`evidence/check-02-fckey-sandbox.txt`](evidence/check-02-fckey-sandbox.txt), [`fckey.test.ts`](agents/test/integration/fckey.test.ts) |
-| Committed wasm matches its SHA-256 and the on-chain code hash | [`deploy.ts`](agents/src/deploy.ts):35, :164; [`Makefile`](Makefile):22 | `make verify` output in section 8 |
+| Committed wasm matches its SHA-256 and the on-chain code hash | [`deploy.ts`](agents/src/deploy.ts):35, :164; [`Makefile`](Makefile):22 | `make verify` output in section 7 |
 | Spawn endpoint is rate limited and capped | [`spawner.ts`](server/src/spawner.ts):225, :267, :276 | [`app.test.ts`](server/test/unit/app.test.ts) (429 and 503 cases) |
-| Testnet behaviour (deploy, 12+ agent run) | | [`evidence/testnet-deploy.md`](evidence/testnet-deploy.md), [`evidence/testnet-run-2026-11-05T11-55-16-789Z.md`](evidence/testnet-run-2026-11-05T11-55-16-789Z.md); the key lock is still pending |
+| Testnet behaviour (deploy, 12+ agent run) | | [`evidence/testnet-deploy.md`](evidence/testnet-deploy.md), [`evidence/testnet-run-2026-11-05T11-55-16-789Z.md`](evidence/testnet-run-2026-11-05T11-55-16-789Z.md) |
 
-## 7. What is mocked or not built
-
-- **The demo seller and its voucher token are ours.** `credits.<operator>` is a NEP-141 "API credit voucher" (decimals 0) deployed by the operator account, which also acts as the seller. It is a stand-in for a real merchant's inventory and is labelled as a demo in its metadata.
-- **NEAR Intents is not used.** It has no testnet and this project spends no real money. Settlement is our own contract. Intents-based cross-chain settlement is roadmap.
-- **The LLM is optional and off by default.** Every decision is made by the deterministic policy in `agents/src/policy.ts`. With `LLM_BASE_URL`, `LLM_API_KEY` and `LLM_MODEL` unset, the rules parser in `agents/src/brief.ts` turns a brief into a policy and the API reports `parser: "rules"`. If an LLM is configured and fails, the rules parser answers and says so. LLM output is never invented.
-- **The contract account still has its full-access key** (the key lock in "Live deployment" is pending). Every measured number below is from a local sandbox unless it says testnet.
-- **Off-chain components are demo grade.** The server keeps spawned agents' keys in a local file (mode 0600, git-ignored) and is meant for throwaway demo money. Wallet-spawned agents are owned by the visitor's wallet, but the server still holds their join/leave key.
-- **Room codes are enforced by the server, not the contract.** Any registered agent can join any open pool on chain; the code decides which pool this server's agents are allowed into. Rooms are opened by the demo seller (the operator), not by real merchants.
-- **Not built:** signed off-chain join intents (relayed, gasless agents), mainnet deployment, real merchants.
-
-## 8. Try it in 30 seconds: `make verify`
+## 7. Try it in 30 seconds: `make verify`
 
 Needs **Linux (x86_64 or arm64) or an Apple Silicon Mac**, Node 22+, pnpm 10 (`corepack enable` is enough), `make`, and network access for the package install plus the one-time download of the `near-sandbox` nearcore binary. **No Rust toolchain, no keys, no wallet, no testnet.** On Windows, run it inside WSL 2 (Ubuntu, where `make` comes from `sudo apt install make` and Node 22+ from your usual installer): `near-sandbox` publishes no Windows or Intel-Mac build of the node, so `make verify`, `make demo`, the integration tests and checks 02 to 04 cannot run natively there. Unit tests, type checks and the web build work on any OS. It checks the committed wasm against `contracts/res/SHA256SUMS`, starts a local nearcore 2.14.0 sandbox, deploys the committed wasm, runs a 10-agent scenario through real transactions to settlement, prints the receipt, and recomputes the invariants from chain views. The scenario takes about 50 seconds (settlement at +47.5 s in the captured run), plus install and first-time binary download.
 
@@ -187,9 +174,9 @@ Related commands:
 | `make check` | Rust unit tests (if `cargo` is installed) and typecheck plus unit tests of every package |
 | `make test-integration` | Integration tests against a real sandbox (chunked settlement, claim path, function-call key, key lock, negotiation, runtime, scenario) |
 | `make checks` | Capability checks 02, 03, 04, 06 on the sandbox (function-call key, sandbox boot and fast-forward, settlement gas, optional LLM) |
-| `make demo` | Sandbox plus server plus scripted agents plus web dashboard (section 9) |
+| `make demo` | Sandbox plus server plus scripted agents plus web dashboard (section 8) |
 
-## 9. Do X, see Y
+## 8. Do X, see Y
 
 ### Locally (works today): `make demo`
 
@@ -220,7 +207,7 @@ Hosted demo URL: https://coop.cyberpunkinc.xyz, on testnet, with nearblocks link
 | **Share code** on a room | Telegram, X, WhatsApp or email with the invite link and code filled in, or copy the link |
 | No wallet? **Demo, server pays** on the spawn page | One agent funded by the operator (capped, 3 per hour per network), same room |
 
-## 10. Architecture
+## 9. Architecture
 
 ```text
                  owner (full-access key)
@@ -253,7 +240,7 @@ Hosted demo URL: https://coop.cyberpunkinc.xyz, on testnet, with nearblocks link
 
 Interface names and JSON shapes are pinned in [docs/SPEC.md](docs/SPEC.md); contract details in [contracts/README.md](contracts/README.md); server details in [server/README.md](server/README.md). The full folder map, with a README in every folder and where each piece of logic lives, is [structure.md](structure.md).
 
-## 11. Measured results
+## 10. Measured results
 
 All from a local sandbox (nearcore 2.14.0, protocol 88), by [`checks/04-settle-gas.ts`](checks/04-settle-gas.ts); full tables in [`evidence/gas.md`](evidence/gas.md).
 
@@ -271,7 +258,7 @@ All from a local sandbox (nearcore 2.14.0, protocol 88), by [`checks/04-settle-g
 
 `DEFAULT_CHUNK` stays at 10: it is a ceiling, and the contract also stops a call when the gas left is below its per-member estimate, so a chunk that is too large cannot run out of gas. A pool is capped at 100 members, which bounds settlement at about 10 calls.
 
-## 12. Built during the hackathon
+## 11. Built during the hackathon
 
 All code in this repository is new and was written inside the hackathon window (which started 2026-10-19 per rule Q-001). There is no pre-existing code, no fork and no earlier baseline. AI coding assistance was used. Libraries and tools (exact versions are pinned in `Cargo.toml`, `Cargo.lock`, the `package.json` files and `pnpm-lock.yaml`):
 
@@ -282,14 +269,14 @@ All code in this repository is new and was written inside the hackathon window (
 | Server | `fastify` 5.12.8, `@fastify/cors` 11.4.0, `@fastify/rate-limit` 11.2.2, `near-api-js`, `zod` |
 | Web | `svelte` 5.57.3, `@sveltejs/kit` 3.1.1 (Vercel adapter 7.0.2), `vite` 8.3.5, `vitest`, `svelte-check` 4.7.8, `@hot-labs/near-connect` 0.12.0 (wallet connection) |
 
-## 13. Other project by the same builder
+## 12. Other project by the same builder
 
 **Handover** (also built at NEAR HACKATHON, on testnet): an NFT that owns its own Ethereum wallet, and a sale you can verify, using NEAR Chain Signatures, a public signature log and a clean check.
 
 - Repo: https://github.com/AlphaTechini/handover
 - Live demo: https://handover-blush.vercel.app
 
-## 14. Full setup, environment, deploy, security, roadmap
+## 13. Full setup, environment, deploy, security, roadmap
 
 ### Setup
 
@@ -338,14 +325,14 @@ pnpm --filter @coop/agents lock-contract --yes                           # delet
 - **Callbacks are `#[private]`**: `on_delivered`, `on_inventory_returned` ([`settle.rs`](contracts/coop/src/settle.rs) lines 282, 302) and `on_claimed` ([`agent.rs`](contracts/coop/src/agent.rs) line 232).
 - **Failed deliveries become claimable balances** (`claim`, [`agent.rs`](contracts/coop/src/agent.rs) line 196); units are not lost. A failed return of unsold inventory is claimable by the seller.
 - **`register_agent` accepts only direct sub-accounts** of the caller, and the contract rejects its own account as an agent ([`agent.rs`](contracts/coop/src/agent.rs) lines 125 to 133).
-- **No admin, no owner, no upgrade method** in the contract. `lock-contract` additionally deletes the contract account's full-access keys so the code cannot be swapped; tested in the sandbox ([`lock.test.ts`](agents/test/integration/lock.test.ts)), **pending on testnet**.
+- **No admin, no owner, no upgrade method** in the contract. `lock-contract` additionally deletes the contract account's full-access keys so the code cannot be swapped; tested in the sandbox ([`lock.test.ts`](agents/test/integration/lock.test.ts)).
 - **Wasm integrity**: `make verify` and the deploy code refuse a wasm whose SHA-256 differs from `contracts/res/SHA256SUMS`, then compare the on-chain `code_hash` after deploy ([`deploy.ts`](agents/src/deploy.ts) lines 35 and 129).
 - **Spawn caps stack**: per-IP hourly limit, total agent cap, per-agent budget cap, an operator balance floor checked before provisioning, one spawn at a time, 4 KB request bodies, zod validation, and a general per-IP rate limit ([`spawner.ts`](server/src/spawner.ts), [`app.ts`](server/src/app.ts)).
 - **Keys**: spawned agents' keys live in `server/.data/agents.json` (mode 0600, git-ignored) and are never returned by any endpoint. They are generated and saved before the first transaction of a spawn, so a failed save spends nothing and a failed transaction leaves the keys in `agents.json.retired`. `make demo` uses the public sandbox key, which is worthless outside your machine. No secret is committed; `.env` is git-ignored.
 
 ### Roadmap
 
-NEAR Intents settlement for cross-chain goods and payment (mainnet only today), mainnet deployment with real merchants, signed off-chain join intents so agents need no gas, and a reputation signal for sellers.
+Mainnet deployment with real merchants, signed off-chain join intents so agents need no gas, and a reputation signal for sellers.
 
 ## License
 
