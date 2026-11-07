@@ -27,6 +27,7 @@ Everything in this repository was built and verified against a **local NEAR sand
 | Extra room items | [`gpu-hours.coop-alpha.testnet`](https://testnet.nearblocks.io/address/gpu-hours.coop-alpha.testnet), [`dataset-seats.coop-alpha.testnet`](https://testnet.nearblocks.io/address/dataset-seats.coop-alpha.testnet) | Deployed from the same token wasm ([`evidence/testnet-items.md`](evidence/testnet-items.md)) |
 | Hosted demo URL | https://coop.cyberpunkinc.xyz (API: https://34-138-43-239.sslip.io/api/health) | Live. Site on Vercel, server on a GCP free-tier VM: [deploy/README.md](deploy/README.md) |
 | Testnet run log (12+ agents, every tx hash) | [`evidence/testnet-run-2026-11-05T11-55-16-789Z.md`](evidence/testnet-run-2026-11-05T11-55-16-789Z.md) | Done: 12 agents, 64 transactions, settled at tier 2, all invariants hold. Produced by `pnpm --filter @coop/agents scenario --agents 12 --network testnet --prefix run2` (`--prefix` gives a re-run fresh agent names) |
+| Demo video (X post) | https://x.com/ApexSys_Dev/status/2118893440066830717 | Live |
 | Other project by the same builder | Handover: [repo](https://github.com/AlphaTechini/handover), [live](https://handover-blush.vercel.app) | Live |
 
 To see Co-op work on your own machine: `make verify` (one command, section 7) and `make demo` (full stack, section 8).

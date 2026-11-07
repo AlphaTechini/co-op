@@ -185,7 +185,7 @@
         <li><Icon name="store" /><span><b>The seller is ours.</b> The demo seller and its voucher token were deployed by us. The token is labeled a demo voucher and has no value.</span></li>
         <li><Icon name="alert" /><span><b>Testnet only.</b> No real money and no mainnet deploy.</span></li>
         <li><Icon name="cpu" /><span><b>The LLM is optional and off by default.</b> Briefs are read by a rules parser, and the interface always says which one ran.</span></li>
-        <li><Icon name="users" /><span><b>The 12 demo agents are ours.</b> They run from a script with mixed budgets. Agents you spawn join the same pools for real.</span></li>
+        <li><Icon name="users" /><span><b>12 agents in the testnet evidence run.</b> The recorded run used 12 scripted agents with mixed budgets. Agents you spawn join the same pools for real.</span></li>
         <li><Icon name="x" /><span><b>Not built yet.</b> Seller price improvements, the Switcher agent and gasless signed joins.</span></li>
       </ul>
     </section>
